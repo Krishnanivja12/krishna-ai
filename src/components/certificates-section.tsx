@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Award, ExternalLink, ChevronDown, ChevronUp } from "lucide-react"
 import { certificates } from "@/lib/bio-data"
@@ -14,6 +14,14 @@ interface CertificatesSectionProps {
 }
 
 export function CertificatesSection({ index }: CertificatesSectionProps) {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
   const { mode } = useMode()
   const [expanded, setExpanded] = useState(false)
 
@@ -55,12 +63,21 @@ export function CertificatesSection({ index }: CertificatesSectionProps) {
             <motion.div
               variants={cardVariantUp}
               key={cert.title}
-              className={`group flex flex-col gap-2 lg:gap-3 bg-background p-4 md:p-6 transition-colors hover:bg-card ${!expanded && index === 3 ? "lg:hidden" : ""}`}
+              initial={{ opacity: 1 }}
+              whileInView={isMobile ? { backgroundColor: "hsl(var(--card))" } : {}}
+              viewport={{ margin: "-30% 0px -30% 0px" }}
+              transition={{ duration: 0.3 }}
+              className={`group flex flex-col gap-2 lg:gap-3 bg-background p-4 md:p-6 transition-colors lg:hover:bg-card ${!expanded && index === 3 ? "lg:hidden" : ""}`}
             >
               <div className="flex items-start justify-between">
-                <div className="flex h-8 w-8 items-center justify-center rounded-sm border border-border bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                <motion.div
+                  whileInView={isMobile ? {backgroundColor: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))"} : {}}
+                  viewport={{ margin: "-30% 0px -30% 0px" }}
+                  transition={{ duration: 0.3 }}
+                  className="flex h-8 w-8 items-center justify-center rounded-sm border border-border bg-secondary text-primary transition-colors lg:group-hover:bg-primary lg:group-hover:text-primary-foreground"
+                >
                   <Award className="h-3.5 w-3.5" strokeWidth={1.5} />
-                </div>
+                </motion.div>
                 {cert.credentialUrl && (
                   <a
                     href={cert.credentialUrl}

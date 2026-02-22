@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Globe, Brain, BarChart3 } from "lucide-react"
 import { sectionVariants, cardVariantUp } from "@/lib/animations"
+import { useEffect, useState } from "react"
 
 interface ServicesStripProps {
   index: number
@@ -30,6 +31,14 @@ const services = [
 ]
 
 export function ServicesStrip({ index }: ServicesStripProps) {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   return (
     <section id="services" className="border-t border-border" aria-labelledby="services-heading">
@@ -56,7 +65,11 @@ export function ServicesStrip({ index }: ServicesStripProps) {
             <motion.div
               variants={cardVariantUp}
               key={service.title}
-              className="group flex flex-col gap-6 bg-background p-4 lg:p-8 transition-colors hover:bg-card"
+              initial={{ opacity: 1 }}
+              whileInView={isMobile ? { backgroundColor: "hsl(var(--card))" } : {}}
+              viewport={{ margin: "-30% 0px -30% 0px" }}
+              transition={{ duration: 0.3 }}
+              className="group flex flex-col gap-6 bg-background p-4 lg:p-8 transition-colors lg:hover:bg-card"
             >
               <div className="flex items-start justify-between">
                 <service.icon
@@ -80,12 +93,15 @@ export function ServicesStrip({ index }: ServicesStripProps) {
 
               <div className="mt-auto flex flex-wrap gap-2 pt-4">
                 {service.tags.map((tag) => (
-                  <span
+                  <motion.span
                     key={tag}
-                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[10px] text-muted-foreground transition-colors group-hover:border-primary/30 group-hover:text-foreground"
+                    whileInView={isMobile ? {borderColor: "hsl(var(--primary) / 0.3)", color: "hsl(var(--foreground))"} : {}}
+                    viewport={{ margin: "-30% 0px -30% 0px" }}
+                    transition={{ duration: 0.3 }}
+                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[10px] text-muted-foreground transition-colors lg:group-hover:border-primary/30 lg:group-hover:text-foreground"
                   >
                     {tag}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             </motion.div>

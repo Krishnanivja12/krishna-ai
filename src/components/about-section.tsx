@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { GraduationCap, MapPin, Calendar } from "lucide-react"
 import { aboutContent, education } from "@/lib/bio-data"
@@ -13,6 +14,14 @@ interface AboutSectionProps {
 export function AboutSection({ index }: AboutSectionProps) {
   const { mode } = useMode()
   const activeBio = aboutContent[mode] || aboutContent.generalist
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   return (
     <section id="about" className="border-t border-border" aria-labelledby="about-heading">
@@ -64,12 +73,21 @@ export function AboutSection({ index }: AboutSectionProps) {
               <motion.div
                 variants={cardVariantLeft}
                 key={edu.degree}
-                className="group flex flex-col gap-4 rounded-md border border-border bg-card px-4 py-6 md:p-8 transition-colors hover:border-primary/30"
+                initial={{ opacity: 1 }}
+                whileInView={isMobile ? { borderColor: "hsl(var(--primary) / 0.3)" } : {}}
+                viewport={{ margin: "-30% 0px -30% 0px" }}
+                transition={{ duration: 0.3 }}
+                className="group flex flex-col gap-4 rounded-md border border-border bg-card px-4 py-6 md:p-8 transition-colors lg:hover:border-primary/30"
               >
                 <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-border bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <motion.div 
+                    initial={{ opacity: 1 }}
+                    whileInView={isMobile ? {backgroundColor: "hsl(var(--primary))",color: "hsl(var(--primary-foreground))"} : {}}                    
+                    viewport={{ margin: "-30% 0px -30% 0px" }}
+                    transition={{ duration: 0.3 }}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-border bg-secondary text-primary transition-colors lg:bg-primary lg:text-primary-foreground">
                     <GraduationCap className="h-5 w-5" strokeWidth={1.5} />
-                  </div>
+                  </motion.div>
                   <div className="flex flex-col gap-1">
                     <h3 className="text-sm font-medium leading-tight text-foreground">
                       {edu.degree}
@@ -102,6 +120,14 @@ export function AboutSection({ index }: AboutSectionProps) {
             ))}
           </motion.div>
         </motion.div>
+
+        {/* Debugging Overlay: Visualizes the center 40% active zone (30% from top, 30% from bottom) */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="fixed inset-0 z-50 pointer-events-none flex flex-col items-center justify-center">
+            <div className="absolute top-[30%] w-full border-t-2 border-red-500/50"><span className="bg-red-500/50 text-white text-[10px] px-1">Top Boundary</span></div>
+            <div className="absolute top-[70%] w-full border-t-2 border-red-500/50"><span className="bg-red-500/50 text-white text-[10px] px-1">Bottom Boundary</span></div>
+          </div>
+        )}
       </div>
     </section>
   )
