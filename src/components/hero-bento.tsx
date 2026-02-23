@@ -1,83 +1,29 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { TerminalCard } from "./terminal-card"
 import { TechTicker } from "./tech-ticker"
 import { useMode } from "@/hooks/use-mode"
-// import { useIsMobile } from "@/hooks/use-mobile"
-// import { useIsTablet } from "@/hooks/use-tablet"
 import { HeroContent } from "@/lib/bio-data"
 import { sectionVariants, cardVariantUp, cardVariantLeft, cardVariantRight, cardVariantDown } from "@/lib/animations"
+import { useAutoHighlight, useIsMobile } from "@/hooks/use-mobile-view-effect"
 
 interface HeroBentoProps {
   index: number
 }
 
 export function HeroBento({ index }: HeroBentoProps) {
-  // const [mounted, setMounted] = useState(false) 
   const { mode } = useMode()
   const content = HeroContent[mode as keyof typeof HeroContent] || HeroContent.generalist
   const [isHovered, setIsHovered] = useState(false)
+  const isMobile = useIsMobile()
+  const nameRef = useRef<HTMLSpanElement>(null)
+  const isNameActive = useAutoHighlight(nameRef, isMobile)
 
-  // const isMobile = useIsMobile()
-  // const isTablet = useIsTablet()
 
-  // useEffect(() => {
-  //   setMounted(true)
-  // }, [])
-
-  // // Debug: Monitor device state
-  // useEffect(() => {
-  //   console.log("Device Check:", { 
-  //     isMobile, 
-  //     isTablet, 
-  //     width: typeof window !== 'undefined' ? window.innerWidth : 'SSR' 
-  //   });
-  // }, [isMobile, isTablet]);
-  
-  // const getCard1Variant = () => {
-  //   if (isMobile) { console.log("Card 1: Mobile (Right)"); return cardVariantRight; }
-  //   if (isTablet) { console.log("Card 1: Tablet (Down)"); return cardVariantDown; }
-  //   console.log("Card 1: Desktop (Down)");
-  //   return cardVariantDown;
-  // }
-
-  // const getCard2Variant = () => {
-  //   if (isMobile) { console.log("Card 2: Mobile (Right)"); return cardVariantRight; }
-  //   if (isTablet) { console.log("Card 2: Tablet (Left)"); return cardVariantLeft; }
-  //   console.log("Card 2: Desktop (Left)");
-  //   return cardVariantLeft;
-  // }
-  
-  // const getCard1Variant = () => {
-  //   if (isMobile) return cardVariantRight
-  //   if (isTablet) return cardVariantDown 
-  //   return cardVariantDown
-  // }
-
-  // const getCard2Variant = () => {
-  //   if (isMobile) return cardVariantRight
-  //   if (isTablet) return cardVariantLeft
-  //   return cardVariantLeft
-  // }
-
-  // const getCard3Variant = () => {
-  //   if (isMobile) return cardVariantRight;
-  //   if (isTablet) return cardVariantRight;
-  //   return cardVariantRight
-  // }
-  
-  // const getCard4Variant = () => {
-  //   if (isMobile) return cardVariantRight;
-  //   if (isTablet) return cardVariantLeft;
-  //   return cardVariantUp
-  // }
-
-  // if (!mounted) return <div className="min-h-screen" />; 
-  
   return (
     <section id="home" className="mx-auto max-w-7xl px-4 pt-32 pb-16 md:pt-36 lg:pt-40 lg:pb-24" aria-labelledby="hero-heading">
       {/* Section label */}
@@ -93,7 +39,6 @@ export function HeroBento({ index }: HeroBentoProps) {
 
       {/* Bento Grid */}
       <motion.div 
-        // key={isMobile ? "mobile" : isTablet ? "tablet" : "desktop"} // Ensures re-animation on resize
         initial="hidden"
         animate="visible"
         variants={sectionVariants}
@@ -112,6 +57,7 @@ export function HeroBento({ index }: HeroBentoProps) {
               Hello, I am
               <br />
               <motion.span
+                ref={nameRef}
                 className="text-primary inline-flex cursor-pointer select-none"
                 onHoverStart={() => setIsHovered(true)}
                 onHoverEnd={() => setIsHovered(false)}
@@ -120,7 +66,7 @@ export function HeroBento({ index }: HeroBentoProps) {
               >
                 <motion.span layout>V</motion.span>
                 <AnimatePresence>
-                  {isHovered && (
+                  {(isHovered || isNameActive) && (
                     <motion.span
                       initial={{ opacity: 0, width: 0 }}
                       animate={{ opacity: 1, width: "auto" }}
@@ -134,7 +80,7 @@ export function HeroBento({ index }: HeroBentoProps) {
                 </AnimatePresence>
                 
                 <AnimatePresence>
-                  {isHovered && (
+                  {(isHovered || isNameActive) && (
                     <motion.span
                       initial={{ opacity: 0, width: 0 }}
                       animate={{ opacity: 1, width: "auto" }}
@@ -149,7 +95,7 @@ export function HeroBento({ index }: HeroBentoProps) {
 
                 <motion.span layout>M</motion.span>
                 <AnimatePresence>
-                  {isHovered && (
+                  {(isHovered || isNameActive) && (
                     <motion.span
                       initial={{ opacity: 0, width: 0 }}
                       animate={{ opacity: 1, width: "auto" }}

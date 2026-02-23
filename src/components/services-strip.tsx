@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
-import { motion, useInView } from "framer-motion"
+import { useRef } from "react"
+import { motion } from "framer-motion"
 import { Globe, Brain, BarChart3 } from "lucide-react"
 import { sectionVariants, cardVariantUp } from "@/lib/animations"
+import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 
 interface ServicesStripProps {
   index: number
@@ -31,14 +32,7 @@ const services = [
 ]
 
 export function ServicesStrip({ index }: ServicesStripProps) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   return (
     <section id="services" className="border-t border-border" aria-labelledby="services-heading">
@@ -72,8 +66,7 @@ export function ServicesStrip({ index }: ServicesStripProps) {
 
 function ServiceCard({ service, isMobile }: { service: typeof services[number], isMobile: boolean }) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" })
-  const isActive = isMobile && isInView
+  const isActive = useAutoHighlight(ref, isMobile)
 
   return (
     <motion.div

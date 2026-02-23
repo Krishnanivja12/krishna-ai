@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
-import { motion, useInView } from "framer-motion"
+import { useState, useRef } from "react"
+import { motion } from "framer-motion"
 import { Award, ExternalLink, ChevronDown, ChevronUp } from "lucide-react"
 import { certificates } from "@/lib/bio-data"
 import { useMode } from "@/hooks/use-mode"
 import { sectionVariants, cardVariantUp, fadeUpVariant } from "@/lib/animations"
+import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 
 const INITIAL_COUNT = 4
 
@@ -14,16 +15,11 @@ interface CertificatesSectionProps {
 }
 
 export function CertificatesSection({ index }: CertificatesSectionProps) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
   const { mode } = useMode()
   const [expanded, setExpanded] = useState(false)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const isButtonActive = useAutoHighlight(buttonRef, isMobile)
 
   // Filter logic
   const filteredCertificates = certificates.filter((cert) => 
@@ -84,16 +80,17 @@ export function CertificatesSection({ index }: CertificatesSectionProps) {
             variants={fadeUpVariant}
             className={`mt-6 flex justify-center ${!expanded && filteredCertificates.length === 4 ? "md:hidden lg:flex" : ""}`}>
             <button
+              ref={buttonRef}
               onClick={() => setExpanded((prev) => !prev)}
-              className="group inline-flex items-center gap-2 rounded-sm border border-border px-5 py-2.5 font-mono text-xs text-muted-foreground transition-all hover:border-primary hover:text-foreground"
+              className={`group inline-flex items-center gap-2 rounded-sm border px-5 py-2.5 font-mono text-xs transition-all duration-300 lg:hover:border-primary lg:hover:text-foreground ${isButtonActive ? "border-primary text-foreground" : "border-border text-muted-foreground"}`}
               aria-expanded={expanded}
               aria-controls="certificates-grid"
             >
               {expanded ? "Show Less" : `Show All (${filteredCertificates.length})`}
               {expanded ? (
-                <ChevronUp className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5" />
+                <ChevronUp className={`h-3.5 w-3.5 transition-transform duration-300 lg:group-hover:-translate-y-0.5 ${isButtonActive ? "-translate-y-0.5" : ""}`} />
               ) : (
-                <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" />
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 lg:group-hover:translate-y-0.5 ${isButtonActive ? "translate-y-0.5" : ""}`} />
               )}
             </button>
           </motion.div>
@@ -105,8 +102,7 @@ export function CertificatesSection({ index }: CertificatesSectionProps) {
 
 function CertificateCard({ cert, index, expanded, isMobile }: { cert: typeof certificates[number], index: number, expanded: boolean, isMobile: boolean }) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" })
-  const isActive = isMobile && isInView
+  const isActive = useAutoHighlight(ref, isMobile)
 
   return (
     <motion.div

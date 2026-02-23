@@ -1,24 +1,18 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { motion, useInView } from "framer-motion"
+import { useRef } from "react"
+import { motion } from "framer-motion"
 import { Briefcase, Calendar, MapPin } from "lucide-react"
 import { experiences } from "@/lib/bio-data"
 import { sectionVariants, cardVariantUp } from "@/lib/animations"
+import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 
 interface ExperienceSectionProps {
   index: number
 }
 
 export function ExperienceSection({ index }: ExperienceSectionProps) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   return (
     <section id="experience" className="border-t border-border" aria-labelledby="experience-heading">
@@ -53,8 +47,7 @@ export function ExperienceSection({ index }: ExperienceSectionProps) {
 
 function ExperienceCard({ exp, index, isMobile }: { exp: typeof experiences[number], index: number, isMobile: boolean }) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" })
-  const isActive = isMobile && isInView
+  const isActive = useAutoHighlight(ref, isMobile)
 
   return (
     <motion.div

@@ -9,6 +9,8 @@ import { sectionVariants, fadeUpVariant, cardVariantRight, cardVariantLeft } fro
 import { useProjectModal } from "@/hooks/use-project-modal"
 import { ProjectCard } from "@/components/project-card"
 import { ProjectDetailModal } from "@/components/project-detail-modal"
+import { useAutoHighlight, useIsMobile } from "@/hooks/use-mobile-view-effect"
+import { useRef } from "react"
 
 interface ProjectsSectionProps {
   index: number
@@ -17,6 +19,9 @@ interface ProjectsSectionProps {
 export function ProjectsSection({ index }: ProjectsSectionProps) {
   const { mode } = useMode()
   const { selectedProject, openProject, closeProject } = useProjectModal()
+  const isMobile = useIsMobile()
+  const viewAllRef = useRef<HTMLDivElement | null>(null)
+  const isViewAllActive = useAutoHighlight(viewAllRef, isMobile)
 
   const filteredProjects = projects.filter((project) => 
     mode === "generalist" || project.mode.includes(mode)
@@ -55,20 +60,20 @@ export function ProjectsSection({ index }: ProjectsSectionProps) {
           ))}
         </motion.div>
 
-        {/* More Projects button */}
         {filteredProjects.length > 4 && (
           <motion.div 
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUpVariant}
-            className="mt-8 flex justify-center">
+            className="mt-8 flex justify-center"
+            ref={viewAllRef}>
             <Link
               href="/projects"
-              className="group inline-flex items-center gap-3 rounded-sm border border-border px-6 py-3 font-mono text-sm text-muted-foreground transition-all hover:border-primary hover:text-foreground hover:gap-4"
+              className={`group inline-flex items-center gap-3 rounded-sm border border-border px-6 py-3 font-mono text-sm text-muted-foreground transition-all hover:border-primary hover:text-foreground hover:gap-4 ${isViewAllActive ? "border-primary text-foreground gap-4" : ""}`}
             >
               View All {mode === "generalist" ? "" : mode} Projects
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+              <ArrowRight className={`h-4 w-4 transition-transform group-hover:translate-x-0.5 ${isViewAllActive ? "translate-x-0.5" : ""}`} aria-hidden="true" />
             </Link>
           </motion.div>
         )}

@@ -1,23 +1,17 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { motion, useInView } from "framer-motion"
+import { useRef } from "react"
+import { motion } from "framer-motion"
 import { skillCategories } from "@/lib/bio-data"
 import { sectionVariants, cardVariantUp } from "@/lib/animations"
+import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 
 interface SkillsSectionProps {
   index: number
 }
 
 export function SkillsSection({ index }: SkillsSectionProps) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   return (
     <section id="skills" className="border-t border-border" aria-labelledby="skills-heading">
@@ -52,8 +46,7 @@ export function SkillsSection({ index }: SkillsSectionProps) {
 
 function SkillCard({ category, isMobile }: { category: typeof skillCategories[number], isMobile: boolean }) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" })
-  const isActive = isMobile && isInView
+  const isActive = useAutoHighlight(ref, isMobile)
 
   return (
     <motion.div

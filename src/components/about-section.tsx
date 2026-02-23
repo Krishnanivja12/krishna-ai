@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { motion, useInView } from "framer-motion"
+import { useRef } from "react"
+import { motion } from "framer-motion"
 import { GraduationCap, MapPin, Calendar } from "lucide-react"
 import { aboutContent, education } from "@/lib/bio-data"
 import { useMode } from "@/hooks/use-mode"
 import { sectionVariants, cardVariantLeft, cardVariantRight } from "@/lib/animations"
+import { useIsMobile, useAutoHighlight, VIEWPORT_MARGIN_PERCENT } from "@/hooks/use-mobile-view-effect"
 
 interface AboutSectionProps {
   index: number
@@ -14,14 +15,7 @@ interface AboutSectionProps {
 export function AboutSection({ index }: AboutSectionProps) {
   const { mode } = useMode()
   const activeBio = aboutContent[mode] || aboutContent.generalist
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   return (
     <section id="about" className="border-t border-border" aria-labelledby="about-heading">
@@ -75,11 +69,15 @@ export function AboutSection({ index }: AboutSectionProps) {
           </motion.div>
         </motion.div>
 
-        {/* Debugging Overlay: Visualizes the center 40% active zone (30% from top, 30% from bottom) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="fixed inset-0 z-50 pointer-events-none flex flex-col items-center justify-center">
-            <div className="absolute top-[30%] w-full border-t-2 border-red-500/50"><span className="bg-red-500/50 text-white text-[10px] px-1">Top Boundary</span></div>
-            <div className="absolute top-[70%] w-full border-t-2 border-red-500/50"><span className="bg-red-500/50 text-white text-[10px] px-1">Bottom Boundary</span></div>
+        {/* Debugging Overlay: Visualizes the center */}
+        {process.env.NODE_ENV === 'development' && isMobile && (
+          <div className="fixed inset-0 z-50 pointer-events-none">
+            <div className="absolute w-full border-t-2 border-dashed border-red-500/50" style={{ top: `${VIEWPORT_MARGIN_PERCENT}%` }}>
+              <span className="bg-red-500 text-white text-[8px] px-2 py-0.5 rounded-br-md font-mono">START (-{VIEWPORT_MARGIN_PERCENT}%) </span>
+            </div>
+            <div className="absolute w-full border-t-2 border-dashed border-red-500/50" style={{ top: `${100 - VIEWPORT_MARGIN_PERCENT}%` }}>
+              <span className="bg-red-500 text-white text-[8px] px-2 py-0.5 rounded-tr-md font-mono"> END (-{VIEWPORT_MARGIN_PERCENT}%) </span>
+            </div>
           </div>
         )}
       </div>
@@ -89,8 +87,7 @@ export function AboutSection({ index }: AboutSectionProps) {
 
 function EducationCard({ edu, isMobile }: { edu: typeof education[number], isMobile: boolean }) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" })
-  const isActive = isMobile && isInView
+  const isActive = useAutoHighlight(ref, isMobile)
 
   return (
     <motion.div

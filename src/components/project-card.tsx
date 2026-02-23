@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
-import { motion, Variants, useInView } from "framer-motion"
+import { useRef } from "react"
+import { motion, Variants } from "framer-motion"
 import { Github, ExternalLink } from "lucide-react"
 import { Project } from "@/lib/project-data"
+import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 
 interface ProjectCardProps {
   project: Project
@@ -14,21 +15,13 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, index, onClick, variants, limitTags = false }: ProjectCardProps) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   const tagsToShow = limitTags ? project.tags.slice(0, 5) : project.tags
   const remainingTags = limitTags ? project.tags.length - 5 : 0
 
   const ref = useRef(null)
-  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" })
-  const isActive = isMobile && isInView
+  const isActive = useAutoHighlight(ref, isMobile)
 
   return (
     <motion.div
