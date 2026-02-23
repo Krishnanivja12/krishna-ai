@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, memo } from "react"
 import { motion, Variants } from "framer-motion"
 import { Github, ExternalLink } from "lucide-react"
 import { Project } from "@/lib/project-data"
@@ -14,7 +14,7 @@ interface ProjectCardProps {
   limitTags?: boolean
 }
 
-export function ProjectCard({ project, index, onClick, variants, limitTags = false }: ProjectCardProps) {
+export const ProjectCard = memo(function ProjectCard({ project, index, onClick, variants, limitTags = false }: ProjectCardProps) {
   const isMobile = useIsMobile()
 
   const tagsToShow = limitTags ? project.tags.slice(0, 5) : project.tags
@@ -28,7 +28,7 @@ export function ProjectCard({ project, index, onClick, variants, limitTags = fal
       ref={ref}
       variants={variants}
       onClick={() => onClick(project)}
-      className={`group relative flex flex-col gap-5 rounded-md border bg-card px-4 py-6 md:p-4 md:py-6 lg:p-8 transition-all duration-300 cursor-pointer lg:hover:border-primary/40 lg:hover:shadow-lg lg:hover:shadow-primary/5 ${isActive ? "border-primary/40 shadow-lg shadow-primary/5" : "border-border shadow-none"}`}
+      className={`group relative flex flex-col gap-5 rounded-md border bg-card px-4 py-6 md:p-4 md:py-6 lg:p-8 transition-[border-color,box-shadow] duration-300 cursor-pointer lg:hover:border-primary/40 lg:hover:shadow-lg lg:hover:shadow-primary/5 ${isActive ? "border-primary/40 shadow-lg shadow-primary/5" : "border-border shadow-none"}`}
     >
       {/* Header */}
       <div className="flex items-start justify-between">
@@ -95,4 +95,4 @@ export function ProjectCard({ project, index, onClick, variants, limitTags = fal
       </div>
     </motion.div>
   )
-}
+})

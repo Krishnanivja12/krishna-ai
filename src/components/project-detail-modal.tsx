@@ -20,7 +20,7 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
         onClick={onClose}
-        className="fixed inset-0 z-50 bg-background/90 backdrop-blur-md"
+        className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"
       />
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: "-45%", x: "-50%" }}
@@ -30,10 +30,10 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
         className="fixed left-1/2 top-1/2 z-50 w-[95%] h-[90%] md:w-[85%] md:h-[85%] lg:w-[75%] lg:h-[85%] max-w-5xl -translate-y-1/2 overflow-hidden flex flex-col shadow-2xl shadow-black/40"
       >
         {/* Glass morphism container */}
-        <div className="relative w-full h-full bg-card/95 backdrop-blur-xl rounded-xl overflow-hidden">
+        <div className="relative w-full h-full rounded-xl overflow-hidden">
           {/* Subtle gradient border effect */}
           <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/20 via-transparent to-primary/10 p-[1px]">
-            <div className="w-full h-full rounded-xl bg-card" />
+            <div className="w-full h-full rounded-xl bg-card/95" />
           </div>
 
           {/* Content */}
