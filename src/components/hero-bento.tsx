@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
@@ -22,6 +22,23 @@ export function HeroBento({ index }: HeroBentoProps) {
   const isMobile = useIsMobile()
   const nameRef = useRef<HTMLSpanElement>(null)
   const isNameActive = useAutoHighlight(nameRef, isMobile)
+  const [isAutoExpanded, setIsAutoExpanded] = useState(false)
+  const [hasInteracted, setHasInteracted] = useState(false)
+
+  useEffect(() => {
+    if (isMobile) return
+    if (hasInteracted) return
+
+    const expandTimer = setTimeout(() => setIsAutoExpanded(true), 1000)
+    const collapseTimer = setTimeout(() => setIsAutoExpanded(false), 3000)
+
+    return () => {
+      clearTimeout(expandTimer)
+      clearTimeout(collapseTimer)
+    }
+  }, [isMobile, hasInteracted])
+
+  const shouldExpand = isHovered || isNameActive || (isAutoExpanded && !isMobile)
 
 
   return (
@@ -59,14 +76,22 @@ export function HeroBento({ index }: HeroBentoProps) {
               <motion.span
                 ref={nameRef}
                 className="text-primary inline-flex cursor-pointer select-none"
-                onHoverStart={() => setIsHovered(true)}
+                onHoverStart={() => {
+                  setIsHovered(true)
+                  setHasInteracted(true)
+                  setIsAutoExpanded(false)
+                }}
                 onHoverEnd={() => setIsHovered(false)}
-                onTap={() => setIsHovered(!isHovered)}
+                onTap={() => {
+                  setIsHovered(!isHovered)
+                  setHasInteracted(true)
+                  setIsAutoExpanded(false)
+                }}
                 layout
               >
                 <motion.span layout>V</motion.span>
                 <AnimatePresence>
-                  {(isHovered || isNameActive) && (
+                  {shouldExpand && (
                     <motion.span
                       initial={{ opacity: 0, width: 0 }}
                       animate={{ opacity: 1, width: "auto" }}
@@ -80,7 +105,7 @@ export function HeroBento({ index }: HeroBentoProps) {
                 </AnimatePresence>
                 
                 <AnimatePresence>
-                  {(isHovered || isNameActive) && (
+                  {shouldExpand && (
                     <motion.span
                       initial={{ opacity: 0, width: 0 }}
                       animate={{ opacity: 1, width: "auto" }}
@@ -95,7 +120,7 @@ export function HeroBento({ index }: HeroBentoProps) {
 
                 <motion.span layout>M</motion.span>
                 <AnimatePresence>
-                  {(isHovered || isNameActive) && (
+                  {shouldExpand && (
                     <motion.span
                       initial={{ opacity: 0, width: 0 }}
                       animate={{ opacity: 1, width: "auto" }}
