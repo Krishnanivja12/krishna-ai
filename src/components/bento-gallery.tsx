@@ -1,7 +1,8 @@
 "use client"
 
+import { useRef } from "react"
 import Image from "next/image"
-import { cn } from "@/lib/utils"
+import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 
 export interface PhotoDetails {
   type: "portrait" | "landscape" | "square"
@@ -34,6 +35,7 @@ export function BentoGallery() {
   const portraitPhoto_m = getPhoto("portrait", "p2")
   const landscapePhoto = getPhoto("landscape")
   const squarePhoto = getPhoto("square")
+  const isMobile = useIsMobile()
 
   if (!portraitPhoto || !landscapePhoto || !squarePhoto) return null
 
@@ -46,82 +48,91 @@ export function BentoGallery() {
       <div className="flex flex-col gap-4 md:flex-row md:items-stretch md:h-[300px] lg:h-auto">
         
         {/* Photo 1: Large Left (Portrait/Primary) */}
-        <div className="group relative min-h-[350px] max-w-sm mx-auto md:max-w-none w-full overflow-hidden rounded-xl border border-border bg-card md:w-3/5 md:min-h-0">
-          {/* Mobile Image */}
-          <Image
-            src={portraitPhoto_m?.src ?? portraitPhoto.src}
-            alt={portraitPhoto_m?.alt ?? portraitPhoto.alt}
-            fill
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 md:hidden"
-            sizes="(max-width: 768px) 100vw, 1px"
-            priority
-          />
-          {/* Desktop Image */}
-          <Image
-            src={portraitPhoto.src}
-            alt={portraitPhoto.alt}
-            fill
-            className="hidden object-cover transition-transform duration-700 ease-out group-hover:scale-105 md:block"
-            sizes="(max-width: 768px) 1px, 50vw"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-          {portraitPhoto.caption && (
-            <div className="absolute bottom-6 left-6 translate-y-4 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-              <p className="font-mono text-xs lg:text-sm font-medium text-foreground">
-                <span className="text-primary">{"> "}</span>
-                {portraitPhoto.caption}
-              </p>
-            </div>
-          )}
-        </div>
+        <PhotoCard 
+          photo={portraitPhoto} 
+          mobilePhoto={portraitPhoto_m}
+          className="min-h-[350px] max-w-sm mx-auto md:max-w-none w-full md:w-3/5 md:min-h-0"
+          isMobile={isMobile}
+          priority
+        />
 
         {/* Right Column - Hidden on mobile */}
         <div className="hidden w-full flex-col gap-4 md:flex md:w-2/5">
           
           {/* Photo 2: Top Right (Landscape) */}
-          <div className="group relative min-h-[100px] max-h-[120px] lg:min-h-[170px] lg:max-h-[190px] w-full overflow-hidden rounded-xl border border-border bg-card">
-            <Image
-              src={landscapePhoto.src}
-              alt={landscapePhoto.alt}
-              fill
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-            {landscapePhoto.caption && (
-              <div className="absolute bottom-6 left-6 translate-y-4 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                <p className="font-mono text-xs lg:text-sm font-medium text-foreground">
-                  <span className="text-primary">{"> "}</span>
-                  {landscapePhoto.caption}
-                </p>
-              </div>
-            )}
-          </div>
+          <PhotoCard 
+            photo={landscapePhoto}
+            className="min-h-[100px] max-h-[120px] lg:min-h-[170px] lg:max-h-[190px] w-full"
+            isMobile={isMobile}
+          />
 
           {/* Photo 3: Bottom Right (Square) */}
-          <div className="group relative aspect-square w-full overflow-hidden rounded-xl border border-border bg-card">
-            <Image
-              src={squarePhoto.src}
-              alt={squarePhoto.alt}
-              fill
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-            {squarePhoto.caption && (
-              <div className="absolute bottom-6 left-6 translate-y-4 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                <p className="font-mono text-xs lg:text-sm font-medium text-foreground">
-                  <span className="text-primary">{"> "}</span>
-                  {squarePhoto.caption}
-                </p>
-              </div>
-            )}
-          </div>
+          <PhotoCard 
+            photo={squarePhoto}
+            className="aspect-square w-full"
+            isMobile={isMobile}
+          />
 
         </div>
 
       </div>
     </section>
+  )
+}
+
+function PhotoCard({ 
+  photo, 
+  mobilePhoto, 
+  className, 
+  isMobile,
+  priority = false 
+}: { 
+  photo: PhotoDetails, 
+  mobilePhoto?: PhotoDetails, 
+  className?: string, 
+  isMobile: boolean,
+  priority?: boolean 
+}) {
+  const ref = useRef(null)
+  const isActive = useAutoHighlight(ref, isMobile)
+
+  return (
+    <div 
+      ref={ref}
+      className={`group relative overflow-hidden rounded-xl border border-border bg-card ${className}`}
+    >
+      {/* Mobile Image (Optional override) */}
+      {mobilePhoto && (
+        <Image
+          src={mobilePhoto.src}
+          alt={mobilePhoto.alt}
+          fill
+          className={`object-cover transition-transform duration-700 ease-out lg:group-hover:scale-105 md:hidden ${isActive ? "scale-105" : ""}`}
+          sizes="(max-width: 768px) 100vw, 1px"
+          priority={priority}
+        />
+      )}
+      
+      {/* Default/Desktop Image */}
+      <Image
+        src={photo.src}
+        alt={photo.alt}
+        fill
+        className={`${mobilePhoto ? "hidden md:block" : ""} object-cover transition-transform duration-700 ease-out lg:group-hover:scale-105 ${isActive ? "scale-105" : ""}`}
+        sizes="(max-width: 768px) 100vw, 50vw"
+        priority={priority}
+      />
+
+      <div className={`absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent transition-opacity duration-500 lg:group-hover:opacity-100 ${isActive ? "opacity-100" : "opacity-0"}`} />
+      
+      {photo.caption && (
+        <div className={`absolute bottom-6 left-6 transition-all duration-500 ease-out lg:group-hover:translate-y-0 lg:group-hover:opacity-100 ${isActive ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
+          <p className="font-mono text-xs lg:text-sm font-medium text-foreground">
+            <span className="text-primary">{"> "}</span>
+            {photo.caption}
+          </p>
+        </div>
+      )}
+    </div>
   )
 }

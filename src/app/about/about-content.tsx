@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import {
@@ -18,6 +18,7 @@ import {
 import { education } from "@/lib/bio-data"
 import { BentoGallery } from "@/components/bento-gallery"
 import { fadeUpVariant, sectionVariants, cardVariantRight } from "@/lib/animations"
+import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 
 const intro = {
   title: "I'm a Full Stack AI Engineer who believes that the best code is written by those who never stop being students.",
@@ -69,6 +70,7 @@ const journey = [
 export function AboutContent() {
   const [isTypingComplete, setIsTypingComplete] = useState(false)
   const [loadingDots, setLoadingDots] = useState("") 
+  const isMobile = useIsMobile()
   const text = "> initiating background check"
 
   useEffect(() => {
@@ -200,17 +202,7 @@ export function AboutContent() {
 
             <div className="flex flex-wrap justify-center gap-4">
               {journey.map((item) => (
-                <motion.div
-                  key={item.title}
-                  variants={cardVariantRight} // Individual card animation
-                  className="group flex w-full flex-col gap-4 rounded-md border border-border bg-card p-4 md:p-6 transition-colors hover:border-primary/30 md:w-[calc(50%-0.5rem)] lg:w-[calc(33.33%-0.67rem)]"
-                >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-sm border border-border bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                    <item.icon className="h-4 w-4" strokeWidth={1.5} />
-                  </div>
-                  <h3 className="font-mono text-sm font-medium text-foreground">{item.title}</h3>
-                  <p className="text-xs leading-relaxed text-muted-foreground text-justify">{item.text}</p>
-                </motion.div>
+                <JourneyCard key={item.title} item={item} isMobile={isMobile} />
               ))}
             </div>
           </motion.section>
@@ -231,55 +223,83 @@ export function AboutContent() {
 
             <div className="flex flex-col gap-4">
               {education.map((edu) => (
-                <motion.div
-                  key={edu.degree}
-                  variants={cardVariantRight}
-                  className="group rounded-md border border-border bg-card p-4 md:p-8 transition-colors hover:border-primary/30"
-                >
-                  <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="flex items-start gap-4">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-border bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                        <GraduationCap className="h-5 w-5" strokeWidth={1.5} />
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <h3 className="text-sm font-medium text-foreground">
-                          {edu.degree}
-                        </h3>
-                        <span className="font-mono text-xs text-primary">
-                          {edu.school}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
-                        <MapPin className="h-3 w-3" strokeWidth={1.5} />
-                        {edu.location}
-                      </span>
-                      <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
-                        <Calendar className="h-3 w-3" strokeWidth={1.5} />
-                        {edu.period}
-                      </span>
-                    </div>
-                  </div>
-
-                  <p className="mb-4 font-mono text-xs text-primary">
-                    {edu.focus}
-                  </p>
-
-                  <ul className="flex flex-col gap-2">
-                    {edu.highlights?.map((h) => (
-                      <li key={h} className="flex items-start gap-2 text-xs md:text-sm text-muted-foreground text-justify">
-                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
+                <EducationCard key={edu.degree} edu={edu} isMobile={isMobile} />
               ))}
             </div>
           </motion.section>
         </>
       )}
     </div>
+  )
+}
+
+function JourneyCard({ item, isMobile }: { item: typeof journey[number], isMobile: boolean }) {
+  const ref = useRef(null)
+  const isActive = useAutoHighlight(ref, isMobile)
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={cardVariantRight}
+      className={`group flex w-full flex-col gap-4 rounded-md border bg-card p-4 md:p-6 transition-colors duration-300 lg:hover:border-primary/30 md:w-[calc(50%-0.5rem)] lg:w-[calc(33.33%-0.67rem)] ${isActive ? "border-primary/30" : "border-border"}`}
+    >
+      <div className={`flex h-9 w-9 items-center justify-center rounded-sm border transition-colors duration-300 lg:group-hover:bg-primary lg:group-hover:text-primary-foreground ${isActive ? "bg-primary text-primary-foreground border-primary" : "bg-secondary text-primary border-border"}`}>
+        <item.icon className="h-4 w-4" strokeWidth={1.5} />
+      </div>
+      <h3 className="font-mono text-sm font-medium text-foreground">{item.title}</h3>
+      <p className="text-xs leading-relaxed text-muted-foreground text-justify">{item.text}</p>
+    </motion.div>
+  )
+}
+
+function EducationCard({ edu, isMobile }: { edu: typeof education[number], isMobile: boolean }) {
+  const ref = useRef(null)
+  const isActive = useAutoHighlight(ref, isMobile)
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={cardVariantRight}
+      className={`group rounded-md border bg-card p-4 md:p-8 transition-colors duration-300 lg:hover:border-primary/30 ${isActive ? "border-primary/30" : "border-border"}`}
+    >
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex items-start gap-4">
+          <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border transition-colors duration-300 lg:group-hover:bg-primary lg:group-hover:text-primary-foreground ${isActive ? "bg-primary text-primary-foreground border-primary" : "bg-secondary text-primary border-border"}`}>
+            <GraduationCap className="h-5 w-5" strokeWidth={1.5} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <h3 className="text-sm font-medium text-foreground">
+              {edu.degree}
+            </h3>
+            <span className="font-mono text-xs text-primary">
+              {edu.school}
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
+            <MapPin className="h-3 w-3" strokeWidth={1.5} />
+            {edu.location}
+          </span>
+          <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
+            <Calendar className="h-3 w-3" strokeWidth={1.5} />
+            {edu.period}
+          </span>
+        </div>
+      </div>
+
+      <p className="mb-4 font-mono text-xs text-primary">
+        {edu.focus}
+      </p>
+
+      <ul className="flex flex-col gap-2">
+        {edu.highlights?.map((h) => (
+          <li key={h} className="flex items-start gap-2 text-xs md:text-sm text-muted-foreground text-justify">
+            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+            {h}
+          </li>
+        ))}
+      </ul>
+    </motion.div>
   )
 }
