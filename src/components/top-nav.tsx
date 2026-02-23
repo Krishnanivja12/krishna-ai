@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
+import { AnimatePresence, motion } from "framer-motion"
 import { useTheme } from "next-themes"
 import { Sun, Moon, Menu, ChevronDown, FileText } from "lucide-react"
 import {
@@ -55,8 +55,6 @@ export function TopNav() {
   const { theme, setTheme } = useTheme()
   const [open, setOpen] = useState(false)
   const { mode: activeMode, setMode: setActiveMode } = useMode() 
-
-  const pathname = usePathname()
 
   // --- Resume Tooltip Logic ---
   const [showResumeTooltip, setShowResumeTooltip] = useState(false)
@@ -205,14 +203,29 @@ export function TopNav() {
 
             <div className="mx-1 h-4 w-px bg-border" aria-hidden="true" />
 
-            <button
+            <motion.button
+              whileTap={{ scale: 0.9, rotate: 15 }} // Slight tilt on click feels organic
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="flex h-8 w-8 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              className="relative flex h-9 w-9 items-center justify-center rounded-sm bg-transparent hover:bg-secondary/50 transition-colors overflow-hidden"
               aria-label="Toggle theme"
             >
-              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            </button>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={theme}
+                  initial={{ y: 20, opacity: 0, rotate: -45 }}
+                  animate={{ y: 0, opacity: 1, rotate: 0 }}
+                  exit={{ y: -20, opacity: 0, rotate: 45 }}
+                  transition={{type: "spring", stiffness: 300, damping: 20}}
+                  className="flex items-center justify-center"
+                >
+                  {theme === "dark" ? (
+                    <Sun className="h-[1.1rem] w-[1.1rem] text-amber-500 fill-amber-500/10" />
+                  ) : (
+                    <Moon className="h-[1.1rem] w-[1.1rem] text-blue-400 fill-blue-400/10" />
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </motion.button>
 
             <div className="mx-1 h-5 w-px bg-border" aria-hidden="true" />
 
