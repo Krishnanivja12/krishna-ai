@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { useState, useEffect, useRef } from "react"
+import { motion, useInView } from "framer-motion"
 import { skillCategories } from "@/lib/bio-data"
 import { sectionVariants, cardVariantUp } from "@/lib/animations"
 
@@ -42,41 +42,43 @@ export function SkillsSection({ index }: SkillsSectionProps) {
           variants={sectionVariants}
           className="grid gap-px border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
           {skillCategories.map((category) => (
-            <motion.div
-              variants={cardVariantUp}
-              key={category.label}
-              initial={{ opacity: 1 }}
-              whileInView={isMobile ? { backgroundColor: "hsl(var(--card))" } : {}}
-              viewport={{ margin: "-30% 0px -30% 0px" }}
-              transition={{ duration: 0.3 }}
-              className="group flex flex-col gap-5 bg-background p-4 md:p-6 lg:p-8 transition-colors lg:hover:bg-card"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[10px] tracking-widest text-primary uppercase">
-                  {category.label}
-                </span>
-                <span className="font-mono text-[10px] text-muted-foreground">
-                  {String(category.skills.length).padStart(2, "0")}
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill) => (
-                  <motion.span
-                    key={skill}
-                    initial={false}
-                    whileInView={isMobile ? {borderColor: "hsl(var(--primary) / 0.2)", color: "hsl(var(--foreground))"} : {}}
-                    viewport={{ margin: "-30% 0px -30% 0px" }}
-                    transition={{ duration: 0.3 }}
-                    className="inline-flex items-center rounded-sm border border-border px-2.5 py-1 font-mono text-[11px] text-muted-foreground transition-colors lg:group-hover:border-primary/20 lg:group-hover:text-foreground"
-                  >
-                    {skill}
-                  </motion.span>                
-                ))}
-              </div>
-            </motion.div>
+            <SkillCard key={category.label} category={category} isMobile={isMobile} />
           ))}
         </motion.div>
       </div>
     </section>
+  )
+}
+
+function SkillCard({ category, isMobile }: { category: typeof skillCategories[number], isMobile: boolean }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" })
+  const isActive = isMobile && isInView
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={cardVariantUp}
+      className={`group flex flex-col gap-5 p-4 md:p-6 lg:p-8 transition-colors duration-300 lg:hover:bg-card ${isActive ? "bg-card" : "bg-background"}`}
+    >
+      <div className="flex items-center justify-between">
+        <span className="font-mono text-[10px] tracking-widest text-primary uppercase">
+          {category.label}
+        </span>
+        <span className="font-mono text-[10px] text-muted-foreground">
+          {String(category.skills.length).padStart(2, "0")}
+        </span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {category.skills.map((skill) => (
+          <span
+            key={skill}
+            className={`inline-flex items-center rounded-sm border px-2.5 py-1 font-mono text-[11px] transition-colors duration-300 lg:group-hover:border-primary/20 lg:group-hover:text-foreground ${isActive ? "border-primary/20 text-foreground" : "border-border text-muted-foreground"}`}
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+    </motion.div>
   )
 }

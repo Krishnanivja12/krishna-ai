@@ -1,9 +1,9 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useEffect, useState, useRef } from "react"
+import { motion, useInView } from "framer-motion"
 import { Globe, Brain, BarChart3 } from "lucide-react"
 import { sectionVariants, cardVariantUp } from "@/lib/animations"
-import { useEffect, useState } from "react"
 
 interface ServicesStripProps {
   index: number
@@ -62,52 +62,55 @@ export function ServicesStrip({ index }: ServicesStripProps) {
           variants={sectionVariants}
           className="grid gap-px border border-border bg-border md:grid-cols-3">
           {services.map((service) => (
-            <motion.div
-              variants={cardVariantUp}
-              key={service.title}
-              initial={{ opacity: 1 }}
-              whileInView={isMobile ? { backgroundColor: "hsl(var(--card))" } : {}}
-              viewport={{ margin: "-30% 0px -30% 0px" }}
-              transition={{ duration: 0.3 }}
-              className="group flex flex-col gap-6 bg-background p-4 lg:p-8 transition-colors lg:hover:bg-card"
-            >
-              <div className="flex items-start justify-between">
-                <service.icon
-                  className="h-5 w-5 text-primary"
-                  strokeWidth={1.5}
-                  aria-hidden="true"
-                />
-                <span className="font-mono text-[10px] text-muted-foreground">
-                  {"//"}
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <h3 className="text-md lg:text-lg font-medium tracking-tight text-foreground">
-                  {service.title}
-                </h3>
-                <p className="text-xs lg:text-sm leading-relaxed text-muted-foreground">
-                  {service.description}
-                </p>
-              </div>
-
-              <div className="mt-auto flex flex-wrap gap-2 pt-4">
-                {service.tags.map((tag) => (
-                  <motion.span
-                    key={tag}
-                    whileInView={isMobile ? {borderColor: "hsl(var(--primary) / 0.3)", color: "hsl(var(--foreground))"} : {}}
-                    viewport={{ margin: "-30% 0px -30% 0px" }}
-                    transition={{ duration: 0.3 }}
-                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[10px] text-muted-foreground transition-colors lg:group-hover:border-primary/30 lg:group-hover:text-foreground"
-                  >
-                    {tag}
-                  </motion.span>
-                ))}
-              </div>
-            </motion.div>
+            <ServiceCard key={service.title} service={service} isMobile={isMobile} />
           ))}
         </motion.div>
       </div>
     </section>
+  )
+}
+
+function ServiceCard({ service, isMobile }: { service: typeof services[number], isMobile: boolean }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" })
+  const isActive = isMobile && isInView
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={cardVariantUp}
+      className={`group flex flex-col gap-6 p-4 lg:p-8 transition-colors duration-300 lg:hover:bg-card ${isActive ? "bg-card" : "bg-background"}`}
+    >
+      <div className="flex items-start justify-between">
+        <service.icon
+          className="h-5 w-5 text-primary"
+          strokeWidth={1.5}
+          aria-hidden="true"
+        />
+        <span className="font-mono text-[10px] text-muted-foreground">
+          {"//"}
+        </span>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <h3 className="text-md lg:text-lg font-medium tracking-tight text-foreground">
+          {service.title}
+        </h3>
+        <p className="text-xs lg:text-sm leading-relaxed text-muted-foreground">
+          {service.description}
+        </p>
+      </div>
+
+      <div className="mt-auto flex flex-wrap gap-2 pt-4">
+        {service.tags.map((tag) => (
+          <span
+            key={tag}
+            className={`rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-colors duration-300 lg:group-hover:border-primary/30 lg:group-hover:text-foreground ${isActive ? "border-primary/30 text-foreground" : "border-border text-muted-foreground"}`}
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </motion.div>
   )
 }

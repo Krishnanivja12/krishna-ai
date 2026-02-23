@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { useState, useEffect, useRef } from "react"
+import { motion, useInView } from "framer-motion"
 import { Briefcase, Calendar, MapPin } from "lucide-react"
 import { experiences } from "@/lib/bio-data"
 import { sectionVariants, cardVariantUp } from "@/lib/animations"
@@ -43,71 +43,71 @@ export function ExperienceSection({ index }: ExperienceSectionProps) {
           variants={sectionVariants}
           className="flex flex-col gap-4">
           {experiences.map((exp, index) => (
-            <motion.div
-              variants={cardVariantUp}
-              key={exp.role}
-              initial={{ opacity: 1 }}
-              whileInView={isMobile ? { borderColor: "hsl(var(--primary) / 0.3)" } : {}}
-              viewport={{ margin: "-30% 0px -30% 0px" }}
-              transition={{ duration: 0.3 }}
-              className="group relative flex flex-col gap-6 rounded-md border border-border bg-card px-4 py-6 md:p-6 lg:p-8 transition-colors lg:hover:border-primary/30"
-            >
-              {/* Top row */}
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex items-start gap-4">
-                  <motion.div
-                    whileInView={isMobile ? {backgroundColor: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))"} : {}}
-                    viewport={{ margin: "-30% 0px -30% 0px" }}
-                    transition={{ duration: 0.3 }}
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-border bg-secondary text-primary transition-colors lg:group-hover:bg-primary lg:group-hover:text-primary-foreground"
-                  >
-                    <Briefcase className="h-5 w-5" strokeWidth={1.5} />
-                  </motion.div>
-                  <div className="flex flex-col gap-1">
-                    <h3 className="text-sm font-medium text-foreground">{exp.role}</h3>
-                    <span className="font-mono text-xs text-primary">{exp.company}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 sm:text-right">
-                  <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
-                    <MapPin className="h-3 w-3" strokeWidth={1.5} />
-                    {exp.location}
-                  </span>
-                  <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
-                    <Calendar className="h-3 w-3" strokeWidth={1.5} />
-                    {exp.period}
-                  </span>
-                </div>
-              </div>
-
-              {/* Description */}
-              <p className="text-xs md:text-sm leading-relaxed text-muted-foreground text-justify">
-                {exp.description}
-              </p>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2">
-                {exp.tags.map((tag) => (
-                  <motion.span
-                    key={tag}
-                    whileInView={isMobile ? {borderColor: "hsl(var(--primary) / 0.2)", color: "hsl(var(--foreground))"} : {}}
-                    viewport={{ margin: "-30% 0px -30% 0px" }}
-                    transition={{ duration: 0.3 }}
-                    className="inline-flex items-center rounded-sm border border-border px-2 py-0.5 font-mono text-[10px] text-muted-foreground transition-colors lg:group-hover:border-primary/20 lg:group-hover:text-foreground"
-                  >
-                    {tag}
-                  </motion.span>
-                ))}
-              </div>
-
-              {/* Index marker */}
-              <span className="absolute right-8 top-8 font-mono text-[10px] text-muted-foreground/50">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-            </motion.div>
+            <ExperienceCard key={exp.role} exp={exp} index={index} isMobile={isMobile} />
           ))}
         </motion.div>
       </div>
     </section>
+  )
+}
+
+function ExperienceCard({ exp, index, isMobile }: { exp: typeof experiences[number], index: number, isMobile: boolean }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" })
+  const isActive = isMobile && isInView
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={cardVariantUp}
+      className={`group relative flex flex-col gap-6 rounded-md border bg-card px-4 py-6 md:p-6 lg:p-8 transition-colors duration-300 lg:hover:border-primary/30 ${isActive ? "border-primary/30" : "border-border"}`}
+    >
+      {/* Top row */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex items-start gap-4">
+          <div
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border transition-colors duration-300 lg:group-hover:bg-primary lg:group-hover:text-primary-foreground ${isActive ? "bg-primary text-primary-foreground border-primary" : "bg-secondary text-primary border-border"}`}
+          >
+            <Briefcase className="h-5 w-5" strokeWidth={1.5} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <h3 className="text-sm font-medium text-foreground">{exp.role}</h3>
+            <span className="font-mono text-xs text-primary">{exp.company}</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 sm:text-right">
+          <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
+            <MapPin className="h-3 w-3" strokeWidth={1.5} />
+            {exp.location}
+          </span>
+          <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
+            <Calendar className="h-3 w-3" strokeWidth={1.5} />
+            {exp.period}
+          </span>
+        </div>
+      </div>
+
+      {/* Description */}
+      <p className="text-xs md:text-sm leading-relaxed text-muted-foreground text-justify">
+        {exp.description}
+      </p>
+
+      {/* Tags */}
+      <div className="flex flex-wrap gap-2">
+        {exp.tags.map((tag) => (
+          <span
+            key={tag}
+            className={`inline-flex items-center rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-colors duration-300 lg:group-hover:border-primary/20 lg:group-hover:text-foreground ${isActive ? "border-primary/20 text-foreground" : "border-border text-muted-foreground"}`}
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {/* Index marker */}
+      <span className="absolute right-8 top-8 font-mono text-[10px] text-muted-foreground/50">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+    </motion.div>
   )
 }
