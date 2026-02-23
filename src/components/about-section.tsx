@@ -6,7 +6,7 @@ import { GraduationCap, MapPin, Calendar } from "lucide-react"
 import { aboutContent, education } from "@/lib/bio-data"
 import { useMode } from "@/hooks/use-mode"
 import { sectionVariants, cardVariantLeft, cardVariantRight } from "@/lib/animations"
-import { useIsMobile, useAutoHighlight, VIEWPORT_MARGIN_PERCENT } from "@/hooks/use-mobile-view-effect"
+import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 
 interface AboutSectionProps {
   index: number
@@ -70,7 +70,7 @@ export function AboutSection({ index }: AboutSectionProps) {
         </motion.div>
 
         {/* Debugging Overlay: Visualizes the center */}
-        {process.env.NODE_ENV === 'development' && isMobile && (
+        {/* {process.env.NODE_ENV === 'development' && isMobile && (
           <div className="fixed inset-0 z-50 pointer-events-none">
             <div className="absolute w-full border-t-2 border-dashed border-red-500/50" style={{ top: `${VIEWPORT_MARGIN_PERCENT}%` }}>
               <span className="bg-red-500 text-white text-[8px] px-2 py-0.5 rounded-br-md font-mono">START (-{VIEWPORT_MARGIN_PERCENT}%) </span>
@@ -79,7 +79,7 @@ export function AboutSection({ index }: AboutSectionProps) {
               <span className="bg-red-500 text-white text-[8px] px-2 py-0.5 rounded-tr-md font-mono"> END (-{VIEWPORT_MARGIN_PERCENT}%) </span>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </section>
   )
