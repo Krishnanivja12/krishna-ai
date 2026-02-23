@@ -126,7 +126,7 @@ export function HeroBento({ index }: HeroBentoProps) {
         </motion.div>
 
         {/* Card 2 - Terminal (Tall, Right, spans 2 rows) */}
-        <motion.div variants={cardVariantLeft} className="sm:col-span-2 md:col-span-1 min-h-[425px] lg:min-h-[440px] md:row-span-2">
+        <motion.div variants={cardVariantLeft} className="hidden md:block md:col-span-1 min-h-[425px] md:min-h-[440px] md:row-span-2" >
           <TerminalCard />
         </motion.div>
 
