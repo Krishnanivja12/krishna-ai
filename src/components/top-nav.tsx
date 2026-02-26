@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { flushSync } from "react-dom"
 import Link from "next/link"
 import Image from "next/image"
 import { AnimatePresence, motion } from "framer-motion"
@@ -52,7 +53,7 @@ const RESUMES = [
 ]
 
 export function TopNav() {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme, resolvedTheme } = useTheme()
   const [open, setOpen] = useState(false)
   const { mode: activeMode, setMode: setActiveMode } = useMode() 
 
@@ -72,6 +73,47 @@ export function TopNav() {
       }
     }
   }, [])
+
+  const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const isDark = resolvedTheme === "dark"
+    const newTheme = isDark ? "light" : "dark"
+
+    if (!document.startViewTransition) {
+      setTheme(newTheme)
+      return
+    }
+
+    const x = e.clientX
+    const y = e.clientY
+    const endRadius = Math.hypot(
+      Math.max(x, innerWidth - x),
+      Math.max(y, innerHeight - y)
+    )
+
+    const transition = document.startViewTransition(() => {
+      flushSync(() => {
+        setTheme(newTheme)
+      })
+    })
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ]
+
+      document.documentElement.animate(
+        {
+          clipPath: clipPath,
+        },
+        {
+          duration: 500,
+          easing: "ease-in-out",
+          pseudoElement: "::view-transition-new(root)",
+        }
+      )
+    })
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -204,9 +246,9 @@ export function TopNav() {
             <div className="mx-1 h-4 w-px bg-border" aria-hidden="true" />
 
             <motion.button
-              whileTap={{ scale: 0.9, rotate: 15 }} // Slight tilt on click feels organic
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="relative flex h-9 w-9 items-center justify-center rounded-sm bg-transparent hover:bg-secondary/50 transition-colors overflow-hidden"
+              whileTap={{ scale: 0.9, rotate: 15 }}
+              onClick={toggleTheme}
+              className="relative flex h-9 w-9 items-center justify-center rounded-sm bg-transparent lg:hover:bg-secondary/50 transition-colors overflow-hidden"
               aria-label="Toggle theme"
             >
               <AnimatePresence mode="wait" initial={false}>
