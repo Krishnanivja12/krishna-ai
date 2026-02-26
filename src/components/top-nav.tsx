@@ -105,6 +105,7 @@ export function TopNav() {
       document.documentElement.animate(
         {
           clipPath: clipPath,
+          filter: ["blur(20px)", "blur(0px)"],
         },
         {
           duration: 500,
