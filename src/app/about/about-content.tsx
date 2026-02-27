@@ -19,6 +19,7 @@ import { education } from "@/lib/bio-data"
 import { BentoGallery } from "@/components/bento-gallery"
 import { fadeUpVariant, sectionVariants, cardVariantRight } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
+import { Footer } from "@/components/footer"
 
 const intro = {
   title: "I'm a Full Stack AI Engineer who believes that the best code is written by those who never stop being students.",
@@ -84,6 +85,7 @@ export function AboutContent() {
   }, [isTypingComplete])
 
   return (
+    <>
     <div className="mx-auto max-w-7xl px-4 pt-24 pb-16 lg:pt-28">
       {/* Back link */}
       <Link
@@ -230,6 +232,8 @@ export function AboutContent() {
         </>
       )}
     </div>
+    {isTypingComplete && <Footer />}
+    </>
   )
 }
 

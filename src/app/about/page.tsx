@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { TopNav } from "@/components/top-nav"
-import { Footer } from "@/components/footer"
 import { AboutContent } from "./about-content"
 
 export const metadata: Metadata = {
@@ -15,7 +14,6 @@ export default function AboutPage() {
       <main>
         <AboutContent />
       </main>
-      <Footer />
     </div>
   )
 }
