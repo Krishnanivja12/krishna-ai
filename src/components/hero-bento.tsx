@@ -77,11 +77,12 @@ export function HeroBento({ index }: HeroBentoProps) {
                 ref={nameRef}
                 className="text-primary inline-flex cursor-pointer select-none"
                 onHoverStart={() => {
+                  if (isMobile) return
                   setIsHovered(true)
                   setHasInteracted(true)
                   setIsAutoExpanded(false)
                 }}
-                onHoverEnd={() => setIsHovered(false)}
+                onHoverEnd={() => !isMobile && setIsHovered(false)}
                 onTap={() => {
                   setIsHovered(!isHovered)
                   setHasInteracted(true)

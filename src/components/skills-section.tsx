@@ -127,8 +127,8 @@ function SkillCard({ category, isMobile }: { category: typeof skillCategories[nu
     <motion.div
       ref={ref}
       variants={cardVariantUp}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => !isMobile && setIsHovered(true)}
+      onMouseLeave={() => !isMobile && setIsHovered(false)}
       className={`relative h-full bg-background lg:hover:z-10 ${isActive ? "z-10" : "z-0"}`}
     >
       {/* The Inner Card: Handles the 3D lift, shadow, and background color */}
