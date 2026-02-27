@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { memo, useMemo, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { skillCategories } from "@/lib/bio-data"
 import { sectionVariants, cardVariantUp } from "@/lib/animations"
@@ -156,14 +156,15 @@ function SkillCard({ category, isMobile }: { category: typeof skillCategories[nu
   )
 }
 
-function SkillPill({ skill, isActive }: { skill: string, isActive: boolean }) {
-  const Icon = getSkillIcon(skill);
+const SkillPill = memo(({ skill, isActive }: { skill: string, isActive: boolean }) => {
+  const Icon = useMemo(() => getSkillIcon(skill), [skill]);
 
   return (
     <motion.span
       layout
       transition={{ layout: { duration: 0.2, ease: "easeOut" } }}
-      className={`inline-flex items-center rounded-sm border px-2 py-1 font-mono text-[11px] transition-all duration-300 ${isActive
+      className={`inline-flex items-center rounded-sm border px-2 py-1 font-mono text-[11px] lg:text-[12.5px] 
+        whitespace-nowrap transition-all duration-300 ${isActive
           ? "border-primary/40 text-foreground bg-primary/5 -translate-y-0.5 shadow-sm"
           : "border-border text-muted-foreground translate-y-0"
         }`}
@@ -172,17 +173,23 @@ function SkillPill({ skill, isActive }: { skill: string, isActive: boolean }) {
         {isActive && (
           <motion.span
             key={`icon-${skill}`}
-            initial={{ width: 0, opacity: 0, scale: 0.5 }}
+            initial={{ width: 0, opacity: 0, scale: 0 }}
             animate={{ width: "auto", opacity: 1, scale: 1 }}
-            exit={{ width: 0, opacity: 0, scale: 0.5 }}
-            transition={{ duration: 0.2, ease: "circOut" }}
-            className="inline-flex items-center justify-center overflow-hidden"
+            exit={{ width: 0, opacity: 0, scale: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 350,
+              damping: 25,
+              opacity: { duration: 0.1 }
+            }}
+            className="inline-flex items-center justify-center overflow-hidden flex-nowrap"
           >
-            <Icon size={12} className="mr-1.5 shrink-0 text-primary" />
+            <Icon className="mr-1.5 shrink-0 text-primary h-3 w-3 lg:h-3.5 lg:w-3.5"/> 
           </motion.span>
         )}
       </AnimatePresence>
       <span className="relative z-10">{skill}</span>
     </motion.span>
   );
-}
+});
+SkillPill.displayName = "SkillPill";
