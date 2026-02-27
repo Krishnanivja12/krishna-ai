@@ -10,6 +10,7 @@ import { useMode } from "@/hooks/use-mode"
 import { HeroContent } from "@/lib/bio-data"
 import { sectionVariants, cardVariantUp, cardVariantLeft, cardVariantRight, cardVariantDown } from "@/lib/animations"
 import { useAutoHighlight, useIsMobile } from "@/hooks/use-mobile-view-effect"
+import { DiaText } from "./animations/text/dia-text";
 
 interface HeroBentoProps {
   index: number
@@ -65,7 +66,7 @@ export function HeroBento({ index }: HeroBentoProps) {
         <motion.div variants={cardVariantDown} className="sm:col-span-2 md:col-span-2 flex flex-col justify-between rounded-md border border-border bg-card p-6 md:p-8 lg:p-10">
           <div>
             <span className="mb-4 inline-block font-mono text-[10px] tracking-widest text-primary uppercase">
-              {content.title}
+              <DiaText words={["Full-Stack", "AI"]} duration={3500} /> {content.title}
             </span>
             <h1
               id="hero-heading"

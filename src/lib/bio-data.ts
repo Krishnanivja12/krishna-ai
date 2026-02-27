@@ -43,7 +43,7 @@ export interface Certificate {
 
 export const HeroContent: HeroContent= {
   generalist: {
-    title: "Full Stack AI Engineer",
+    title: "Engineer",
     description: "Merging Full Stack Engineering with AI Research to create production-grade solutions."
   },
   fullstack: {
