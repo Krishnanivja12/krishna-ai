@@ -129,7 +129,7 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     label: "Data Science & AI",
-    skills: ["PyTorch", "TensorFlow", "Scikit-learn", "Pandas", "NumPy", "LangChain", "OpenAI", "Hugging Face"],
+    skills: ["PyTorch", "TensorFlow", "Scikit-learn", "Pandas", "NumPy", "LangChain", "Hugging Face"],
   },
   {
     label: "Data Engineering",
@@ -137,7 +137,7 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     label: "Cloud & Tools",
-    skills: ["AWS", "Azure", "GCP", "Docker", "Kubernetes", "Git", "Terraform", "CI/CD"],
+    skills: ["AWS", "Azure", "Git", "Docker", "Kubernetes", "Terraform", "CI/CD"],
   },
 ]
 
