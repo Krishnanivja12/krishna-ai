@@ -6,7 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { AnimatePresence, motion } from "framer-motion"
 import { useTheme } from "next-themes"
-import { Sun, Moon, Menu, ChevronDown, FileText } from "lucide-react"
+import { Sun, Moon, Menu, ChevronDown, FileText, Download } from "lucide-react"
 import {
   Sheet,
   SheetContent,
@@ -55,6 +55,7 @@ const RESUMES = [
 export function TopNav() {
   const { theme, setTheme, resolvedTheme } = useTheme()
   const [open, setOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const { mode: activeMode, setMode: setActiveMode } = useMode() 
 
   // --- Resume Tooltip Logic ---
@@ -196,13 +197,64 @@ export function TopNav() {
             <div className="relative flex items-center justify-center">
               {activeMode === "generalist" ? (
                 // If Generalist: Show Dropdown Menu
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:h-auto sm:w-auto sm:border sm:border-border sm:bg-transparent sm:px-3 sm:py-1.5 sm:font-mono sm:text-xs sm:hover:border-primary sm:hover:bg-transparent outline-none">
-                    <FileText className="h-4 w-4 sm:hidden" />
-                    <span className="hidden sm:flex sm:items-center sm:gap-1">
-                      Resume <ChevronDown className="h-3 w-3 opacity-70" />
+                <DropdownMenu onOpenChange={setIsOpen}>
+                  <DropdownMenuTrigger className="group relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:h-auto sm:w-auto sm:border sm:border-border sm:bg-transparent sm:px-3 sm:py-1.5 sm:font-mono sm:text-xs sm:hover:border-primary outline-none">
+
+                    {/* MOBILE ICON ANIMATION */}
+                    <div className="relative h-4 w-4 sm:hidden">
+                      <AnimatePresence mode="wait">
+                        {!isOpen ? (
+                          <motion.div
+                            key="file"
+                            initial={{ y: 10, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -10, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <FileText className="h-4 w-4" />
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="download"
+                            initial={{ y: 10, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -10, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Download className="h-4 w-4 text-primary" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    {/* DESKTOP TEXT ANIMATION (Shutter/Slide Effect) */}
+                    <span className="hidden sm:flex sm:items-center sm:gap-1 overflow-hidden relative h-[14px]">
+                      <AnimatePresence mode="wait">
+                        {!isOpen ? (
+                          <motion.div
+                            key="text-resume"
+                            initial={{ y: 15 }}
+                            animate={{ y: 0 }}
+                            exit={{ y: -15 }}
+                            className="flex items-center gap-1"
+                          >
+                            Resume <ChevronDown className="h-3 w-3 opacity-70" />
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="text-download"
+                            initial={{ y: 15 }}
+                            animate={{ y: 0 }}
+                            exit={{ y: -15 }}
+                            className="flex items-center gap-1 text-primary"
+                          >
+                            Download <ChevronDown className="h-3 w-3 rotate-180 transition-transform" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </span>
                   </DropdownMenuTrigger>
+
                   <DropdownMenuContent align="end" className="min-w-[160px] font-mono text-xs">
                     {RESUMES.map((resume) => (
                       <DropdownMenuItem key={resume.id} asChild className="cursor-pointer">
