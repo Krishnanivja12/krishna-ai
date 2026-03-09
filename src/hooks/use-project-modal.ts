@@ -5,6 +5,7 @@ import { Project } from "@/lib/project-data"
 
 export function useProjectModal() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [sourceRect, setSourceRect] = useState<DOMRect | null>(null)
 
   useEffect(() => {
     const handlePopState = () => {
@@ -29,8 +30,9 @@ export function useProjectModal() {
     }
   }, [selectedProject])
 
-  const openProject = useCallback((project: Project) => {
+  const openProject = useCallback((project: Project, rect?: DOMRect) => {
     window.history.pushState(null, "", window.location.href)
+    setSourceRect(rect ?? null)
     setSelectedProject(project)
   }, [])
 
@@ -42,6 +44,7 @@ export function useProjectModal() {
 
   return {
     selectedProject,
+    sourceRect,
     openProject,
     closeProject,
     setSelectedProject

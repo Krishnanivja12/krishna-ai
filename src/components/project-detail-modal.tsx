@@ -1,5 +1,6 @@
 "use client"
 
+import { useMemo } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { Github, ExternalLink, Video, X } from "lucide-react"
@@ -10,25 +11,79 @@ import { GitHubReadme } from "@/components/github-readme"
 interface ProjectDetailModalProps {
   project: Project
   onClose: () => void
+  sourceRect?: DOMRect | null
 }
 
-export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps) {
+export function ProjectDetailModal({ project, onClose, sourceRect }: ProjectDetailModalProps) {
+
+  // Calculate the final modal position (centered)
+  const finalRect = useMemo(() => {
+    if (typeof window === "undefined") return { top: "5%", left: "2.5%", width: "95%", height: "90%" }
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+
+    let widthPct = 95, heightPct = 90
+    if (vw >= 1024) { widthPct = 75; heightPct = 85 }
+    else if (vw >= 768) { widthPct = 85; heightPct = 85 }
+
+    const w = Math.min(vw * widthPct / 100, 1280) // max-w-5xl = 1280px
+    const h = vh * heightPct / 100
+    const left = (vw - w) / 2
+    const top = (vh - h) / 2
+
+    return { top, left, width: w, height: h }
+  }, [])
+
+  // Source rect for the initial/exit keyframe
+  const fromRect = sourceRect
+    ? { top: sourceRect.top, left: sourceRect.left, width: sourceRect.width, height: sourceRect.height }
+    : { top: finalRect.top as number, left: finalRect.left as number, width: (finalRect.width as number) * 0.9, height: (finalRect.height as number) * 0.9 }
+
   return (
     <>
+      {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         onClick={onClose}
         className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"
       />
+
+      {/* Modal — animates from card rect to centered position */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: "-45%", x: "-50%" }}
-        animate={{ opacity: 1, scale: 1, y: "-50%", x: "-50%" }}
-        exit={{ opacity: 0, scale: 0.9, y: "-45%", x: "-50%" }}
-        transition={{ type: "spring", duration: 0.5, bounce: 0.1 }}
-        className="fixed left-1/2 top-1/2 z-50 w-[95%] h-[90%] md:w-[85%] md:h-[85%] lg:w-[75%] lg:h-[85%] max-w-5xl -translate-y-1/2 overflow-hidden flex flex-col shadow-2xl shadow-black/40"
+        initial={{
+          position: "fixed",
+          top: fromRect.top,
+          left: fromRect.left,
+          width: fromRect.width,
+          height: fromRect.height,
+          opacity: 0.5,
+          borderRadius: 8,
+        }}
+        animate={{
+          top: finalRect.top,
+          left: finalRect.left,
+          width: finalRect.width,
+          height: finalRect.height,
+          opacity: 1,
+          borderRadius: 12,
+        }}
+        exit={{
+          top: fromRect.top,
+          left: fromRect.left,
+          width: fromRect.width,
+          height: fromRect.height,
+          opacity: 0,
+          borderRadius: 8,
+        }}
+        transition={{
+          duration: 0.5,
+          ease: [0.22, 1, 0.36, 1], // easeOutExpo — smooth deceleration, no bounce
+        }}
+        className="fixed z-50 overflow-hidden flex flex-col shadow-2xl shadow-black/40"
+        style={{ maxWidth: "none" }} // override any Tailwind max-width
       >
         {/* Glass morphism container */}
         <div className="relative w-full h-full rounded-xl overflow-hidden">
@@ -37,17 +92,34 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
             <div className="w-full h-full rounded-xl bg-card/95" />
           </div>
 
-          {/* Content */}
-          <div className="relative w-full h-full flex flex-col">
+          {/* Content — fades in after expansion */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.3,
+              delay: 0.15, // starts fading in when expansion is ~30% done
+              ease: "easeOut",
+            }}
+            className="relative w-full h-full flex flex-col"
+          >
             {/* Header / Close */}
             <div className="flex items-center justify-between px-6 py-5 bg-gradient-to-b from-background/50 to-transparent backdrop-blur-sm">
-              <h2 className="font-mono text-sm md:text-lg font-medium uppercase tracking-wider text-foreground">
+              <motion.h2
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.25, ease: "easeOut" }}
+                className="font-mono text-sm md:text-lg font-medium uppercase tracking-wider text-foreground"
+              >
                 {project.title}
-              </h2>
+              </motion.h2>
               <motion.button
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.3, ease: "easeOut" }}
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.2 }}
                 onClick={onClose}
                 className="relative group rounded-full p-2 text-muted-foreground transition-colors"
               >
@@ -56,9 +128,14 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
               </motion.button>
             </div>
 
-            {/* Scrollable Content */}
+            {/* Scrollable Content — staggered fade-in */}
             <ScrollArea className="flex-1">
-              <div className="p-4 md:p-6 lg:p-8">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
+                className="p-4 md:p-6 lg:p-8"
+              >
                 {/* Top Actions */}
                 <div className="mb-8 flex flex-wrap gap-4">
                   {project.github && (
@@ -142,9 +219,9 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
                 {project.github && (
                   <GitHubReadme githubUrl={project.github} />
                 )}
-              </div>
+              </motion.div>
             </ScrollArea>
-          </div>
+          </motion.div>
         </div>
       </motion.div>
     </>

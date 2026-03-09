@@ -29,7 +29,7 @@ const modeFilters = [
 
 export function ProjectsPageContent() {
   const [activeFilter, setActiveFilter] = useState("all")
-  const { selectedProject, openProject, closeProject } = useProjectModal()
+  const { selectedProject, sourceRect, openProject, closeProject } = useProjectModal()
 
   const filtered =
     activeFilter === "all"
@@ -153,7 +153,7 @@ export function ProjectsPageContent() {
       {/* Project Detail Overlay */}
       <AnimatePresence>
         {selectedProject && (
-          <ProjectDetailModal project={selectedProject} onClose={closeProject} />
+          <ProjectDetailModal project={selectedProject} onClose={closeProject} sourceRect={sourceRect} />
         )}
       </AnimatePresence>
     </div>

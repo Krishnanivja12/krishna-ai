@@ -9,7 +9,7 @@ import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 interface ProjectCardProps {
   project: Project
   index: number
-  onClick: (project: Project) => void
+  onClick: (project: Project, rect?: DOMRect) => void
   variants?: Variants
   limitTags?: boolean
 }
@@ -20,14 +20,19 @@ export const ProjectCard = memo(function ProjectCard({ project, index, onClick, 
   const tagsToShow = limitTags ? project.tags.slice(0, 5) : project.tags
   const remainingTags = limitTags ? project.tags.length - 5 : 0
 
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement>(null)
   const isActive = useAutoHighlight(ref, isMobile)
+
+  const handleClick = () => {
+    const rect = ref.current?.getBoundingClientRect()
+    onClick(project, rect ?? undefined)
+  }
 
   return (
     <motion.div
       ref={ref}
       variants={variants}
-      onClick={() => onClick(project)}
+      onClick={handleClick}
       className={`group relative flex flex-col gap-5 rounded-md border bg-card px-4 py-6 md:p-4 md:py-6 lg:p-8 cursor-pointer transition-all duration-500 ease-out lg:hover:border-primary/40 lg:hover:shadow-xl lg:hover:shadow-primary/5 lg:hover:-translate-y-1 ${isActive ? "border-primary/40 shadow-xl shadow-primary/5 -translate-y-1" : "border-border shadow-none translate-y-0"}`}
     >
       {/* Header */}

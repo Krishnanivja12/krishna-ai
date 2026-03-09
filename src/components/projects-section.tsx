@@ -18,7 +18,7 @@ interface ProjectsSectionProps {
 
 export function ProjectsSection({ index }: ProjectsSectionProps) {
   const { mode } = useMode()
-  const { selectedProject, openProject, closeProject } = useProjectModal()
+  const { selectedProject, sourceRect, openProject, closeProject } = useProjectModal()
   const isMobile = useIsMobile()
   const viewAllRef = useRef<HTMLDivElement | null>(null)
   const isViewAllActive = useAutoHighlight(viewAllRef, isMobile)
@@ -81,7 +81,7 @@ export function ProjectsSection({ index }: ProjectsSectionProps) {
         {/* Project Detail Overlay */}
         <AnimatePresence>
           {selectedProject && (
-            <ProjectDetailModal project={selectedProject} onClose={closeProject} />
+            <ProjectDetailModal project={selectedProject} onClose={closeProject} sourceRect={sourceRect} />
           )}
         </AnimatePresence>
 
