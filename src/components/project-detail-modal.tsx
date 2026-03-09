@@ -58,7 +58,7 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
 
             {/* Scrollable Content */}
             <ScrollArea className="flex-1">
-              <div className="p-6 md:p-8">
+              <div className="p-4 md:p-6 lg:p-8">
                 {/* Top Actions */}
                 <div className="mb-8 flex flex-wrap gap-4">
                   {project.github && (

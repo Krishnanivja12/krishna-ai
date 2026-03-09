@@ -247,14 +247,14 @@ export function GitHubReadme({ githubUrl }: GitHubReadmeProps) {
 	if (!markdown) return null;
 
 	return (
-		<div className="mt-8">
+		<div className="mt-8 w-0 min-w-full">
 			<div className="mb-4 flex items-center gap-2">
 				<FileText className="h-4 w-4 text-primary" />
 				<h3 className="font-mono text-xs uppercase tracking-widest text-primary md:text-sm">
 					README.md
 				</h3>
 			</div>
-			<div className="rounded-sm border border-border bg-secondary/10 p-5 md:p-6">
+			<div className="overflow-x-auto rounded-sm border border-border bg-secondary/10 p-3 md:p-5 lg:p-6">
 				<ReactMarkdown
 					remarkPlugins={[remarkGfm]}
 					components={components}
