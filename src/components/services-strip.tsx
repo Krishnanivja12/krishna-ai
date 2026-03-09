@@ -72,8 +72,9 @@ function ServiceCard({ service, isMobile }: { service: typeof services[number], 
     <motion.div
       ref={ref}
       variants={cardVariantUp}
-      className={`group flex flex-col gap-6 p-4 lg:p-8 transition-colors duration-300 lg:hover:bg-card ${isActive ? "bg-card" : "bg-background"}`}
+      className={`relative bg-background lg:hover:z-10 ${isActive ? "z-10" : "z-0"}`}
     >
+      <div className={`group flex flex-col gap-6 h-full p-4 lg:p-8 transition-all duration-500 ease-out lg:hover:bg-card lg:hover:-translate-y-1 lg:hover:shadow-xl lg:hover:shadow-primary/10 ${isActive ? "bg-card -translate-y-1 shadow-xl shadow-primary/10" : "bg-background translate-y-0 shadow-none"}`}>
       <div className="flex items-start justify-between">
         <service.icon
           className="h-5 w-5 text-primary"
@@ -98,11 +99,12 @@ function ServiceCard({ service, isMobile }: { service: typeof services[number], 
         {service.tags.map((tag) => (
           <span
             key={tag}
-            className={`rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-colors duration-300 lg:group-hover:border-primary/30 lg:group-hover:text-foreground ${isActive ? "border-primary/30 text-foreground" : "border-border text-muted-foreground"}`}
+            className={`rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-all duration-500 ease-out lg:group-hover:border-primary/30 lg:group-hover:text-foreground lg:group-hover:-translate-y-0.5 ${isActive ? "border-primary/30 text-foreground -translate-y-0.5" : "border-border text-muted-foreground translate-y-0"}`}
           >
             {tag}
           </span>
         ))}
+      </div>
       </div>
     </motion.div>
   )

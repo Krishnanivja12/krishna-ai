@@ -108,8 +108,9 @@ function CertificateCard({ cert, index, expanded, isMobile }: { cert: typeof cer
     <motion.div
       ref={ref}
       variants={cardVariantUp}
-      className={`group flex flex-col gap-2 lg:gap-3 p-4 md:p-6 transition-colors duration-300 lg:hover:bg-card ${!expanded && index === 3 ? "lg:hidden" : ""} ${isActive ? "bg-card" : "bg-background"}`}
+      className={`relative bg-background lg:hover:z-10 ${!expanded && index === 3 ? "lg:hidden" : ""} ${isActive ? "z-10" : "z-0"}`}
     >
+      <div className={`group flex flex-col gap-2 lg:gap-3 h-full p-4 md:p-6 transition-all duration-500 ease-out lg:hover:bg-card lg:hover:-translate-y-1 lg:hover:shadow-lg lg:hover:shadow-primary/5 ${isActive ? "bg-card -translate-y-1 shadow-lg shadow-primary/5" : "bg-background translate-y-0 shadow-none"}`}>
       <div className="flex items-start justify-between">
         <div
           className={`flex h-8 w-8 items-center justify-center rounded-sm border transition-colors duration-300 lg:group-hover:bg-primary lg:group-hover:text-primary-foreground ${isActive ? "bg-primary text-primary-foreground border-primary" : "bg-secondary text-primary border-border"}`}
@@ -152,6 +153,7 @@ function CertificateCard({ cert, index, expanded, isMobile }: { cert: typeof cer
             </span>
           ))}
         </div>
+      </div>
       </div>
     </motion.div>
   )

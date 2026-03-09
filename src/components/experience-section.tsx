@@ -53,7 +53,7 @@ function ExperienceCard({ exp, index, isMobile }: { exp: typeof experiences[numb
     <motion.div
       ref={ref}
       variants={cardVariantUp}
-      className={`group relative flex flex-col gap-6 rounded-md border bg-card px-4 py-6 md:p-6 lg:p-8 transition-colors duration-300 lg:hover:border-primary/30 ${isActive ? "border-primary/30" : "border-border"}`}
+      className={`group relative flex flex-col gap-6 rounded-md border bg-card px-4 py-6 md:p-6 lg:p-8 transition-all duration-500 ease-out lg:hover:border-primary/30 lg:hover:-translate-y-1 lg:hover:shadow-lg lg:hover:shadow-primary/5 ${isActive ? "border-primary/30 -translate-y-1 shadow-lg shadow-primary/5" : "border-border translate-y-0 shadow-none"}`}
     >
       {/* Top row */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -90,7 +90,7 @@ function ExperienceCard({ exp, index, isMobile }: { exp: typeof experiences[numb
         {exp.tags.map((tag) => (
           <span
             key={tag}
-            className={`inline-flex items-center rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-colors duration-300 lg:group-hover:border-primary/20 lg:group-hover:text-foreground ${isActive ? "border-primary/20 text-foreground" : "border-border text-muted-foreground"}`}
+            className={`inline-flex items-center rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-all duration-500 ease-out lg:group-hover:border-primary/20 lg:group-hover:text-foreground lg:group-hover:-translate-y-0.5 ${isActive ? "border-primary/20 text-foreground -translate-y-0.5" : "border-border text-muted-foreground translate-y-0"}`}
           >
             {tag}
           </span>

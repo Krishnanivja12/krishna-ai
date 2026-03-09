@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { steps } from "framer-motion"
 import { Github, Linkedin, Mail } from "lucide-react"
 import { DiscordIcon } from "./discord-icon"
+import { MagneticButton } from "./magnetic-button"
 
 export const socialLinks = [
   { icon: Github, label: "GitHub", href: "https://github.com/Viraj-Mavani", color: "hover:text-white hover:bg-[#24292e] hover:border-[#24292e]" },
@@ -75,33 +76,34 @@ export function Footer() {
           {/* Right Side: High-Interaction Socials */}
           <div className="flex items-center gap-3">
             {socialLinks.map((link, i) => (
-              <motion.a
-                key={link.label}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                viewport={{ once: false, margin: "-10%" }} 
-                transition={{ 
-                  duration: 0.4, 
-                  delay: i * 0.1,
-                  type: "spring", 
-                  stiffness: 260, 
-                  damping: 20 
-                }}
-                whileHover={{ 
-                  y: -8, 
-                  scale: 1.1,
-                  rotate: i % 2 === 0 ? 5 : -5
-                }}
-                whileTap={{ scale: 0.9 }}
-                className={`group relative flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-card/50 backdrop-blur-sm text-muted-foreground transition-all duration-300 shadow-sm ${link.color}`}
-              >
-                <div className="absolute inset-0 rounded-xl bg-primary/0 group-hover:bg-primary/5 group-hover:ring-4 group-hover:ring-primary/10 transition-all duration-500" />
-                
-                <link.icon className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
-              </motion.a>
+              <MagneticButton key={link.label} strength={0.4}>
+                <motion.a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  viewport={{ once: false, margin: "-10%" }} 
+                  transition={{ 
+                    duration: 0.4, 
+                    delay: i * 0.1,
+                    type: "spring", 
+                    stiffness: 260, 
+                    damping: 20 
+                  }}
+                  whileHover={{ 
+                    y: -8, 
+                    scale: 1.1,
+                    rotate: i % 2 === 0 ? 5 : -5
+                  }}
+                  whileTap={{ scale: 0.9 }}
+                  className={`group relative flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-card/50 backdrop-blur-sm text-muted-foreground transition-all duration-300 shadow-sm ${link.color}`}
+                >
+                  <div className="absolute inset-0 rounded-xl bg-primary/0 group-hover:bg-primary/5 group-hover:ring-4 group-hover:ring-primary/10 transition-all duration-500" />
+                  
+                  <link.icon className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
+                </motion.a>
+              </MagneticButton>
             ))}
           </div>
         </div>

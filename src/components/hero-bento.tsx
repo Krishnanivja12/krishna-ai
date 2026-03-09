@@ -12,6 +12,7 @@ import { sectionVariants, cardVariantUp, cardVariantLeft, cardVariantRight, card
 import { useAutoHighlight, useIsMobile } from "@/hooks/use-mobile-view-effect"
 import { DiaText } from "./animations/text/dia-text";
 import { TextBlurIn } from "./animations/text/blur-in";
+import { MagneticButton } from "./magnetic-button";
 
 interface HeroBentoProps {
   index: number
@@ -162,13 +163,15 @@ export function HeroBento({ index }: HeroBentoProps) {
 
           <motion.div 
             className="mt-8">
-            <Link
-              href="/about"
-              className={`group inline-flex items-center gap-3 rounded-sm bg-primary px-6 py-3 font-mono text-sm font-medium text-primary-foreground transition-all hover:gap-4 ${isNameActive ? "gap-4" : ""}`}
-            >
-              About Me
-              <ArrowRight className={`h-4 w-4 transition-transform group-hover:translate-x-0.5 ${isNameActive ? "translate-x-0.5" : ""}`} aria-hidden="true" />
-            </Link>
+            <MagneticButton>
+              <Link
+                href="/about"
+                className={`group inline-flex items-center gap-3 rounded-sm bg-primary px-6 py-3 font-mono text-sm font-medium text-primary-foreground transition-all hover:gap-4 ${isNameActive ? "gap-4" : ""}`}
+              >
+                About Me
+                <ArrowRight className={`h-4 w-4 transition-transform group-hover:translate-x-0.5 ${isNameActive ? "translate-x-0.5" : ""}`} aria-hidden="true" />
+              </Link>
+            </MagneticButton>
           </motion.div>
         </motion.div>
 

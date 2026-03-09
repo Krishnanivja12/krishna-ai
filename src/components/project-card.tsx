@@ -28,7 +28,7 @@ export const ProjectCard = memo(function ProjectCard({ project, index, onClick, 
       ref={ref}
       variants={variants}
       onClick={() => onClick(project)}
-      className={`group relative flex flex-col gap-5 rounded-md border bg-card px-4 py-6 md:p-4 md:py-6 lg:p-8 transition-[border-color,box-shadow] duration-300 cursor-pointer lg:hover:border-primary/40 lg:hover:shadow-lg lg:hover:shadow-primary/5 ${isActive ? "border-primary/40 shadow-lg shadow-primary/5" : "border-border shadow-none"}`}
+      className={`group relative flex flex-col gap-5 rounded-md border bg-card px-4 py-6 md:p-4 md:py-6 lg:p-8 cursor-pointer transition-all duration-500 ease-out lg:hover:border-primary/40 lg:hover:shadow-xl lg:hover:shadow-primary/5 lg:hover:-translate-y-1 ${isActive ? "border-primary/40 shadow-xl shadow-primary/5 -translate-y-1" : "border-border shadow-none translate-y-0"}`}
     >
       {/* Header */}
       <div className="flex items-start justify-between">
@@ -82,13 +82,13 @@ export const ProjectCard = memo(function ProjectCard({ project, index, onClick, 
         {tagsToShow.map((tag) => (
           <span
             key={tag}
-            className={`inline-flex items-center rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-colors duration-300 lg:group-hover:border-primary/20 lg:group-hover:text-foreground ${isActive ? "border-primary/20 text-foreground" : "border-border text-muted-foreground"}`}
+            className={`inline-flex items-center rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-all duration-500 ease-out lg:group-hover:border-primary/20 lg:group-hover:text-foreground lg:group-hover:-translate-y-0.5 ${isActive ? "border-primary/20 text-foreground -translate-y-0.5" : "border-border text-muted-foreground translate-y-0"}`}
           >
             {tag}
           </span>
         ))}
         {remainingTags > 0 && (
-          <span className="inline-flex items-center rounded-sm border border-border px-2 py-0.5 font-mono text-[10px] text-muted-foreground group-hover:border-primary/20 group-hover:text-foreground">
+          <span className={`inline-flex items-center rounded-sm border border-border px-2 py-0.5 font-mono text-[10px] transition-all duration-500 ease-out lg:group-hover:border-primary/20 lg:group-hover:text-foreground lg:group-hover:-translate-y-0.5 ${isActive ? "border-primary/20 text-foreground -translate-y-0.5" : "text-muted-foreground translate-y-0"}`}>
             +{remainingTags}
           </span>
         )}

@@ -7,6 +7,7 @@ import { SITE_METADATA } from "@/lib/site-metadata"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { AmbientCursor } from "@/components/ambient-cursor"
 
 import './globals.css'
 
@@ -39,6 +40,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
+					<AmbientCursor />
 					<ModeProvider>
 						<ScrollArea className="h-screen w-full">
 							{children}
