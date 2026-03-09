@@ -1,7 +1,7 @@
 "use client"
 
 import { memo, useMemo, useRef, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { skillCategories } from "@/lib/bio-data"
 import { sectionVariants, cardVariantUp } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
@@ -25,7 +25,7 @@ const getSkillIcon = (skillName: string) => {
     "java": FaJava,
     "azure": VscAzure,
     "sql": PiFileSql,
-    
+
     // Frameworks / Web
     "next.js": "SiNextdotjs",
     "node.js": "SiNodedotjs",
@@ -133,8 +133,8 @@ function SkillCard({ category, isMobile }: { category: typeof skillCategories[nu
     >
       {/* The Inner Card: Handles the 3D lift, shadow, and background color */}
       <div className={`group flex flex-col h-full gap-5 p-4 md:p-6 lg:p-8 transition-all duration-500 ease-out lg:hover:bg-card lg:hover:-translate-y-1.5 lg:hover:shadow-xl lg:hover:shadow-primary/10 ${isActive
-          ? "bg-card -translate-y-1.5 shadow-xl shadow-primary/10"
-          : "bg-transparent translate-y-0 shadow-none"
+        ? "bg-card -translate-y-1.5 shadow-xl shadow-primary/10"
+        : "bg-transparent translate-y-0 shadow-none"
         }`}>
 
         <div className="flex items-center justify-between">
@@ -160,36 +160,25 @@ const SkillPill = memo(({ skill, isActive }: { skill: string, isActive: boolean 
   const Icon = useMemo(() => getSkillIcon(skill), [skill]);
 
   return (
-    <motion.span
-      layout
-      transition={{ layout: { duration: 0.2, ease: "easeOut" } }}
+    <span
       className={`inline-flex items-center rounded-sm border px-2 py-1 font-mono text-[11px] lg:text-[12.5px] 
-        whitespace-nowrap transition-all duration-300 ${isActive
+        whitespace-nowrap transition-all duration-300 ease-out ${isActive
           ? "border-primary/40 text-foreground bg-primary/5 -translate-y-0.5 shadow-sm"
           : "border-border text-muted-foreground translate-y-0"
         }`}
     >
-      <AnimatePresence mode="popLayout" initial={false}>
-        {isActive && (
-          <motion.span
-            key={`icon-${skill}`}
-            initial={{ width: 0, opacity: 0, scale: 0 }}
-            animate={{ width: "auto", opacity: 1, scale: 1 }}
-            exit={{ width: 0, opacity: 0, scale: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 350,
-              damping: 25,
-              opacity: { duration: 0.1 }
-            }}
-            className="inline-flex items-center justify-center overflow-hidden flex-nowrap"
-          >
-            <Icon className="mr-1.5 shrink-0 text-primary h-3 w-3 lg:h-3.5 lg:w-3.5"/> 
-          </motion.span>
-        )}
-      </AnimatePresence>
-      <span className="relative z-10">{skill}</span>
-    </motion.span>
+      <span
+        className={`inline-flex items-center justify-center overflow-hidden transition-all duration-500 ease-out shrink-0 ${isActive ? "w-3 lg:w-3.5 mr-1.5 opacity-100" : "w-0 mr-0 opacity-0"
+          }`}
+      >
+        <Icon
+          className="shrink-0 text-primary h-3 w-3 lg:h-3.5 lg:w-3.5"
+          aria-hidden="true"
+        />
+      </span>
+      <span>{skill}</span>
+    </span>
   );
 });
 SkillPill.displayName = "SkillPill";
+
