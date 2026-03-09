@@ -6,8 +6,8 @@ import { motion, useMotionValue, useSpring } from "framer-motion"
 export function AmbientCursor() {
   const [isDesktop, setIsDesktop] = useState(false)
 
-  const cursorX = useMotionValue(-200)
-  const cursorY = useMotionValue(-200)
+  const cursorX = useMotionValue(-400)
+  const cursorY = useMotionValue(-400)
 
   const springConfig = { damping: 40, stiffness: 90, mass: 1.2 }
   const x = useSpring(cursorX, springConfig)
@@ -39,12 +39,15 @@ export function AmbientCursor() {
   if (!isDesktop) return null
 
   return (
-    <motion.div
-      className="pointer-events-none fixed inset-0 z-0"
+    <div
+      className="pointer-events-none fixed inset-0 z-[1] overflow-hidden"
       aria-hidden="true"
     >
       <motion.div
         style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
           x,
           y,
           translateX: "-50%",
@@ -52,10 +55,11 @@ export function AmbientCursor() {
           width: 600,
           height: 600,
           borderRadius: "50%",
-          background: "radial-gradient(circle, hsl(var(--primary) / 0.10) 0%, hsl(var(--primary) / 0.04) 40%, transparent 70%)",
+          background: "radial-gradient(circle, hsl(var(--primary) / 0.12) 0%, hsl(var(--primary) / 0.05) 40%, transparent 70%)",
           filter: "blur(80px)",
         }}
       />
-    </motion.div>
+    </div>
   )
 }
+
