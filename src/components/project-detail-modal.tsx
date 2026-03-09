@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Github, ExternalLink, Video, X } from "lucide-react"
 import { Project } from "@/lib/project-data"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { GitHubReadme } from "@/components/github-readme"
 
 interface ProjectDetailModalProps {
   project: Project
@@ -135,6 +136,11 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
                       )}
                     </div>
                   </div>
+                )}
+
+                {/* GitHub README */}
+                {project.github && (
+                  <GitHubReadme githubUrl={project.github} />
                 )}
               </div>
             </ScrollArea>
