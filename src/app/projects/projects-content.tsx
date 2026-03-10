@@ -37,7 +37,7 @@ export function ProjectsPageContent() {
       : projects.filter((p) => p.mode.includes(activeFilter))
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <TopNav />
 
       <main className="mx-auto max-w-7xl px-4 pt-24 pb-16 lg:pt-28">

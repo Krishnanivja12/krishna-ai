@@ -10,7 +10,7 @@ import { Footer } from "@/components/footer"
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <TopNav />
       <main>
         <HeroBento index={1} />
