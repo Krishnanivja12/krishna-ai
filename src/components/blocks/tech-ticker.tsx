@@ -1,5 +1,7 @@
 "use client"
 
+import { GlowCard } from "./glow-card"
+
 const techStack = [
   "React",
   "Next.js",
@@ -19,7 +21,7 @@ const techStack = [
 
 export function TechTicker() {
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-md border border-border bg-card">
+    <GlowCard className="flex h-full flex-col overflow-hidden rounded-md border border-border bg-card">
       <div className="flex items-center border-b border-border px-4 py-2.5">
         <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
           tech_stack
@@ -54,6 +56,6 @@ export function TechTicker() {
           animation-play-state: paused;
         }
       `}</style> */}
-    </div>
+    </GlowCard>
   )
 }

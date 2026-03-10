@@ -7,6 +7,7 @@ import { aboutContent, education } from "@/lib/bio-data"
 import { useMode } from "@/hooks/use-mode"
 import { sectionVariants, cardVariantLeft, cardVariantRight } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
+import { GlowCard } from "../blocks/glow-card"
 
 interface AboutSectionProps {
   index: number
@@ -40,7 +41,7 @@ export function AboutSection({ index }: AboutSectionProps) {
           variants={sectionVariants}
           className="grid gap-8 lg:grid-cols-2 items-stretch">
           {/* About text */}
-          <motion.div variants={cardVariantRight} className="flex flex-col gap-6 rounded-md border border-border bg-card p-4 md:p-8 h-full">
+          <GlowCard as={motion.div} variants={cardVariantRight} className="flex flex-col gap-6 rounded-md border border-border bg-card p-4 md:p-8 h-full">
             <div className="flex items-start justify-between">
               <span className="font-mono text-[10px] tracking-widest text-primary uppercase">
                 {mode === "generalist" ? "about_me" : `about_${mode.replace("-", "_")}`}
@@ -59,7 +60,7 @@ export function AboutSection({ index }: AboutSectionProps) {
                 </p>
               ))}
             </div>
-          </motion.div>
+          </GlowCard>
 
           {/* Education */}
           <motion.div variants={sectionVariants} className="flex flex-col gap-4">
