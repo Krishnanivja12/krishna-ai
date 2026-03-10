@@ -100,6 +100,30 @@ export const projects: Project[] = [
 		mode: ["ai-ml"],
 	},
 	{
+		title: "Neo-Atom: A Local Agentic AI Assistant",
+		brief: "Neo-Atom is a sophisticated, privacy-first AI assistant engineered to bridge the gap between local LLMs and Windows OS automation. Leveraging an agentic tool-calling framework, it processes natural language through high-speed local STT and TTS engines to execute complex system commands, web searches, and safe mathematical computations autonomously.",
+		description: [
+			"Neo-Atom represents a fundamental shift from traditional keyword-based automation to a dynamic, agentic architecture. Unlike standard assistants that rely on rigid 'if-then' logic, Neo-Atom utilizes a reasoning-first approach where a local Large Language Model (LLM) determines the best course of action. By integrating an asynchronous event loop with a modular tool registry, the assistant can contextually decide when to browse the web, launch whitelisted applications, or query system resources without human intervention or manual routing.",
+			"The technical core of the project focuses on performance and total privacy. By running Ollama locally, the system ensures that no conversation data ever leaves the machine. To achieve a seamless user experience, I implemented high-speed Speech-to-Text using Faster-Whisper and natural-sounding, offline Text-to-Speech via Piper. These modules are orchestrated through an advanced LangChain agentic loop that handles multi-step tool execution, allowing the assistant to chain tasks together—such as searching for a video and opening the browser simultaneously.",
+			"The final result is a robust, extensible desktop companion that demonstrates the power of local AI orchestration. Beyond simple tasks, the architecture supports complex memory management and conversation history trimming to maintain low latency during extended interactions. This project serves as a showcase for modern AI software engineering, emphasizing safe OS integration, asynchronous Python patterns, and the deployment of state-of-the-art open-source models within a private hardware environment.",
+			"Ultimately, Neo-Atom transforms a standard PC into a truly intelligent, voice-responsive workspace capable of autonomous digital labor.",
+		],
+		tags: [
+			"Python",
+			"Ollama",
+			"LangChain",
+			"Faster-Whisper",
+			"Piper",
+			"Asynchronous Programming",
+			"Agentic Workflows",
+			"Windows API",
+			"LLM Orchestration",
+			"Git",
+		],
+		github: "https://github.com/Viraj-Mavani/neo-atom",
+		mode: ["ai-ml"],
+	},
+	{
 		title: "ML-Powered Taxi Fare Prediction",
 		brief: "Engineered an advanced taxi fare prediction system using the New York City dataset as part of my Master’s AI coursework. I benchmarked various models, selecting LightGBM for its superior performance, achieving an 83.9% R² score. The project utilized Docker to automate travel distance and time extraction from complex map data.",
 		description: [

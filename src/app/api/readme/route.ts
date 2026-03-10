@@ -24,20 +24,22 @@ export async function GET(request: NextRequest) {
 
 	const [, owner, repo] = match;
 
-	// Try main branch first, fallback to master
+	// Try main branch first, fallback to master, and try different casing
 	for (const branch of ["main", "master"]) {
-		try {
-			const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`;
-			const res = await fetch(rawUrl, {
-				next: { revalidate: 3600 }, // Cache for 1 hour
-			});
+		for (const filename of ["README.md", "readme.md"]) {
+			try {
+				const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filename}`;
+				const res = await fetch(rawUrl, {
+					next: { revalidate: 3600 }, // Cache for 1 hour
+				});
 
-			if (res.ok) {
-				const markdown = await res.text();
-				return NextResponse.json({ markdown, owner, repo, branch });
+				if (res.ok) {
+					const markdown = await res.text();
+					return NextResponse.json({ markdown, owner, repo, branch });
+				}
+			} catch {
+				// Continue to next combination
 			}
-		} catch {
-			// Continue to next branch
 		}
 	}
 
