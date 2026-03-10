@@ -9,6 +9,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { AmbientCursor } from "@/components/ambient-cursor"
 import { PremiumBackground } from '@/components/premium-background'
+import { AccessibilityProvider } from "@/contexts/accessibility-context"
+import { AccessibilityMenu } from "@/components/accessibility-menu"
 
 import './globals.css'
 
@@ -41,13 +43,16 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<AmbientCursor />
-					<PremiumBackground />
-					<ModeProvider>
-						<ScrollArea className="h-screen w-full relative z-10">
-							{children}
-						</ScrollArea>
-					</ModeProvider>
+					<AccessibilityProvider>
+						<AmbientCursor />
+						<PremiumBackground />
+						<ModeProvider>
+							<ScrollArea className="h-screen w-full relative z-10">
+								{children}
+							</ScrollArea>
+						</ModeProvider>
+						<AccessibilityMenu />
+					</AccessibilityProvider>
 				</ThemeProvider>
 				<SpeedInsights />
 				<Analytics />

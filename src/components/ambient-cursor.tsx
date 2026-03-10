@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { motion, useMotionValue, useSpring } from "framer-motion"
+import { useAccessibility } from "@/contexts/accessibility-context"
 
 export function AmbientCursor() {
   const [isDesktop, setIsDesktop] = useState(false)
+  const { reducedMotion } = useAccessibility()
 
   const cursorX = useMotionValue(-400)
   const cursorY = useMotionValue(-400)
@@ -36,7 +38,7 @@ export function AmbientCursor() {
     }
   }, [cursorX, cursorY])
 
-  if (!isDesktop) return null
+  if (!isDesktop || reducedMotion) return null
 
   return (
     <div

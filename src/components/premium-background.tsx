@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useMotionValue, useSpring } from "framer-motion";
+import { useAccessibility } from "@/contexts/accessibility-context";
 
 // ─── Types ───────────────────────────────────────────────────
 interface Particle {
@@ -75,6 +76,7 @@ export function PremiumBackground() {
   const animFrameRef = useRef<number>(0);
   const explosionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [mounted, setMounted] = useState(false);
+  const { reducedMotion } = useAccessibility();
 
   // Mouse tracking with framer-motion springs
   const rawMouseX = useMotionValue(0);
@@ -180,7 +182,7 @@ export function PremiumBackground() {
 
   // ─── Main animation loop ─────────────────────────────────
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || reducedMotion) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -364,9 +366,9 @@ export function PremiumBackground() {
       window.removeEventListener("resize", onResize);
       if (explosionTimerRef.current) clearTimeout(explosionTimerRef.current);
     };
-  }, [mounted, handleResize, initParticles, scheduleNextExplosion, rawMouseX, rawMouseY, springX, springY]);
+  }, [mounted, reducedMotion, handleResize, initParticles, scheduleNextExplosion, rawMouseX, rawMouseY, springX, springY]);
 
-  if (!mounted) return null;
+  if (!mounted || reducedMotion) return null;
 
   return (
     <div

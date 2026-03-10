@@ -101,3 +101,20 @@
   z-index: 999;
   outline: 100vmax solid transparent;
 }
+
+/* ─── Accessibility Overrides ─────────────────────────────── */
+
+/* Smooth transition for text size changes */
+html {
+  transition: font-size 0.3s ease;
+}
+
+/* High Contrast: force muted-foreground to match foreground */
+html.a11y-high-contrast {
+  --muted-foreground: var(--foreground);
+}
+
+/* Large Text: bump base font from 16px → 18px */
+html.a11y-large-text {
+  font-size: 18px;
+}
