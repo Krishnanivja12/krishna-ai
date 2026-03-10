@@ -16,10 +16,10 @@ import {
   Lightbulb
 } from "lucide-react"
 import { education } from "@/lib/bio-data"
-import { BentoGallery } from "@/components/bento-gallery"
+import { BentoGallery } from "@/components/sections/bento-gallery"
 import { fadeUpVariant, sectionVariants, cardVariantRight } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
-import { Footer } from "@/components/footer"
+import { Footer } from "@/components/layout/footer"
 
 const intro = {
   title: "I'm a Full Stack AI Engineer who believes that the best code is written by those who never stop being students.",
@@ -70,7 +70,7 @@ const journey = [
 
 export function AboutContent() {
   const [isTypingComplete, setIsTypingComplete] = useState(false)
-  const [loadingDots, setLoadingDots] = useState("") 
+  const [loadingDots, setLoadingDots] = useState("")
   const isMobile = useIsMobile()
   const text = "> initiating background check"
 
@@ -86,153 +86,153 @@ export function AboutContent() {
 
   return (
     <>
-    <div className="mx-auto max-w-7xl px-4 pt-24 pb-16 lg:pt-28">
-      {/* Back link */}
-      <Link
-        href="/"
-        className="mb-8 inline-flex items-center gap-2 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        Back to Home
-      </Link>
+      <div className="mx-auto max-w-7xl px-4 pt-24 pb-16 lg:pt-28">
+        {/* Back link */}
+        <Link
+          href="/"
+          className="mb-8 inline-flex items-center gap-2 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Back to Home
+        </Link>
 
-      {/* Page header */}
-      <div className="mb-10 flex items-center gap-4">
-        <span className="font-mono text-2xl font-bold tracking-widest text-foreground md:text-3xl lg:text-4xl uppercase">
-          About Me
-        </span>
-        <div className="h-px flex-1 bg-border" aria-hidden="true" />
-      </div>
+        {/* Page header */}
+        <div className="mb-10 flex items-center gap-4">
+          <span className="font-mono text-2xl font-bold tracking-widest text-foreground md:text-3xl lg:text-4xl uppercase">
+            About Me
+          </span>
+          <div className="h-px flex-1 bg-border" aria-hidden="true" />
+        </div>
 
-      <div className="mt-2 mb-8 font-mono text-xs md:text-sm text-muted-foreground min-h-[24px]">
-        <span>
-          {text.split("").map((char, i) => (
-            <motion.span
-              key={i}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.05, delay: i * 0.03 }}
-              onAnimationComplete={() => {
-                if (i === text.length - 1) setIsTypingComplete(true)
-              }}
+        <div className="mt-2 mb-8 font-mono text-xs md:text-sm text-muted-foreground min-h-[24px]">
+          <span>
+            {text.split("").map((char, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.05, delay: i * 0.03 }}
+                onAnimationComplete={() => {
+                  if (i === text.length - 1) setIsTypingComplete(true)
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
+            <span>{loadingDots}</span>
+          </span>
+        </div>
+
+        {/* Content */}
+        {isTypingComplete && (
+          <>
+            {/* Gallery */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={fadeUpVariant}
             >
-              {char}
-            </motion.span>
-          ))}
-          <span>{loadingDots}</span>
-        </span>
-      </div>
+              <BentoGallery />
+            </motion.div>
 
-      {/* Content */}
-      {isTypingComplete && (
-        <>
-          {/* Gallery */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={fadeUpVariant}
-          >
-            <BentoGallery />
-          </motion.div>
-              
-          {/* Intro section */}
-          <motion.section 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={fadeUpVariant}
-            className="mb-16 grid gap-4 grid-cols-1 lg:grid-cols-4"
-          >
-            {/* Left Block: Intro Content */}
-            <div className="rounded-md border border-border bg-card lg:col-span-3 p-4 md:p-8 lg:p-10">
-              <span className="mb-4 inline-block font-mono text-[10px] tracking-widest text-primary uppercase">
-                who I am
-              </span>
-              <h1 className="mb-6 text-balance font-medium leading-tight tracking-tight text-foreground text-md md:text-2xl lg:text-3xl">
-                {intro.title}
-              </h1>
-              <div className="flex max-w-full flex-col gap-4 text-justify">
-                {intro.paragraphs.map((paragraph, index) => (
-                  <p key={index} className="text-xs md:text-base leading-relaxed text-muted-foreground">
-                    {paragraph}
-                  </p>
+            {/* Intro section */}
+            <motion.section
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={fadeUpVariant}
+              className="mb-16 grid gap-4 grid-cols-1 lg:grid-cols-4"
+            >
+              {/* Left Block: Intro Content */}
+              <div className="rounded-md border border-border bg-card lg:col-span-3 p-4 md:p-8 lg:p-10">
+                <span className="mb-4 inline-block font-mono text-[10px] tracking-widest text-primary uppercase">
+                  who I am
+                </span>
+                <h1 className="mb-6 text-balance font-medium leading-tight tracking-tight text-foreground text-md md:text-2xl lg:text-3xl">
+                  {intro.title}
+                </h1>
+                <div className="flex max-w-full flex-col gap-4 text-justify">
+                  {intro.paragraphs.map((paragraph, index) => (
+                    <p key={index} className="text-xs md:text-base leading-relaxed text-muted-foreground">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Block: Status & Location Cards */}
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:flex lg:flex-col">
+                {/* Card 2: Status */}
+                <div className="flex flex-col justify-center gap-4 rounded-md border border-border bg-card p-4 md:p-8 lg:p-6">
+                  <div className="flex items-center gap-3">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                    </span>
+                    <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
+                      Status
+                    </span>
+                  </div>
+                  <p className="text-sm font-medium">Available for Freelance & Full-time opportunities</p>
+                </div>
+
+                {/* Card 3: Location */}
+                <div className="flex flex-col justify-center gap-4 rounded-md border border-border bg-card p-4 md:p-8 lg:p-6">
+                  <div className="space-y-1">
+                    <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">Location</span>
+                    <p className="text-sm">London, ON, Canada</p>
+                  </div>
+                </div>
+              </div>
+            </motion.section>
+
+            {/* Journey / Philosophy */}
+            <motion.section
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={sectionVariants} // Controls the staggering of children
+              className="mb-16"
+            >
+              <div className="mb-10 flex items-center gap-4">
+                <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
+                  my journey
+                </span>
+                <div className="h-px flex-1 bg-border" aria-hidden="true" />
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-4">
+                {journey.map((item) => (
+                  <JourneyCard key={item.title} item={item} isMobile={isMobile} />
                 ))}
               </div>
-            </div>
-            
-            {/* Right Block: Status & Location Cards */}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:flex lg:flex-col">
-              {/* Card 2: Status */}
-              <div className="flex flex-col justify-center gap-4 rounded-md border border-border bg-card p-4 md:p-8 lg:p-6">
-                <div className="flex items-center gap-3">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                  </span>
-                  <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-                    Status
-                  </span>
-                </div>
-                <p className="text-sm font-medium">Available for Freelance & Full-time opportunities</p>
+            </motion.section>
+
+            {/* Education (detailed) */}
+            <motion.section
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={sectionVariants}
+            >
+              <div className="mb-10 flex items-center gap-4">
+                <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
+                  education
+                </span>
+                <div className="h-px flex-1 bg-border" aria-hidden="true" />
               </div>
 
-              {/* Card 3: Location */}
-              <div className="flex flex-col justify-center gap-4 rounded-md border border-border bg-card p-4 md:p-8 lg:p-6">
-                <div className="space-y-1">
-                  <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">Location</span>
-                  <p className="text-sm">London, ON, Canada</p>
-                </div>
+              <div className="flex flex-col gap-4">
+                {education.map((edu) => (
+                  <EducationCard key={edu.degree} edu={edu} isMobile={isMobile} />
+                ))}
               </div>
-            </div>
-          </motion.section>
-
-          {/* Journey / Philosophy */}
-          <motion.section 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={sectionVariants} // Controls the staggering of children
-            className="mb-16"
-          >
-            <div className="mb-10 flex items-center gap-4">
-              <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-                my journey
-              </span>
-              <div className="h-px flex-1 bg-border" aria-hidden="true" />
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-4">
-              {journey.map((item) => (
-                <JourneyCard key={item.title} item={item} isMobile={isMobile} />
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Education (detailed) */}
-          <motion.section 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={sectionVariants}
-          >
-            <div className="mb-10 flex items-center gap-4">
-              <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-                education
-              </span>
-              <div className="h-px flex-1 bg-border" aria-hidden="true" />
-            </div>
-
-            <div className="flex flex-col gap-4">
-              {education.map((edu) => (
-                <EducationCard key={edu.degree} edu={edu} isMobile={isMobile} />
-              ))}
-            </div>
-          </motion.section>
-        </>
-      )}
-    </div>
-    {isTypingComplete && <Footer />}
+            </motion.section>
+          </>
+        )}
+      </div>
+      {isTypingComplete && <Footer />}
     </>
   )
 }

@@ -7,8 +7,8 @@ import Link from "next/link"
 import { useMode } from "@/hooks/use-mode"
 import { sectionVariants, fadeUpVariant, cardVariantRight, cardVariantLeft } from "@/lib/animations"
 import { useProjectModal } from "@/hooks/use-project-modal"
-import { ProjectCard } from "@/components/project-card"
-import { ProjectDetailModal } from "@/components/project-detail-modal"
+import { ProjectCard } from "@/components/blocks/project-card"
+import { ProjectDetailModal } from "@/components/blocks/project-detail-modal"
 import { useAutoHighlight, useIsMobile } from "@/hooks/use-mobile-view-effect"
 import { useRef } from "react"
 
@@ -23,7 +23,7 @@ export function ProjectsSection({ index }: ProjectsSectionProps) {
   const viewAllRef = useRef<HTMLDivElement | null>(null)
   const isViewAllActive = useAutoHighlight(viewAllRef, isMobile)
 
-  const filteredProjects = projects.filter((project) => 
+  const filteredProjects = projects.filter((project) =>
     mode === "generalist" || project.mode.includes(mode)
   )
 
@@ -43,7 +43,7 @@ export function ProjectsSection({ index }: ProjectsSectionProps) {
 
         <h2 id="projects-heading" className="sr-only">Projects</h2>
 
-        <motion.div 
+        <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
@@ -61,7 +61,7 @@ export function ProjectsSection({ index }: ProjectsSectionProps) {
         </motion.div>
 
         {filteredProjects.length > 4 && (
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}

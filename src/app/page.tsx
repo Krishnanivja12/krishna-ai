@@ -1,12 +1,12 @@
-import { TopNav } from "@/components/top-nav"
-import { HeroBento } from "@/components/hero-bento"
-import { AboutSection } from "@/components/about-section"
-import { SkillsSection } from "@/components/skills-section"
-import { ExperienceSection } from "@/components/experience-section"
-import { ProjectsSection } from "@/components/projects-section"
-import { CertificatesSection } from "@/components/certificates-section"
-import { ServicesStrip } from "@/components/services-strip"
-import { Footer } from "@/components/footer"
+import { TopNav } from "@/components/layout/top-nav"
+import { HeroBento } from "@/components/sections/hero-bento"
+import { AboutSection } from "@/components/sections/about-section"
+import { SkillsSection } from "@/components/sections/skills-section"
+import { ExperienceSection } from "@/components/sections/experience-section"
+import { ProjectsSection } from "@/components/sections/projects-section"
+import { CertificatesSection } from "@/components/sections/certificates-section"
+import { ServicesStrip } from "@/components/sections/services-strip"
+import { Footer } from "@/components/layout/footer"
 
 export default function Page() {
   return (

@@ -6,8 +6,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ArrowLeft, ChevronDown } from "lucide-react"
 
 import { projects } from "@/lib/project-data"
-import { TopNav } from "@/components/top-nav"
-import { Footer } from "@/components/footer"
+import { TopNav } from "@/components/layout/top-nav"
+import { Footer } from "@/components/layout/footer"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { fadeUpVariant, sectionVariants, cardVariantRight, cardVariantLeft } from "@/lib/animations"
 import { useProjectModal } from "@/hooks/use-project-modal"
-import { ProjectCard } from "@/components/project-card"
-import { ProjectDetailModal } from "@/components/project-detail-modal"
+import { ProjectCard } from "@/components/blocks/project-card"
+import { ProjectDetailModal } from "@/components/blocks/project-detail-modal"
 
 const modeFilters = [
   { id: "all", label: "All" },
@@ -51,7 +51,7 @@ export function ProjectsPageContent() {
         </Link>
 
         {/* Page header */}
-        <motion.div 
+        <motion.div
           initial="hidden"
           animate="visible"
           variants={fadeUpVariant}
@@ -67,7 +67,7 @@ export function ProjectsPageContent() {
         </motion.div>
 
         {/* Mode filter bar */}
-        <motion.div 
+        <motion.div
           initial="hidden"
           animate="visible"
           variants={fadeUpVariant}
@@ -82,11 +82,10 @@ export function ProjectsPageContent() {
               <button
                 key={filter.id}
                 onClick={() => setActiveFilter(filter.id)}
-                className={`rounded-sm px-3 py-1.5 font-mono text-xs transition-all duration-200 ${
-                  activeFilter === filter.id
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`rounded-sm px-3 py-1.5 font-mono text-xs transition-all duration-200 ${activeFilter === filter.id
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+                  }`}
               >
                 {filter.label}
               </button>
@@ -102,12 +101,12 @@ export function ProjectsPageContent() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="font-mono text-xs">
                 {modeFilters.map((filter) => (
-                    <DropdownMenuItem 
-                      key={filter.id} 
-                      onClick={() => setActiveFilter(filter.id)}
-                      className={activeFilter === filter.id ? "text-primary focus:text-primary" : ""}>
-                      {filter.label}
-                    </DropdownMenuItem>
+                  <DropdownMenuItem
+                    key={filter.id}
+                    onClick={() => setActiveFilter(filter.id)}
+                    className={activeFilter === filter.id ? "text-primary focus:text-primary" : ""}>
+                    {filter.label}
+                  </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -115,7 +114,7 @@ export function ProjectsPageContent() {
         </motion.div>
 
         {/* Project list (Grid) */}
-        <motion.div 
+        <motion.div
           key={activeFilter}
           initial="hidden"
           animate="visible"

@@ -24,7 +24,7 @@ import {
 import { useMode } from "@/hooks/use-mode"
 import { SITE_CONFIG } from "@/config/site-config"
 import { SITE_METADATA } from "@/lib/site-metadata"
-import { socialLinks } from "@/components/footer"
+import { socialLinks } from "@/components/layout/footer"
 
 const exploreLinks = [
   { label: "Home", href: "/#home" },
@@ -56,7 +56,7 @@ export function TopNav() {
   const { theme, setTheme, resolvedTheme } = useTheme()
   const [open, setOpen] = useState(false)
   const [isOpen, setIsOpen] = useState(false);
-  const { mode: activeMode, setMode: setActiveMode } = useMode() 
+  const { mode: activeMode, setMode: setActiveMode } = useMode()
 
   // --- Resume Tooltip Logic ---
   const [showResumeTooltip, setShowResumeTooltip] = useState(false)
@@ -160,11 +160,10 @@ export function TopNav() {
                       // if mode.id string doesn't perfectly match
                       // We can cast it: setActiveMode(mode.id as any) if needed
                       onClick={() => setActiveMode(mode.id as any)}
-                      className={`relative flex items-center gap-2 rounded-sm px-3 py-1.5 font-mono text-xs tracking-tight transition-all duration-200 ${
-                        activeMode === mode.id
+                      className={`relative flex items-center gap-2 rounded-sm px-3 py-1.5 font-mono text-xs tracking-tight transition-all duration-200 ${activeMode === mode.id
                           ? "bg-primary text-primary-foreground shadow-sm"
                           : "text-muted-foreground hover:text-foreground"
-                      }`}
+                        }`}
                     >
                       {activeMode === mode.id && (
                         <span
@@ -192,7 +191,7 @@ export function TopNav() {
 
           {/* Right box - Theme Toggle + Drawer Button */}
           <div className="flex items-center gap-1 rounded-md border border-border bg-card/80 px-2 py-1.5 backdrop-blur-xl">
-          
+
             {/* Dynamic Resume Button with Tooltip Wrapper */}
             <div className="relative flex items-center justify-center">
               {activeMode === "generalist" ? (
@@ -286,10 +285,9 @@ export function TopNav() {
               )}
 
               {/* Mobile Tooltip - Shows only on initial load */}
-              <div 
-                className={`absolute top-full mt-3 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-primary text-primary-foreground text-[10px] font-mono font-medium rounded shadow-lg pointer-events-none transition-opacity duration-300 sm:hidden ${
-                  showResumeTooltip ? "opacity-100" : "opacity-0"
-                }`}
+              <div
+                className={`absolute top-full mt-3 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-primary text-primary-foreground text-[10px] font-mono font-medium rounded shadow-lg pointer-events-none transition-opacity duration-300 sm:hidden ${showResumeTooltip ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-primary"></div>
                 Resume
@@ -310,7 +308,7 @@ export function TopNav() {
                   initial={{ y: 20, opacity: 0, rotate: -45 }}
                   animate={{ y: 0, opacity: 1, rotate: 0 }}
                   exit={{ y: -20, opacity: 0, rotate: 45 }}
-                  transition={{type: "spring", stiffness: 300, damping: 20}}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   className="flex items-center justify-center"
                 >
                   {theme === "dark" ? (

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { TopNav } from "@/components/top-nav"
+import { TopNav } from "@/components/layout/top-nav"
 import { AboutContent } from "./about-content"
 
 export const metadata: Metadata = {

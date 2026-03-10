@@ -4,15 +4,15 @@ import { useRef, useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { TerminalCard } from "./terminal-card"
-import { TechTicker } from "./tech-ticker"
+import { TerminalCard } from "../blocks/terminal-card"
+import { TechTicker } from "../blocks/tech-ticker"
 import { useMode } from "@/hooks/use-mode"
 import { HeroContent } from "@/lib/bio-data"
 import { sectionVariants, cardVariantUp, cardVariantLeft, cardVariantRight, cardVariantDown } from "@/lib/animations"
 import { useAutoHighlight, useIsMobile } from "@/hooks/use-mobile-view-effect"
-import { DiaText } from "./animations/text/dia-text";
-import { TextBlurIn } from "./animations/text/blur-in";
-import { MagneticButton } from "./magnetic-button";
+import { DiaText } from "../animations/text/dia-text";
+import { TextBlurIn } from "../animations/text/blur-in";
+import { MagneticButton } from "../blocks/magnetic-button";
 
 interface HeroBentoProps {
   index: number
@@ -53,13 +53,13 @@ export function HeroBento({ index }: HeroBentoProps) {
           index
         </span>
         <div className="h-px flex-1 bg-border" aria-hidden="true" />
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground">
-            {String(index).padStart(2, "0")}
-          </span>
+        <span className="font-mono text-[10px] tracking-widest text-muted-foreground">
+          {String(index).padStart(2, "0")}
+        </span>
       </div>
 
       {/* Bento Grid */}
-      <motion.div 
+      <motion.div
         initial="hidden"
         animate="visible"
         variants={sectionVariants}
@@ -94,7 +94,7 @@ export function HeroBento({ index }: HeroBentoProps) {
                 }}
                 layout
               >
-                <motion.span 
+                <motion.span
                   layout
                   initial={{ opacity: 0, filter: "blur(10px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
@@ -113,7 +113,7 @@ export function HeroBento({ index }: HeroBentoProps) {
                     </motion.span>
                   )}
                 </AnimatePresence>
-                
+
                 <AnimatePresence>
                   {shouldExpand && isInitialAnimationComplete && (
                     <motion.span
@@ -128,7 +128,7 @@ export function HeroBento({ index }: HeroBentoProps) {
                   )}
                 </AnimatePresence>
 
-                <motion.span 
+                <motion.span
                   layout
                   initial={{ opacity: 0, filter: "blur(10px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
@@ -147,7 +147,7 @@ export function HeroBento({ index }: HeroBentoProps) {
                     </motion.span>
                   )}
                 </AnimatePresence>
-                <motion.span 
+                <motion.span
                   layout
                   initial={{ opacity: 0, filter: "blur(10px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
@@ -161,7 +161,7 @@ export function HeroBento({ index }: HeroBentoProps) {
             </TextBlurIn>
           </div>
 
-          <motion.div 
+          <motion.div
             className="mt-8">
             <MagneticButton>
               <Link
