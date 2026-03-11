@@ -129,7 +129,7 @@ export function TopNav() {
                   src={SITE_METADATA.logo}
                   alt="Logo"
                   fill
-                  className="object-cover"
+                  className="object-cover invert dark:invert-0"
                 />
               </div>
               <span className="hidden font-mono text-xs tracking-wider text-foreground sm:block">
@@ -161,8 +161,8 @@ export function TopNav() {
                       // We can cast it: setActiveMode(mode.id as any) if needed
                       onClick={() => setActiveMode(mode.id as any)}
                       className={`relative flex items-center gap-2 rounded-sm px-3 py-1.5 font-mono text-xs tracking-tight transition-all duration-200 ${activeMode === mode.id
-                          ? "bg-primary text-primary-foreground shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
                         }`}
                     >
                       {activeMode === mode.id && (
@@ -342,7 +342,7 @@ export function TopNav() {
                         src={SITE_METADATA.logo}
                         alt="Logo"
                         fill
-                        className="object-cover"
+                        className="object-cover invert dark:invert-0"
                       />
                     </div>
                     Navigation
