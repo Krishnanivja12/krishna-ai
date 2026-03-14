@@ -1,16 +1,15 @@
 import React from "react"
 import type { Metadata, Viewport } from 'next'
-import { Poppins, JetBrains_Mono } from 'next/font/google'
+import { JetBrains_Mono } from 'next/font/google'
 import { ThemeProvider } from "@/components/layout/theme-provider"
-import { ModeProvider } from "@/hooks/use-mode"
 import { SITE_METADATA } from "@/lib/site-metadata"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { AmbientCursor } from "@/components/layout/ambient-cursor"
 import { PremiumBackground } from '@/components/layout/premium-background'
 import { AccessibilityProvider } from "@/contexts/accessibility-context"
 import { AccessibilityMenu } from "@/components/blocks/accessibility-menu"
+import { ClientShell } from "@/components/layout/client-shell"
 import localFont from 'next/font/local'
 
 import './globals.css'
@@ -134,11 +133,9 @@ export default function RootLayout({
 					<AccessibilityProvider>
 						<AmbientCursor />
 						<PremiumBackground />
-						<ModeProvider>
-							<ScrollArea className="h-screen w-full relative z-10">
-								{children}
-							</ScrollArea>
-						</ModeProvider>
+            <ClientShell>
+							{children}
+            </ClientShell>
 						<AccessibilityMenu />
 					</AccessibilityProvider>
 				</ThemeProvider>

@@ -3,13 +3,14 @@
 import { memo, useMemo, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { skillCategories } from "@/lib/bio-data"
-import { sectionVariants, cardVariantUp } from "@/lib/animations"
+import { cinematicReveal, staggerContainer } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 import * as SiIcons from "react-icons/si";
 import { LuHash, LuWorkflow, LuDatabaseZap, LuNetwork } from "react-icons/lu";
 import { FaJava } from "react-icons/fa";
 import { VscAzure } from "react-icons/vsc";
 import { PiFileSql } from "react-icons/pi";
+import { SectionHeader } from "../layout/section-header"
 
 interface SkillsSectionProps {
   index: number
@@ -89,24 +90,19 @@ export function SkillsSection({ index }: SkillsSectionProps) {
   return (
     <section id="skills" className="border-t border-border" aria-labelledby="skills-heading">
       <div className="mx-auto max-w-7xl px-4 py-16 lg:py-24">
-        {/* Section label */}
-        <div className="mb-12 flex items-center gap-4">
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-            skills & technologies
-          </span>
-          <div className="h-px flex-1 bg-border" aria-hidden="true" />
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground">
-            {String(index).padStart(2, "0")}
-          </span>
-        </div>
+        <SectionHeader 
+          index={index} 
+          title="Skills & Technologies" 
+          subtitle="Expertise across the full stack, with a focus on AI/ML and data-driven architectures."
+        />
 
         <h2 id="skills-heading" className="sr-only">Skills & Technologies</h2>
 
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={sectionVariants}
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
           className="grid gap-px border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
           {skillCategories.map((category) => (
             <SkillCard key={category.label} category={category} isMobile={isMobile} />
@@ -126,7 +122,7 @@ function SkillCard({ category, isMobile }: { category: typeof skillCategories[nu
   return (
     <motion.div
       ref={ref}
-      variants={cardVariantUp}
+      variants={cinematicReveal}
       onMouseEnter={() => !isMobile && setIsHovered(true)}
       onMouseLeave={() => !isMobile && setIsHovered(false)}
       className={`relative h-full bg-background lg:hover:z-10 ${isActive ? "z-10" : "z-0"}`}

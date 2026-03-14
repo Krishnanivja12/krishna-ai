@@ -33,8 +33,11 @@ export const ProjectCard = memo(function ProjectCard({ project, index, onClick, 
       ref={ref}
       variants={variants}
       onClick={handleClick}
-      className={`group relative flex flex-col gap-5 rounded-md border bg-card px-4 py-6 md:p-4 md:py-6 lg:p-8 cursor-pointer transition-all duration-500 ease-out lg:hover:border-primary/40 lg:hover:shadow-xl lg:hover:shadow-primary/5 lg:hover:-translate-y-1 ${isActive ? "border-primary/40 shadow-xl shadow-primary/5 -translate-y-1" : "border-border shadow-none translate-y-0"}`}
+      className={`group relative flex flex-col gap-5 rounded-md border bg-card/40 backdrop-blur-md px-4 py-6 md:p-4 md:py-6 lg:p-8 cursor-pointer transition-all duration-500 ease-out lg:hover:border-primary/40 lg:hover:shadow-xl lg:hover:shadow-primary/5 lg:hover:-translate-y-1 ${isActive ? "border-primary/40 shadow-xl shadow-primary/5 -translate-y-1" : "border-border shadow-none translate-y-0"}`}
     >
+      <div className="absolute top-1 right-2 opacity-5 pointer-events-none transition-opacity group-hover:opacity-20">
+        <span className="font-mono text-[8px] tracking-widest">[ PRJ_{String(index + 1).padStart(2, "0")} ]</span>
+      </div>
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex flex-col gap-1">

@@ -53,7 +53,7 @@ export function TerminalCard() {
   }
 
   return (
-    <GlowCard className="flex h-full flex-col overflow-hidden rounded-md border border-border bg-card">
+    <GlowCard className="flex h-full flex-col overflow-hidden rounded-md border border-border bg-card/40 backdrop-blur-md">
       <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
         <div className="flex gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" aria-hidden="true" />

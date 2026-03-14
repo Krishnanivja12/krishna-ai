@@ -4,8 +4,9 @@ import { useRef } from "react"
 import { motion } from "framer-motion"
 import { Briefcase, Calendar, MapPin } from "lucide-react"
 import { experiences } from "@/lib/bio-data"
-import { sectionVariants, cardVariantUp } from "@/lib/animations"
+import { cinematicReveal, staggerContainer } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
+import { SectionHeader } from "../layout/section-header"
 
 interface ExperienceSectionProps {
   index: number
@@ -17,24 +18,19 @@ export function ExperienceSection({ index }: ExperienceSectionProps) {
   return (
     <section id="experience" className="border-t border-border" aria-labelledby="experience-heading">
       <div className="mx-auto max-w-7xl px-4 py-16 lg:py-24">
-        {/* Section label */}
-        <div className="mb-12 flex items-center gap-4">
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-            work experience
-          </span>
-          <div className="h-px flex-1 bg-border" aria-hidden="true" />
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground">
-            {String(index).padStart(2, "0")}
-          </span>
-        </div>
+        <SectionHeader 
+          index={index} 
+          title="Work Experience" 
+          subtitle="A track record of delivering high-impact solutions across diverse technical landscapes."
+        />
 
         <h2 id="experience-heading" className="sr-only">Work Experience</h2>
 
         <motion.div 
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={sectionVariants}
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
           className="flex flex-col gap-4">
           {experiences.map((exp, index) => (
             <ExperienceCard key={exp.role} exp={exp} index={index} isMobile={isMobile} />
@@ -52,8 +48,8 @@ function ExperienceCard({ exp, index, isMobile }: { exp: typeof experiences[numb
   return (
     <motion.div
       ref={ref}
-      variants={cardVariantUp}
-      className={`group relative flex flex-col gap-6 rounded-md border bg-card px-4 py-6 md:p-6 lg:p-8 transition-all duration-500 ease-out lg:hover:border-primary/30 lg:hover:-translate-y-1 lg:hover:shadow-lg lg:hover:shadow-primary/5 ${isActive ? "border-primary/30 -translate-y-1 shadow-lg shadow-primary/5" : "border-border translate-y-0 shadow-none"}`}
+      variants={cinematicReveal}
+      className={`group relative flex flex-col gap-6 rounded-md border bg-card/40 backdrop-blur-md px-4 py-6 md:p-6 lg:p-8 transition-all duration-500 ease-out lg:hover:border-primary/30 lg:hover:-translate-y-1 lg:hover:shadow-lg lg:hover:shadow-primary/5 ${isActive ? "border-primary/30 -translate-y-1 shadow-lg shadow-primary/5" : "border-border translate-y-0 shadow-none"}`}
     >
       {/* Top row */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

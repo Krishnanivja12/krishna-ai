@@ -59,3 +59,30 @@ export const cardVariantRight: Variants = {
     transition: { duration: 0.5, ease: "easeOut" }
   }
 }
+
+export const cinematicReveal: Variants = {
+  hidden: { opacity: 0, y: 40, filter: "blur(10px)", scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 20,
+      mass: 1
+    }
+  }
+}
+
+export const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+}

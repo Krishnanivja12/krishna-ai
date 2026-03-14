@@ -1,7 +1,5 @@
 "use client"
 
-import { GlowCard } from "./glow-card"
-
 const techStack = [
   "React",
   "Next.js",
@@ -21,9 +19,9 @@ const techStack = [
 
 export function TechTicker() {
   return (
-    <GlowCard className="flex h-full flex-col overflow-hidden rounded-md border border-border bg-card">
-      <div className="flex items-center border-b border-border px-4 py-2.5">
-        <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
+    <div className="flex h-full w-full flex-col overflow-hidden"> {/*TODO: Since we removed GlowCard from here we need to add GlowCard somewhere fot the glow effect in bento  {/* Card 4 - Tech Stack Ticker (Small, Bottom Center) */}
+      <div className="flex items-center pt-4">
+        <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase opacity-60">
           tech_stack
         </span>
       </div>
@@ -32,30 +30,13 @@ export function TechTicker() {
           {[...techStack, ...techStack].map((tech, i) => (
             <span
               key={`${tech}-${i}`}
-              className="inline-flex items-center rounded-sm border border-border px-2.5 py-1 font-mono text-[10px] text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
+              className="inline-flex items-center rounded-sm border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
             >
               {tech}
             </span>
           ))}
         </div>
       </div>
-{/* 
-      <style jsx>{`
-        @keyframes ticker {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .animate-ticker {
-          animation: ticker 20s linear infinite;
-        }
-        .animate-ticker:hover {
-          animation-play-state: paused;
-        }
-      `}</style> */}
-    </GlowCard>
+    </div>
   )
 }
