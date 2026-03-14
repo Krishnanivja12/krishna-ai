@@ -110,7 +110,11 @@
 /* ─── Accessibility Overrides ─────────────────────────────── */
 
 /* Smooth transition for text size changes */
-html {
+/* Prevents browser's native anchor jump from shifting the root UI shell */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
   transition: font-size 0.3s ease;
 }
 

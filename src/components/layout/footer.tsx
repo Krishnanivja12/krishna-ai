@@ -38,7 +38,7 @@ export function Footer() {
 
   return (
     <footer id="contact" className="border-t border-border" role="contentinfo">
-      <div className="mx-auto max-w-7xl px-4 py-12">
+      <div className="mx-auto max-w-7xl px-4 pt-[5.5rem] pb-32">
         <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
 
           <motion.div

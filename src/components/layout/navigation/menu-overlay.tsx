@@ -41,6 +41,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   const { setTheme, resolvedTheme } = useTheme()
   const { mode: activeMode, setMode: setActiveMode } = useMode()
   const [showResumes, setShowResumes] = useState(false)
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null)
 
   const toggleTheme = (e: React.MouseEvent) => {
     const newTheme = resolvedTheme === "dark" ? "light" : "dark"
@@ -85,6 +86,39 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
 
   const currentResume = RESUMES.find(r => r.id === (activeMode === "ai-ml" ? "data" : activeMode)) || RESUMES[0]
 
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    const isAnchor = href.startsWith("#") || href.startsWith("/#")
+    const targetPathname = href.split("#")[0].replace("/", "") || "home"
+    const currentPathname = window.location.pathname.replace("/", "") || "home"
+
+    // If it's a section on the same page
+    if (isAnchor && (targetPathname === currentPathname || (targetPathname === "home" && currentPathname === ""))) {
+      e.preventDefault()
+      const targetId = href.includes("#") ? `#${href.split("#")[1]}` : "#home"
+      const targetElement = document.querySelector(targetId)
+      const viewport = document.querySelector('[data-radix-scroll-area-viewport]')
+
+      onClose()
+
+      // Wait for menu exit animation to complete before scrolling
+      setTimeout(() => {
+        if (viewport && targetElement) {
+          // Manual scroll on the Radix viewport to avoid browser anchor-snap conflicts
+          const targetOffset = (targetElement as HTMLElement).offsetTop
+          viewport.scrollTo({ top: targetOffset, behavior: "smooth" })
+        } else if (viewport && targetId === "#home") {
+          viewport.scrollTo({ top: 0, behavior: "smooth" })
+        } else if (targetElement) {
+          // Fallback if ScrollArea is not used (e.g. on simpler pages)
+          targetElement.scrollIntoView({ behavior: "smooth" })
+        }
+      }, 400)
+    } else {
+      // Regular page navigation
+      onClose()
+    }
+  }
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -106,20 +140,57 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                 01. Explore
               </motion.span>
               <nav className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-                {exploreLinks.map((link, i) => (
-                  <motion.div key={link.label} variants={itemVariants}>
-                    <Link
-                      href={link.href}
-                      onClick={onClose}
-                      className={`group flex items-center gap-4 py-2 font-mono text-xl md:text-2xl text-foreground/80 transition-all px-4 rounded-md -ml-4 ${link.color}`}
-                    >
-                      <span className="text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                        {"//"}
-                      </span>
-                      {link.label}
-                    </Link>
-                  </motion.div>
-                ))}
+                {exploreLinks.map((link, i) => {
+                  const isAnchor = link.href.includes("#")
+                  const routeLabel = isAnchor 
+                    ? `#${link.href.split("#")[1]}` 
+                    : link.href.startsWith("/") ? link.href : `/${link.href}`
+
+                  return (
+                    <motion.div key={link.label} variants={itemVariants}>
+                      <Link
+                        href={link.href}
+                        onMouseEnter={() => setHoveredLink(link.label)}
+                        onMouseLeave={() => setHoveredLink(null)}
+                        onClick={(e) => handleLinkClick(e, link.href)}
+                        className={`group relative flex items-center justify-between py-2 font-mono text-xl md:text-2xl text-foreground/80 transition-all px-4 rounded-md -ml-4 ${link.color}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <span className="text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                            {"//"}
+                          </span>
+                          {link.label}
+                        </div>
+
+                        {/* Premium Route Indicator */}
+                        <div className="flex items-center gap-4 overflow-hidden">
+                          {/* Static version for Mobile/Tab (Subtle/Faint) */}
+                          <div className="md:hidden font-mono text-[8px] tracking-[0.1em] opacity-[0.25] dark:opacity-[0.15] uppercase italic pr-2">
+                            {routeLabel}
+                          </div>
+
+                          {/* Animated version for Desktop */}
+                          <div className="hidden md:flex justify-end min-w-[80px]">
+                            <AnimatePresence mode="wait">
+                              {hoveredLink === link.label && (
+                                <motion.span 
+                                  key="indicator"
+                                  initial={{ y: "100%", opacity: 0, filter: "blur(4px)" }}
+                                  animate={{ y: 0, opacity: 0.6, filter: "blur(0px)" }}
+                                  exit={{ y: "-100%", opacity: 0, filter: "blur(4px)" }}
+                                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                  className="block font-mono text-[9px] tracking-[0.2em] text-muted-foreground uppercase italic"
+                                >
+                                  {(link.href.startsWith("#") || link.href.startsWith("/#")) ? "Section" : "Page"}
+                                </motion.span>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  )
+                })}
               </nav>
             </div>
 
