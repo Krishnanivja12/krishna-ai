@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
@@ -14,17 +14,55 @@ export function Navigation() {
   const toggleOpen = useCallback(() => setIsOpen((prev) => !prev), [])
   
   useScrollLock(isOpen)
+  
+  // Double-click/tap handler for the entire window
+  useEffect(() => {
+    const handleDoubleClick = (e: MouseEvent | TouchEvent) => {
+      // Don't trigger if it's a click on an interactive element
+      const target = e.target as HTMLElement
+      const isInteractive = target.closest('button, a, input, [role="button"]')
+      
+      if (!isInteractive) {
+        toggleOpen()
+      }
+    }
+
+    window.addEventListener("dblclick", handleDoubleClick)
+    return () => window.removeEventListener("dblclick", handleDoubleClick)
+  }, [toggleOpen])
+
+  // Browser "Back" button support to close menu
+  useEffect(() => {
+    if (isOpen) {
+      // Push a new state to history when menu opens
+      window.history.pushState({ menuOpen: true }, "")
+    }
+
+    const handlePopState = (e: PopStateEvent) => {
+      if (isOpen) {
+        e.preventDefault()
+        setIsOpen(false)
+      }
+    }
+
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
+  }, [isOpen])
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-[100] pointer-events-none">
+      <header className="fixed top-0 left-0 right-0 z-[160] pointer-events-none">
         <div className="mx-auto max-w-7xl px-4 py-4 md:py-8 flex items-center justify-between pointer-events-auto">
           
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            animate={{ 
+              opacity: isOpen ? 0 : 1, 
+              x: isOpen ? -20 : 0 
+            }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className={isOpen ? "pointer-events-none" : ""}
           >
             <Link 
               href="/" 

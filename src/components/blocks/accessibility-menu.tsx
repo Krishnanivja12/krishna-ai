@@ -5,11 +5,30 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Accessibility, Monitor, Contrast, Type } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useAccessibility } from "@/contexts/accessibility-context";
+import { usePathname } from "next/navigation"; // Not used here directly but good for context if needed
 
 export function AccessibilityMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // We need to know if the main navigation is open. 
+  // Since Navigation and AccessibilityMenu are siblings in RootLayout, 
+  // we might need a shared state or just check for the presence of the menu overlay class/id.
+  // However, simpler is to check if the scroll is locked or if the overlay is in DOM.
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
+  useEffect(() => {
+    const checkNav = () => {
+      const overlay = document.querySelector('[data-nav-overlay]');
+      setIsNavOpen(!!overlay);
+    };
+
+    const observer = new MutationObserver(checkNav);
+    observer.observe(document.body, { childList: true, subtree: true });
+    
+    return () => observer.disconnect();
+  }, []);
 
   const {
     reducedMotion,
@@ -136,16 +155,23 @@ export function AccessibilityMenu() {
       </AnimatePresence>
 
       {/* ─── Floating Trigger Button ──────────────────────── */}
-      <motion.button
-        onClick={() => setIsOpen((v) => !v)}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.94 }}
-        className="group flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card/80 backdrop-blur-md shadow-lg shadow-black/10 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        aria-label="Toggle accessibility settings"
-        aria-expanded={isOpen}
-      >
-        <Accessibility className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
-      </motion.button>
+      <AnimatePresence>
+        {!isNavOpen && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={() => setIsOpen((v) => !v)}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.94 }}
+            className="group flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card/80 backdrop-blur-md shadow-lg shadow-black/10 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            aria-label="Toggle accessibility settings"
+            aria-expanded={isOpen}
+          >
+            <Accessibility className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

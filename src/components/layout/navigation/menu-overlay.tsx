@@ -127,7 +127,8 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
           animate="opened"
           exit="closed"
           variants={overlayVariants}
-          className="fixed inset-0 z-[90] flex flex-col bg-background/95 backdrop-blur-2xl px-6 py-24 md:px-20 md:py-32 overflow-y-auto"
+          data-nav-overlay
+          className="fixed inset-0 z-[150] flex flex-col bg-background/80 backdrop-blur-[40px] px-6 py-24 md:px-20 md:py-32 overflow-y-auto border-b border-border/50 shadow-2xl"
         >
           <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-row gap-12 lg:gap-32">
 

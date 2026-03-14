@@ -73,13 +73,26 @@ export function AboutContent() {
   const [loadingDots, setLoadingDots] = useState("")
   const isMobile = useIsMobile()
   const text = "> initiating background check"
+  const [skipAnimation, setSkipAnimation] = useState(false)
+
+  useEffect(() => {
+    // Check if user has seen animation before
+    const hasSeen = localStorage.getItem("has-seen-about-animation")
+    if (hasSeen) {
+      setSkipAnimation(true)
+      setIsTypingComplete(true)
+    } else {
+      // Mark as seen for next time
+      localStorage.setItem("has-seen-about-animation", "true")
+    }
+  }, [])
 
   useEffect(() => {
     if (!isTypingComplete) return;
 
     const interval = setInterval(() => {
       setLoadingDots((prev) => (prev.length >= 3 ? "" : prev + "."))
-    }, 300) // delay
+    }, 200) // faster delay
 
     return () => clearInterval(interval)
   }, [isTypingComplete])
@@ -104,24 +117,26 @@ export function AboutContent() {
           <div className="h-px flex-1 bg-border" aria-hidden="true" />
         </div>
 
-        <div className="mt-2 mb-8 font-mono text-xs md:text-sm text-muted-foreground min-h-[24px]">
-          <span>
-            {text.split("").map((char, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.05, delay: i * 0.03 }}
-                onAnimationComplete={() => {
-                  if (i === text.length - 1) setIsTypingComplete(true)
-                }}
-              >
-                {char}
-              </motion.span>
-            ))}
-            <span>{loadingDots}</span>
-          </span>
-        </div>
+        {!skipAnimation && (
+          <div className="mt-2 mb-8 font-mono text-xs md:text-sm text-muted-foreground min-h-[24px]">
+            <span>
+              {text.split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.03, delay: i * 0.02 }} // faster typing
+                  onAnimationComplete={() => {
+                    if (i === text.length - 1) setIsTypingComplete(true)
+                  }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+              <span>{loadingDots}</span>
+            </span>
+          </div>
+        )}
 
         {/* Content */}
         {isTypingComplete && (
