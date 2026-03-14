@@ -1,0 +1,274 @@
+"use client"
+
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link"
+import { useTheme } from "next-themes"
+import { flushSync } from "react-dom"
+import { Sun, Moon, FileText, Download, ChevronRight } from "lucide-react"
+import { useMode } from "@/hooks/use-mode"
+import { exploreLinks, modes, RESUMES } from "@/config/navigation-data"
+import { socialLinks } from "@/components/layout/footer"
+
+interface MenuOverlayProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+const overlayVariants = {
+  closed: {
+    opacity: 0,
+    transition: {
+      staggerChildren: 0.05,
+      staggerDirection: -1,
+    }
+  },
+  opened: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    }
+  }
+}
+
+const itemVariants = {
+  closed: { y: 20, opacity: 0 },
+  opened: { y: 0, opacity: 1 }
+}
+
+export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
+  const { setTheme, resolvedTheme } = useTheme()
+  const { mode: activeMode, setMode: setActiveMode } = useMode()
+  const [showResumes, setShowResumes] = useState(false)
+
+  const toggleTheme = (e: React.MouseEvent) => {
+    const newTheme = resolvedTheme === "dark" ? "light" : "dark"
+
+    if (!document.startViewTransition) {
+      setTheme(newTheme)
+      return
+    }
+
+    const x = e.clientX
+    const y = e.clientY
+    const endRadius = Math.hypot(
+      Math.max(x, innerWidth - x),
+      Math.max(y, innerHeight - y)
+    )
+
+    const transition = document.startViewTransition(() => {
+      flushSync(() => {
+        setTheme(newTheme)
+      })
+    })
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ]
+
+      document.documentElement.animate(
+        {
+          clipPath: clipPath,
+          filter: ["blur(20px)", "blur(0px)"],
+        },
+        {
+          duration: 600,
+          easing: "ease-in-out",
+          pseudoElement: "::view-transition-new(root)",
+        }
+      )
+    })
+  }
+
+  const currentResume = RESUMES.find(r => r.id === (activeMode === "ai-ml" ? "data" : activeMode)) || RESUMES[0]
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial="closed"
+          animate="opened"
+          exit="closed"
+          variants={overlayVariants}
+          className="fixed inset-0 z-[90] flex flex-col bg-background/95 backdrop-blur-2xl px-6 py-24 md:px-20 md:py-32 overflow-y-auto"
+        >
+          <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-row gap-12 lg:gap-32">
+
+            {/* Left: Primary Links */}
+            <div className="flex-1">
+              <motion.span
+                variants={itemVariants}
+                className="mb-8 block font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase"
+              >
+                01. Explore
+              </motion.span>
+              <nav className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                {exploreLinks.map((link, i) => (
+                  <motion.div key={link.label} variants={itemVariants}>
+                    <Link
+                      href={link.href}
+                      onClick={onClose}
+                      className={`group flex items-center gap-4 py-2 font-mono text-xl md:text-2xl text-foreground/80 transition-all px-4 rounded-md -ml-4 ${link.color}`}
+                    >
+                      <span className="text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                        {"//"}
+                      </span>
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+            </div>
+
+            {/* Right: Controls & Context */}
+            <div className="w-full lg:w-80 flex flex-col gap-12">
+
+              {/* Mode Selection */}
+              <motion.div variants={itemVariants}>
+                <div className="mb-6 flex items-center justify-between">
+                  <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                    02. Perspective
+                  </span>
+                  <span className="rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[8px] tracking-widest text-primary uppercase animate-pulse">
+                    Coming Soon
+                  </span>
+                </div>
+                <div className="flex flex-col gap-2 opacity-50 grayscale pointer-events-none">
+                  {modes.map((mode) => (
+                    <button
+                      key={mode.id}
+                      onClick={() => setActiveMode(mode.id as any)}
+                      className={`flex items-center justify-between rounded-sm border border-border px-4 py-3 font-mono text-xs transition-all ${activeMode === mode.id
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-secondary/40 text-muted-foreground hover:border-primary/50"
+                        }`}
+                    >
+                      {mode.label}
+                      {activeMode === mode.id && <ChevronRight className="h-3 w-3" />}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Quick Actions */}
+              <motion.div variants={itemVariants} className="flex flex-col gap-6">
+                <div>
+                  <span className="mb-4 block font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                    03. Actions
+                  </span>
+                  <div className="relative">
+                    <div className="flex flex-row gap-2">
+                      <button
+                        onClick={toggleTheme}
+                        className="flex-1 flex items-center justify-center gap-2 rounded-sm border border-border bg-secondary/40 py-3 font-mono text-xs text-foreground hover:border-primary transition-colors group overflow-hidden"
+                      >
+                        <div className="relative h-4 w-4">
+                          <AnimatePresence mode="wait">
+                            <motion.div
+                              key={resolvedTheme}
+                              initial={{ y: 20, opacity: 0, rotate: -45 }}
+                              animate={{ y: 0, opacity: 1, rotate: 0 }}
+                              exit={{ y: -20, opacity: 0, rotate: 45 }}
+                              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                              className="absolute inset-0 flex items-center justify-center"
+                            >
+                              {resolvedTheme === "dark" ? (
+                                <Sun size={14} className="text-amber-500 fill-amber-500/10" />
+                              ) : (
+                                <Moon size={14} className="text-blue-400 fill-blue-400/10" />
+                              )}
+                            </motion.div>
+                          </AnimatePresence>
+                        </div>
+                        Theme
+                      </button>
+
+                      <button
+                        onClick={() => setShowResumes(!showResumes)}
+                        className={`flex-1 flex items-center justify-center gap-2 rounded-sm border border-border py-3 font-mono text-xs transition-all ${showResumes ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/40 text-foreground hover:border-primary"
+                          }`}
+                      >
+                        <FileText size={14} className={showResumes ? "animate-bounce" : ""} />
+                        Resume
+                        <motion.div
+                          animate={{ rotate: showResumes ? 270 : 0 }}
+                          transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                        >
+                          <ChevronRight size={14} className="mt-0.5" />
+                        </motion.div>
+                      </button>
+                    </div>
+
+                    <AnimatePresence>
+                      {showResumes && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10, scale: 0.9, filter: "blur(10px)" }}
+                          animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                          exit={{ opacity: 0, y: 10, scale: 0.9, filter: "blur(10px)" }}
+                          className="absolute bottom-full right-0 mb-3 w-full lg:w-full md:w-[calc(50%-4px)] flex flex-col gap-1 rounded-sm border border-border bg-background/90 p-1 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] z-20"
+                        >
+                          <div className="px-3 py-2 border-b border-border/50 mb-1 text-right">
+                            <span className="font-mono text-[8px] tracking-widest text-muted-foreground uppercase block italic">Download Version</span>
+                          </div>
+                          {RESUMES.map((resume, idx) => (
+                            <motion.a
+                              key={resume.id}
+                              href={resume.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              initial={{ opacity: 0, x: 20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: idx * 0.05 }}
+                              className="flex items-center justify-end gap-3 rounded-sm px-3 py-2.5 font-mono text-[10px] hover:bg-primary hover:text-primary-foreground transition-all group text-right"
+                            >
+                              <ChevronRight size={10} className="-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-50 transition-all rotate-180" />
+                              <span className="flex items-center gap-2">
+                                {resume.label}
+                                <Download size={12} className="opacity-50 group-hover:opacity-100 transition-opacity" />
+                              </span>
+                            </motion.a>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+
+                {/* Socials */}
+                <div>
+                  <span className="mb-4 block font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                    04. Network
+                  </span>
+                  <div className="flex flex-wrap gap-3">
+                    {socialLinks.map((social, i) => (
+                      <motion.a
+                        key={social.label}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ y: -4, scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5 + i * 0.05 }}
+                        className={`group relative flex h-11 w-11 items-center justify-center rounded-sm border border-border bg-secondary/40 text-muted-foreground transition-all duration-300 ${social.color}`}
+                        aria-label={social.label}
+                      >
+                        <div className="absolute inset-0 rounded-xl bg-primary/0 group-hover:bg-primary/5 transition-colors" />
+                        <social.icon size={18} className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
+                      </motion.a>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}

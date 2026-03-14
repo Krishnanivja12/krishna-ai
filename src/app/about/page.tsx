@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { TopNav } from "@/components/layout/top-nav"
+import { Navigation } from "@/components/layout/navigation"
 import { AboutContent } from "./about-content"
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="min-h-screen">
-      <TopNav />
+      <Navigation />
       <main>
         <AboutContent />
       </main>

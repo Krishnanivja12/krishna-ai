@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ArrowLeft, ChevronDown } from "lucide-react"
 
 import { projects } from "@/lib/project-data"
-import { TopNav } from "@/components/layout/top-nav"
+import { Navigation } from "@/components/layout/navigation"
 import { Footer } from "@/components/layout/footer"
 import {
   DropdownMenu,
@@ -38,7 +38,7 @@ export function ProjectsPageContent() {
 
   return (
     <div className="min-h-screen">
-      <TopNav />
+      <Navigation />
 
       <main className="mx-auto max-w-7xl px-4 pt-24 pb-16 lg:pt-28">
         {/* Back link */}

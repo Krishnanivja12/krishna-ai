@@ -1,4 +1,4 @@
-import { TopNav } from "@/components/layout/top-nav"
+import { Navigation } from "@/components/layout/navigation"
 import { HeroBento } from "@/components/sections/hero-bento"
 import { AboutSection } from "@/components/sections/about-section"
 import { SkillsSection } from "@/components/sections/skills-section"
@@ -11,7 +11,7 @@ import { Footer } from "@/components/layout/footer"
 export default function Page() {
   return (
     <div className="min-h-screen">
-      <TopNav />
+      <Navigation />
       <main>
         <HeroBento index={1} />
         <AboutSection index={2} />
