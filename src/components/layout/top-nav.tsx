@@ -129,7 +129,7 @@ export function TopNav() {
                   src={SITE_METADATA.logo}
                   alt="Logo"
                   fill
-                  className="object-cover invert dark:invert-0"
+                  className="object-cover dark:invert"
                 />
               </div>
               <span className="hidden font-mono text-xs tracking-wider text-foreground sm:block">
@@ -342,7 +342,7 @@ export function TopNav() {
                         src={SITE_METADATA.logo}
                         alt="Logo"
                         fill
-                        className="object-cover invert dark:invert-0"
+                        className="object-cover dark:invert"
                       />
                     </div>
                     Navigation

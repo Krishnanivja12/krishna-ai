@@ -14,13 +14,13 @@ export interface PhotoDetails {
 
 // Photo Pool
 const ALL_PHOTOS: PhotoDetails[] = [
-  { type: "portrait", id: "p1", src: "/photos/125318.jpg", alt: "Profile Portrait", caption: "sys.admin // viraj" },
-  { type: "portrait", id: "p2", src: "/photos/AKP05692.jpg", alt: "Profile Portrait", caption: "sys.admin // viraj" },
-  { type: "portrait", id: "p3", src: "/photos/AKP05694.jpg", alt: "Profile Portrait", caption: "sys.admin // viraj" },
-  { type: "portrait", id: "p4", src: "/photos/AKP05682.jpg", alt: "Profile Portrait", caption: "sys.admin // viraj" },
+  { type: "portrait", id: "p1", src: "/photos/Viraj Mavani Western University.jpg", alt: "Viraj Mavani Western University", caption: "sys.admin // viraj" },
+  { type: "portrait", id: "p2", src: "/photos/Viraj Mavani.jpg", alt: "Viraj Mavani", caption: "sys.admin // viraj" },
+  { type: "portrait", id: "p3", src: "/photos/Viraj Mavani Suit.jpg", alt: "Viraj Mavani", caption: "sys.admin // viraj" },
+  { type: "portrait", id: "p4", src: "/photos/Viraj Mavani Monochorme.jpg", alt: "Viraj Mavani", caption: "sys.admin // viraj" },
   { type: "landscape", id: "p1", src: "/photos/middlesex.jpg", alt: "University", caption: "University.config" },
-  { type: "landscape", id: "p2", src: "/photos/IMG_6089.JPG", alt: "Hobbies", caption: "offline_status" },
-  { type: "square", id: "p1", src: "/photos/IMG_1694(1).jpg", alt: "Hobbies", caption: "offline_status" },
+  { type: "landscape", id: "p2", src: "/photos/Viraj Mavani Niagara Falls.jpg", alt: "Hobbies", caption: "offline_status" },
+  { type: "square", id: "p1", src: "/photos/Viraj Mavani.jpeg", alt: "Hobbies", caption: "offline_status" },
   // { id: "p2", src: "/photos/setup.jpg", alt: "Desk Setup", caption: "workspace.config" },
   // { id: "p3", src: "/photos/event.jpg", alt: "Tech Event", caption: "networking_mode: active" },
   // { id: "p4", src: "/photos/extra.jpg", alt: "Extra Shot", caption: "compiling..." },

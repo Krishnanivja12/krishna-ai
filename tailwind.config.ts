@@ -64,8 +64,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'Inter', 'Helvetica', 'Arial', 'sans-serif'],
-        mono: ['var(--font-jetbrains)', 'JetBrains Mono', 'monospace'],
+        sans: ['"Google Sans"', 'var(--font-google-sans)', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        mono: ['var(--font-jetbrains)', '"JetBrains Mono"', '"Fira Code"', '"Fira Mono"', '"Cascadia Code"', '"Source Code Pro"', 'ui-monospace', 'monospace'],
       },
       borderRadius: {
         lg: 'var(--radius)',
