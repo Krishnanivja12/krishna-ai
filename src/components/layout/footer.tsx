@@ -83,7 +83,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   initial={{ opacity: 0, scale: 0.8, y: 20 }}
                   whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                  viewport={{ once: false, margin: "-10%" }}
+                  viewport={{ once: false, amount: 0.2 }} // trigger when 20% visible
                   transition={{
                     duration: 0.4,
                     delay: i * 0.1,

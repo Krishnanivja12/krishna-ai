@@ -8,17 +8,25 @@ import { MenuToggle } from "./menu-toggle"
 import { MenuOverlay } from "./menu-overlay"
 import { useScrollLock } from "@/hooks/use-scroll-lock"
 import { SITE_METADATA } from "@/lib/site-metadata"
+import { useProjectModal } from "@/hooks/use-project-modal"
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
+  const { selectedProject } = useProjectModal()
   const toggleOpen = useCallback(() => setIsOpen((prev) => !prev), [])
-  
-  useScrollLock(isOpen)
-  
+
+  // ... (useScrollLock) ...
+
   // Double-click/tap handler for the entire window
   useEffect(() => {
     const handleDoubleClick = (e: MouseEvent | TouchEvent) => {
-      // Don't trigger if it's a click on an interactive element
+      // Disable for PC/Mouse users (pointer: fine)
+      const isPC = window.matchMedia("(pointer: fine)").matches
+      if (isPC) return
+
+      // Don't trigger if it's a click on an interactive element or if modal is open
+      if (selectedProject) return
+      
       const target = e.target as HTMLElement
       const isInteractive = target.closest('button, a, input, [role="button"]')
       
@@ -29,7 +37,7 @@ export function Navigation() {
 
     window.addEventListener("dblclick", handleDoubleClick)
     return () => window.removeEventListener("dblclick", handleDoubleClick)
-  }, [toggleOpen])
+  }, [toggleOpen, selectedProject])
 
   // Browser "Back" button support to close menu
   useEffect(() => {
@@ -51,7 +59,11 @@ export function Navigation() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-[160] pointer-events-none">
+      <header 
+        className={`fixed top-0 left-0 right-0 z-[160] transition-all duration-500 ${
+          selectedProject ? "opacity-0 pointer-events-none -translate-y-full" : "opacity-100 pointer-events-auto translate-y-0"
+        }`}
+      >
         <div className="mx-auto max-w-7xl px-4 py-4 md:py-8 flex items-center justify-between pointer-events-auto">
           
           {/* Logo */}

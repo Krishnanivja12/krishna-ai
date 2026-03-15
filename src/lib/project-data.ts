@@ -6,6 +6,7 @@ export interface Project {
 	github?: string;
 	live?: string;
 	images?: string[];
+	banner?: string;
 	video?: string;
 	mode: string[];
 }

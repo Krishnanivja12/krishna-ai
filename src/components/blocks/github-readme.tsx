@@ -228,7 +228,7 @@ export function GitHubReadme({ githubUrl }: GitHubReadmeProps) {
 	// Loading skeleton
 	if (status === "loading") {
 		return (
-			<div className="mt-8">
+			<div className="mt-2">
 				<h3 className="mb-4 font-mono text-xs uppercase tracking-widest text-primary md:text-sm">
 					README.md
 				</h3>
@@ -247,7 +247,7 @@ export function GitHubReadme({ githubUrl }: GitHubReadmeProps) {
 	if (!markdown) return null;
 
 	return (
-		<div className="mt-8 w-0 min-w-full">
+		<div className="mt-2 w-0 min-w-full">
 			<div className="mb-4 flex items-center gap-2">
 				<FileText className="h-4 w-4 text-primary" />
 				<h3 className="font-mono text-xs uppercase tracking-widest text-primary md:text-sm">

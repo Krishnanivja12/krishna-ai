@@ -53,7 +53,7 @@ export function SectionHeader({ index, title, subtitle }: SectionHeaderProps) {
       
       {subtitle && (
         <motion.div variants={headerReveal} className="max-w-md">
-          <p className="font-mono text-[11px] leading-relaxed text-muted-foreground uppercase tracking-wider">
+          <p className="font-mono text-[11px] leading-relaxed text-muted-foreground uppercase tracking-wider text-left md:text-right">
             {subtitle}
           </p>
         </motion.div>
