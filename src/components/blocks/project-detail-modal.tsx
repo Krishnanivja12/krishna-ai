@@ -100,16 +100,20 @@ export function ProjectDetailModal({ project, onClose, sourceRect }: ProjectDeta
           <div className="flex items-center justify-between px-6 py-5 border-b border-border/50 bg-background/20 backdrop-blur-sm">
             <motion.h2
               variants={characterContainer}
-              className="flex flex-wrap font-mono text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-foreground"
+              className="flex flex-wrap font-mono text-xs md:text-sm font-medium uppercase text-foreground"
             >
-              {project.title.split("").map((char, i) => (
-                <motion.span 
-                  key={i} 
-                  variants={headerReveal}
-                  className={char === " " ? "mr-[0.2em]" : ""}
-                >
-                  {char}
-                </motion.span>
+              {project.title.split(" ").map((word, wordIdx) => (
+                <span key={wordIdx} className="inline-flex mr-[0.3em]">
+                  {word.split("").map((char, charIdx) => (
+                    <motion.span 
+                      key={charIdx} 
+                      variants={headerReveal}
+                      className="tracking-[0.1em]"
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </span>
               ))}
             </motion.h2>
             <motion.button
