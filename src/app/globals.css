@@ -93,10 +93,6 @@
       radial-gradient(at 100% 100%, hsla(var(--primary) / 0.05) 0, transparent 50%);
   }
 
-  .dark body::after {
-    opacity: 0.25;
-  }
-
   ::selection {
     background-color: hsl(var(--primary) / 0.4);
     color: rgba(255, 255, 255, 0.8);

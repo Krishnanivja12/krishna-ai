@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { GlowCard } from "./glow-card"
 
 const terminalLines = [
   { type: "comment", text: "# data_pipeline.py" },
@@ -53,7 +52,7 @@ export function TerminalCard() {
   }
 
   return (
-    <GlowCard className="flex h-full flex-col overflow-hidden rounded-md border border-border bg-card/40 backdrop-blur-md">
+    <div className="flex h-full flex-col overflow-hidden">
       <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
         <div className="flex gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" aria-hidden="true" />
@@ -74,6 +73,6 @@ export function TerminalCard() {
           <span className="inline-block h-3.5 w-1.5 animate-pulse bg-primary" aria-hidden="true" />
         </pre>
       </div>
-    </GlowCard>
+    </div>
   )
 }

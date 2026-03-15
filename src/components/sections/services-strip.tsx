@@ -3,8 +3,9 @@
 import { useRef } from "react"
 import { motion } from "framer-motion"
 import { Globe, Brain, BarChart3 } from "lucide-react"
-import { sectionVariants, cardVariantUp } from "@/lib/animations"
+import { cinematicReveal, staggerContainer } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
+import { SectionHeader } from "../layout/section-header"
 
 interface ServicesStripProps {
   index: number
@@ -37,23 +38,19 @@ export function ServicesStrip({ index }: ServicesStripProps) {
   return (
     <section id="services" className="border-t border-border" aria-labelledby="services-heading">
       <div className="mx-auto max-w-7xl px-4 py-16 lg:py-24">
-        <div className="mb-12 flex items-center gap-4">
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-            services
-          </span>
-          <div className="h-px flex-1 bg-border" aria-hidden="true" />
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground">
-            {String(index).padStart(2, "0")}
-          </span>
-        </div>
+        <SectionHeader 
+          index={index} 
+          title="Core Services" 
+          subtitle="Specialized technical solutions designed to scale your vision and accelerate impact."
+        />
 
         <h2 id="services-heading" className="sr-only">Services</h2>
 
         <motion.div 
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={sectionVariants}
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
           className="grid gap-px border border-border bg-border md:grid-cols-3">
           {services.map((service) => (
             <ServiceCard key={service.title} service={service} isMobile={isMobile} />
@@ -71,7 +68,7 @@ function ServiceCard({ service, isMobile }: { service: typeof services[number], 
   return (
     <motion.div
       ref={ref}
-      variants={cardVariantUp}
+      variants={cinematicReveal}
       className={`relative bg-background lg:hover:z-10 ${isActive ? "z-10" : "z-0"}`}
     >
       <div className={`group flex flex-col gap-6 h-full p-4 lg:p-8 transition-all duration-500 ease-out lg:hover:bg-card lg:hover:-translate-y-1 lg:hover:shadow-xl lg:hover:shadow-primary/10 ${isActive ? "bg-card -translate-y-1 shadow-xl shadow-primary/10" : "bg-background translate-y-0 shadow-none"}`}>

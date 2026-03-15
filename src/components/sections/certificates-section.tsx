@@ -5,8 +5,9 @@ import { motion } from "framer-motion"
 import { Award, ExternalLink, ChevronDown, ChevronUp } from "lucide-react"
 import { certificates } from "@/lib/bio-data"
 import { useMode } from "@/hooks/use-mode"
-import { sectionVariants, cardVariantUp, fadeUpVariant } from "@/lib/animations"
+import { cinematicReveal, staggerContainer, fadeUpVariant } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
+import { SectionHeader } from "../layout/section-header"
 
 const INITIAL_COUNT = 4
 
@@ -36,15 +37,11 @@ export function CertificatesSection({ index }: CertificatesSectionProps) {
   return (
     <section id="certificates" className="border-t border-border" aria-labelledby="certificates-heading">
       <div className="mx-auto max-w-7xl px-4 py-16 lg:py-24">
-        <div className="mb-12 flex items-center gap-4">
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-            certificates
-          </span>
-          <div className="h-px flex-1 bg-border" aria-hidden="true" />
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground">
-            {String(index).padStart(2, "0")}
-          </span>
-        </div>
+        <SectionHeader 
+          index={index} 
+          title="Certifications" 
+          subtitle="Continuous learning and professional validation through industry-standard mastery."
+        />
 
         <h2 id="certificates-heading" className="sr-only">Certificates</h2>
 
@@ -52,8 +49,8 @@ export function CertificatesSection({ index }: CertificatesSectionProps) {
           key={expanded ? "expanded" : "collapsed"}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={sectionVariants}
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
           className="grid gap-px border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
           {visible.map((cert, index) => (
             <CertificateCard key={cert.title} cert={cert} index={index} expanded={expanded} isMobile={isMobile} />
@@ -62,7 +59,7 @@ export function CertificatesSection({ index }: CertificatesSectionProps) {
             const showOnMd = visible.length % 2 !== 0 && i === 0
             return (
               <motion.div
-                variants={cardVariantUp}
+                variants={cinematicReveal}
                 key={`empty-${i}`}
                 className={`hidden bg-background ${showOnMd ? "md:block" : "lg:block"} ${!expanded && visible.length === 4 ? "lg:hidden" : ""}`}
                 aria-hidden="true"
@@ -107,7 +104,7 @@ function CertificateCard({ cert, index, expanded, isMobile }: { cert: typeof cer
   return (
     <motion.div
       ref={ref}
-      variants={cardVariantUp}
+      variants={cinematicReveal}
       className={`relative bg-background lg:hover:z-10 ${!expanded && index === 3 ? "lg:hidden" : ""} ${isActive ? "z-10" : "z-0"}`}
     >
       <div className={`group flex flex-col gap-2 lg:gap-3 h-full p-4 md:p-6 transition-all duration-500 ease-out lg:hover:bg-card lg:hover:-translate-y-1 lg:hover:shadow-lg lg:hover:shadow-primary/5 ${isActive ? "bg-card -translate-y-1 shadow-lg shadow-primary/5" : "bg-background translate-y-0 shadow-none"}`}>

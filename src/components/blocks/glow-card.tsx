@@ -1,48 +1,38 @@
 "use client"
 
 import { useRef, useState, useCallback, useEffect } from "react"
+import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion"
 import { useAccessibility } from "@/contexts/accessibility-context"
 
 interface GlowCardProps {
   children: React.ReactNode
   className?: string
   as?: React.ElementType
-  /** Radius (px) of the glow spot on the border. Default 200. */
   glowRadius?: number
-  /** Peak opacity of the glow border highlight. Default 0.5. */
   glowOpacity?: number
-  /** Whether the card should have default border styling. Default true. */
-  bordered?: boolean
-  /** Any extra props to forward to the wrapper element (e.g. framer-motion ones) */
   [key: string]: any
 }
 
-/**
- * GlowCard — A card wrapper that adds a cursor-proximity border glow.
- *
- * When the mouse hovers over (or near) this card, a radial gradient
- * follows the cursor along the card's border, creating a subtle
- * edge-glow effect that matches the ambient cursor's color.
- *
- * Usage:
- *   <GlowCard className="p-8 bg-card">
- *     ...your content...
- *   </GlowCard>
- */
 export function GlowCard({
   children,
   className = "",
   as: Component = "div",
-  glowRadius = 200,
-  glowOpacity = 0.5,
-  bordered = true,
+  glowRadius = 350,
+  glowOpacity = 0.4,
   ...rest
 }: GlowCardProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 })
   const [isHovering, setIsHovering] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
   const { reducedMotion } = useAccessibility()
+
+  // Physics-based mouse tracking
+  const mouseX = useMotionValue(-1000)
+  const mouseY = useMotionValue(-1000)
+
+  const springConfig = { stiffness: 150, damping: 25, mass: 0.5 }
+  const smoothX = useSpring(mouseX, springConfig)
+  const smoothY = useSpring(mouseY, springConfig)
 
   useEffect(() => {
     const check = () => {
@@ -57,49 +47,58 @@ export function GlowCard({
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     const rect = containerRef.current?.getBoundingClientRect()
     if (!rect) return
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    })
-  }, [])
+    mouseX.set(e.clientX - rect.left)
+    mouseY.set(e.clientY - rect.top)
+  }, [mouseX, mouseY])
 
   const handleMouseEnter = useCallback(() => setIsHovering(true), [])
   const handleMouseLeave = useCallback(() => {
     setIsHovering(false)
-    setMousePos({ x: -1000, y: -1000 })
-  }, [])
+    mouseX.set(-1000)
+    mouseY.set(-1000)
+  }, [mouseX, mouseY])
 
-  const showGlow = isDesktop && !reducedMotion && isHovering
+  const showGlow = isDesktop && !reducedMotion
+  const borderBackground = useMotionTemplate`radial-gradient(${glowRadius}px circle at ${smoothX}px ${smoothY}px, hsla(var(--primary) / ${glowOpacity}), transparent 80%)`
+  const ambientBackground = useMotionTemplate`radial-gradient(${glowRadius / 1.5}px circle at ${smoothX}px ${smoothY}px, hsla(var(--primary) / 0.08), transparent 80%)`
 
   return (
     <Component
       ref={containerRef}
-      className={`glow-card-wrapper relative ${className}`}
+      className={`group relative overflow-hidden rounded-md ${className}`}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       {...rest}
     >
-      {/* Glow border overlay — sits on top of the card, uses pointer-events-none */}
+      {/* 1. Ambient Background Glow (Subtle tint follows cursor inside) */}
+      {/* {showGlow && (
+        <motion.div
+           className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+           style={{ background: ambientBackground }}
+        />
+      )} */}
+
+      {/* 2. Border Glow Layer */}
       {showGlow && (
-        <div
+        <motion.div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-10 rounded-[inherit]"
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{
-            // Use a radial gradient mask to show a border only near the cursor
             border: "1px solid transparent",
-            background: `radial-gradient(${glowRadius}px circle at ${mousePos.x}px ${mousePos.y}px, hsl(var(--primary) / ${glowOpacity}), transparent 70%)`,
-            // Only show the gradient on the border area using the mask trick
-            WebkitMask:
-              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            background: borderBackground,
+            WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             WebkitMaskComposite: "xor",
             maskComposite: "exclude",
-            padding: "1px", // This creates the "border" thickness for the mask
-            transition: "opacity 0.2s ease",
+            padding: "1px",
           }}
         />
       )}
-      {children}
+
+      {/* Content wrapper to ensure it stays above ambient glow */}
+      {/* {/* <div className="relative z-10 h-full w-full"> */}
+        {children}
+      {/* </div> */}
     </Component>
   )
 }
