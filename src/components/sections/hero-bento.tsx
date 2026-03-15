@@ -9,17 +9,19 @@ import { TechTicker } from "../blocks/tech-ticker"
 import { GlowCard } from "../blocks/glow-card"
 import { useMode } from "@/hooks/use-mode"
 import { HeroContent } from "@/lib/bio-data"
-import { sectionVariants, staggerContainer, cinematicReveal } from "@/lib/animations"
+import { sectionVariants, staggerContainer, cinematicReveal, headerReveal, lineReveal } from "@/lib/animations"
 import { useAutoHighlight, useIsMobile } from "@/hooks/use-mobile-view-effect"
 import { DiaText } from "../animations/text/dia-text";
 import { TextBlurIn } from "../animations/text/blur-in";
 import { MagneticButton } from "../blocks/magnetic-button";
 
 const DecorativeTag = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
-  <div className={`flex items-center gap-2 font-mono text-[8px] tracking-[0.2em] text-muted-foreground/50 uppercase italic ${className}`}>
-    <div className="h-[1px] w-4 bg-border/50" />
-    {children}
-  </div>
+  <motion.div variants={staggerContainer} className={`flex items-center gap-2 font-mono text-[8px] tracking-[0.2em] text-muted-foreground/50 uppercase italic ${className}`}>
+    <motion.div variants={lineReveal} className="h-[1px] w-4 bg-border/50 origin-left" />
+    <motion.span variants={headerReveal}>
+      {children}
+    </motion.span>
+  </motion.div>
 )
 
 interface HeroBentoProps {
@@ -56,15 +58,20 @@ export function HeroBento({ index }: HeroBentoProps) {
   return (
     <section id="home" className="mx-auto max-w-7xl px-4 pt-32 pb-16 md:pt-36 lg:pt-40 lg:pb-24" aria-labelledby="hero-heading">
       {/* Section label */}
-      <div className="mb-8 flex items-center gap-4">
-        <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
+      <motion.div 
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+        className="mb-8 flex items-center gap-4"
+      >
+        <motion.span variants={headerReveal} className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
           index
-        </span>
-        <div className="h-px flex-1 bg-border" aria-hidden="true" />
-        <span className="font-mono text-[10px] tracking-widest text-muted-foreground">
+        </motion.span>
+        <motion.div variants={lineReveal} className="h-px flex-1 bg-border origin-left" aria-hidden="true" />
+        <motion.span variants={headerReveal} className="font-mono text-[10px] tracking-widest text-muted-foreground">
           {String(index).padStart(2, "0")}
-        </span>
-      </div>
+        </motion.span>
+      </motion.div>
 
       {/* Bento Grid */}
       <motion.div

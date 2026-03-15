@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { GraduationCap, MapPin, Calendar } from "lucide-react"
 import { aboutContent, education } from "@/lib/bio-data"
 import { useMode } from "@/hooks/use-mode"
-import { cinematicReveal, staggerContainer } from "@/lib/animations"
+import { cinematicReveal, staggerContainer, headerReveal } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 import { GlowCard } from "../blocks/glow-card"
 import { SectionHeader } from "../layout/section-header"
@@ -38,16 +38,16 @@ export function AboutSection({ index }: AboutSectionProps) {
           className="grid gap-8 lg:grid-cols-2 items-stretch">
           {/* About text */}
           <GlowCard as={motion.div} variants={cinematicReveal} className="flex flex-col gap-6 rounded-md border border-border bg-card/40 backdrop-blur-md p-4 md:p-8 h-full relative overflow-hidden">
-            <div className="absolute top-2 right-2 opacity-10">
+            <motion.div variants={headerReveal} className="absolute top-2 right-2 opacity-10">
                <span className="font-mono text-[8px] tracking-widest">[ BIO_DATA ]</span>
-            </div>
+            </motion.div>
             <div className="flex items-start justify-between">
-              <span className="font-mono text-[10px] tracking-widest text-primary uppercase">
+              <motion.span variants={headerReveal} className="font-mono text-[10px] tracking-widest text-primary uppercase">
                 {mode === "generalist" ? "about_me" : `about_${mode.replace("-", "_")}`}
-              </span>
-              <span className="font-mono text-[10px] text-muted-foreground">
+              </motion.span>
+              <motion.span variants={headerReveal} className="font-mono text-[10px] text-muted-foreground">
                 {"//"}
-              </span>
+              </motion.span>
             </div>
             <div className="flex flex-col gap-4">
               {activeBio.map((paragraph, i) => (

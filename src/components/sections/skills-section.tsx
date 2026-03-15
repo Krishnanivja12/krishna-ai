@@ -3,7 +3,7 @@
 import { memo, useMemo, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { skillCategories } from "@/lib/bio-data"
-import { cinematicReveal, staggerContainer } from "@/lib/animations"
+import { cinematicReveal, staggerContainer, headerReveal } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 import * as SiIcons from "react-icons/si";
 import { LuHash, LuWorkflow, LuDatabaseZap, LuNetwork } from "react-icons/lu";
@@ -134,12 +134,12 @@ function SkillCard({ category, isMobile }: { category: typeof skillCategories[nu
         }`}>
 
         <div className="flex items-center justify-between">
-          <span className="font-mono text-[10px] tracking-widest text-primary uppercase">
+          <motion.span variants={headerReveal} className="font-mono text-[10px] tracking-widest text-primary uppercase">
             {category.label}
-          </span>
-          <span className="font-mono text-[10px] text-muted-foreground">
+          </motion.span>
+          <motion.span variants={headerReveal} className="font-mono text-[10px] text-muted-foreground">
             {String(category.skills.length).padStart(2, "0")}
-          </span>
+          </motion.span>
         </div>
 
         <div className="flex flex-wrap gap-2">

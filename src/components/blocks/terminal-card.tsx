@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { headerReveal, staggerContainer } from "@/lib/animations"
 
 const terminalLines = [
   { type: "comment", text: "# data_pipeline.py" },
@@ -52,16 +54,22 @@ export function TerminalCard() {
   }
 
   return (
-    <div className="flex h-full flex-col overflow-hidden">
+    <motion.div 
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={staggerContainer}
+      className="flex h-full flex-col overflow-hidden"
+    >
       <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
         <div className="flex gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" aria-hidden="true" />
-          <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" aria-hidden="true" />
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/70" aria-hidden="true" />
+          <motion.span variants={headerReveal} className="h-2.5 w-2.5 rounded-full bg-red-500/70" aria-hidden="true" />
+          <motion.span variants={headerReveal} className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" aria-hidden="true" />
+          <motion.span variants={headerReveal} className="h-2.5 w-2.5 rounded-full bg-emerald-500/70" aria-hidden="true" />
         </div>
-        <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
+        <motion.span variants={headerReveal} className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
           data_pipeline.py
-        </span>
+        </motion.span>
       </div>
       <div className="flex-1 overflow-hidden p-4" aria-label="Terminal animation showing a Python data pipeline script">
         <pre className="font-mono text-[11.5px] lg:text-xs leading-relaxed">
@@ -73,6 +81,6 @@ export function TerminalCard() {
           <span className="inline-block h-3.5 w-1.5 animate-pulse bg-primary" aria-hidden="true" />
         </pre>
       </div>
-    </div>
+    </motion.div>
   )
 }
