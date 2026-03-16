@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { useTheme } from "next-themes"
@@ -37,6 +37,21 @@ const overlayVariants = {
 const itemVariants = {
   closed: { y: 20, opacity: 0 },
   opened: { y: 0, opacity: 1 }
+}
+
+function NavStaggerItem({ children, variants, className = "" }: { children: React.ReactNode, variants: any, className?: string }) {
+  const [isItemReady, setIsItemReady] = useState(false)
+  return (
+    <motion.div
+      variants={variants}
+      onAnimationComplete={(definition) => {
+        if (definition === "opened") setIsItemReady(true)
+      }}
+      className={cn(className, !isItemReady && "pointer-events-none")}
+    >
+      {children}
+    </motion.div>
+  )
 }
 
 export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
@@ -152,7 +167,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                     : link.href.startsWith("/") ? link.href : `/${link.href}`
 
                   return (
-                    <motion.div key={link.label} variants={itemVariants}>
+                    <NavStaggerItem key={link.label} variants={itemVariants}>
                       <Link
                         href={link.href}
                         onMouseEnter={() => setHoveredLink(link.label)}
@@ -193,7 +208,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                           </div>
                         </div>
                       </Link>
-                    </motion.div>
+                    </NavStaggerItem>
                   )
                 })}
               </nav>
@@ -203,7 +218,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
             <div className="w-full lg:w-80 flex flex-col gap-12">
 
               {/* Mode Selection */}
-              <motion.div variants={itemVariants}>
+              <NavStaggerItem variants={itemVariants}>
                 <div className="mb-6 flex items-center justify-between">
                   <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
                     02. Perspective
@@ -227,10 +242,10 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                     </button>
                   ))}
                 </div>
-              </motion.div>
+              </NavStaggerItem>
 
               {/* Quick Actions */}
-              <motion.div variants={itemVariants} className="flex flex-col gap-6">
+              <NavStaggerItem variants={itemVariants} className="flex flex-col gap-6">
                 <div>
                   <span className="mb-4 block font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
                     03. Actions
@@ -329,7 +344,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                       }
 
                       return (
-                        <motion.div
+                        <NavStaggerItem
                           key={social.label}
                           variants={itemVariants}
                         >
@@ -370,12 +385,12 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                               strokeWidth={1.5}
                             />
                           </motion.a>
-                        </motion.div>
+                        </NavStaggerItem>
                       );
                     })}
                   </div>
                 </div>
-              </motion.div>
+              </NavStaggerItem>
 
             </div>
           </div>
