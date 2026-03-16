@@ -8,6 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { AmbientCursor } from "@/components/layout/ambient-cursor"
 import { PremiumBackground } from '@/components/layout/premium-background'
 import { AccessibilityProvider } from "@/contexts/accessibility-context"
+import { NavigationHubProvider } from "@/contexts/navigation-hub-context"
 import { AccessibilityMenu } from "@/components/blocks/accessibility-menu"
 import { ClientShell } from "@/components/layout/client-shell"
 import localFont from 'next/font/local'
@@ -131,12 +132,14 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					<AccessibilityProvider>
-						<AmbientCursor />
-						<PremiumBackground />
-            <ClientShell>
-							{children}
-            </ClientShell>
-						<AccessibilityMenu />
+						<NavigationHubProvider>
+							<AmbientCursor />
+							<PremiumBackground />
+							<ClientShell>
+								{children}
+							</ClientShell>
+							<AccessibilityMenu />
+						</NavigationHubProvider>
 					</AccessibilityProvider>
 				</ThemeProvider>
 				<SpeedInsights />

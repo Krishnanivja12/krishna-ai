@@ -17,6 +17,7 @@ import { PremiumBackButton } from "@/components/ui/premium-back-button"
 import { FilterBar } from "@/components/blocks/filter-bar"
 import { MobileFilterHub } from "@/components/blocks/mobile-filter-hub"
 import { useIsMobile, useAtTopHighlight } from "@/hooks/use-mobile-view-effect"
+import { useNavigationHub } from "@/contexts/navigation-hub-context"
 
 const modeFilters = [
   { id: "all", label: "All" },
@@ -27,6 +28,7 @@ const modeFilters = [
 ]
 
 export function ProjectsPageContent() {
+  const { isOpen: isNavHubOpen } = useNavigationHub()
   const [activeFilter, setActiveFilter] = useState("all")
   const { selectedProject, sourceRect, openProject, closeProject } = useProjectModal()
   const isMobile = useIsMobile()
@@ -54,6 +56,7 @@ export function ProjectsPageContent() {
             href="/" 
             text="Return to Dashboard" 
             autoHover={isAtTop}
+            isVisible={!isNavHubOpen}
           />
         </div>
 

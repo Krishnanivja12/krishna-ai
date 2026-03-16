@@ -23,6 +23,7 @@ import { Footer } from "@/components/layout/footer"
 import { SectionHeader } from "@/components/layout/section-header"
 import { GlowCard } from "@/components/blocks/glow-card"
 import { PremiumBackButton } from "@/components/ui/premium-back-button"
+import { useNavigationHub } from "@/contexts/navigation-hub-context"
 
 const intro = {
   title: "I'm a Full Stack AI Engineer who believes that the best code is written by those who never stop being students.",
@@ -72,6 +73,7 @@ const journey = [
 ]
 
 export function AboutContent() {
+  const { isOpen: isNavHubOpen } = useNavigationHub()
   const [isTypingComplete, setIsTypingComplete] = useState(false)
   const [loadingDots, setLoadingDots] = useState("")
   const isMobile = useIsMobile()
@@ -111,6 +113,7 @@ export function AboutContent() {
             href="/" 
             text="Back to Terminal" 
             autoHover={isAtTop}
+            isVisible={!isNavHubOpen}
           />
         </div>
 

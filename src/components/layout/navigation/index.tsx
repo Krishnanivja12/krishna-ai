@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
@@ -9,11 +9,11 @@ import { MenuOverlay } from "./menu-overlay"
 import { useScrollLock } from "@/hooks/use-scroll-lock"
 import { SITE_METADATA } from "@/lib/site-metadata"
 import { useProjectModal } from "@/hooks/use-project-modal"
+import { useNavigationHub } from "@/contexts/navigation-hub-context"
 
 export function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
+  const { isOpen, setIsOpen, toggleOpen } = useNavigationHub()
   const { selectedProject } = useProjectModal()
-  const toggleOpen = useCallback(() => setIsOpen((prev) => !prev), [])
 
   // ... (useScrollLock) ...
 
