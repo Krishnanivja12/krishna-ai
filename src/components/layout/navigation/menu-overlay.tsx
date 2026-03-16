@@ -9,6 +9,8 @@ import { Sun, Moon, FileText, Download, ChevronRight } from "lucide-react"
 import { useMode } from "@/hooks/use-mode"
 import { exploreLinks, modes, RESUMES } from "@/config/navigation-data"
 import { socialLinks } from "@/components/layout/footer"
+import { useIsMobile, useAtBottomHighlight } from "@/hooks/use-mobile-view-effect"
+import { cn } from "@/lib/utils"
 
 interface MenuOverlayProps {
   isOpen: boolean
@@ -42,6 +44,8 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   const { mode: activeMode, setMode: setActiveMode } = useMode()
   const [showResumes, setShowResumes] = useState(false)
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
+  const isMobile = useIsMobile()
+  const isAtBottom = useAtBottomHighlight(isMobile, 30)
 
   const toggleTheme = (e: React.MouseEvent) => {
     const newTheme = resolvedTheme === "dark" ? "light" : "dark"
@@ -315,24 +319,60 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                     04. Network
                   </span>
                   <div className="flex flex-wrap gap-3">
-                    {socialLinks.map((social, i) => (
-                      <motion.a
-                        key={social.label}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ y: -4, scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.5 + i * 0.05 }}
-                        className={`group relative flex h-11 w-11 items-center justify-center rounded-sm border border-border bg-secondary/40 text-muted-foreground transition-all duration-300 ${social.color}`}
-                        aria-label={social.label}
-                      >
-                        <div className="absolute inset-0 rounded-xl bg-primary/0 group-hover:bg-primary/5 transition-colors" />
-                        <social.icon size={18} className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
-                      </motion.a>
-                    ))}
+                    {socialLinks.map((social, i) => {
+                      // Explicit mapping to ensure Tailwind generates these brand classes for auto-hover
+                      const brandStyles: Record<string, string> = {
+                        GitHub: "text-white bg-[#24292e] border-[#24292e]",
+                        LinkedIn: "text-white bg-[#0077b5] border-[#0077b5]",
+                        Discord: "text-white bg-[#5865F2] border-[#5865F2]",
+                        Email: "text-white bg-[#EA4335] border-[#EA4335]"
+                      }
+
+                      return (
+                        <motion.div
+                          key={social.label}
+                          variants={itemVariants}
+                        >
+                          <motion.a
+                            href={social.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            // Mirror the PC whileHover transforms using the mobile auto-hover state
+                            animate={{
+                              y: isAtBottom ? -4 : 0,
+                              // scale: isAtBottom ? 1.1 : 1,
+                              opacity: 1
+                            }}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 25
+                            }}
+                            className={cn(
+                              "group relative flex h-11 w-11 items-center justify-center rounded-sm border border-border bg-secondary/40 text-muted-foreground transition-all duration-300",
+                              social.color,
+                              isAtBottom && brandStyles[social.label]
+                            )}
+                            aria-label={social.label}
+                          >
+                            <div className={cn(
+                              "absolute inset-0 rounded-xl bg-primary/0 transition-colors group-hover:bg-primary/5",
+                              isAtBottom && "bg-primary/5"
+                            )} />
+                            <social.icon
+                              size={18}
+                              className={cn(
+                                "relative z-10 h-5 w-5 transition-transform duration-300 group-hover:scale-110",
+                                isAtBottom && "scale-110"
+                              )}
+                              strokeWidth={1.5}
+                            />
+                          </motion.a>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </div>
               </motion.div>

@@ -8,14 +8,17 @@ interface PremiumBackButtonProps {
   href: string
   text: string
   className?: string
+  autoHover?: boolean
+  threshold?: number
 }
 
-export function PremiumBackButton({ href, text, className = "" }: PremiumBackButtonProps) {
+export function PremiumBackButton({ href, text, className = "", autoHover = false, threshold = 50 }: PremiumBackButtonProps) {
   return (
     <Link href={href}>
       <motion.div
         initial="initial"
         whileHover="hover"
+        animate={autoHover ? "hover" : "initial"}
         className={`group relative flex items-center gap-4 font-mono ${className}`}
       >
         {/* Terminal HUD Block */}
@@ -29,7 +32,7 @@ export function PremiumBackButton({ href, text, className = "" }: PremiumBackBut
 
           <motion.div
             variants={{
-              initial: { scale: 1, backgroundColor: "rgba(var(--secondary), 0.3)" },
+              initial: { scale: 1, backgroundColor: "hsla(var(--secondary) / 0.3)" },
               hover: { scale: 1.05, backgroundColor: "hsl(var(--primary))" }
             }}
             className="relative flex h-8 items-center justify-center rounded-sm border border-primary/30 px-3 transition-colors duration-300 group-hover:border-primary"

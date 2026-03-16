@@ -16,6 +16,7 @@ import { SectionHeader } from "@/components/layout/section-header"
 import { PremiumBackButton } from "@/components/ui/premium-back-button"
 import { FilterBar } from "@/components/blocks/filter-bar"
 import { MobileFilterHub } from "@/components/blocks/mobile-filter-hub"
+import { useIsMobile, useAtTopHighlight } from "@/hooks/use-mobile-view-effect"
 
 const modeFilters = [
   { id: "all", label: "All" },
@@ -28,6 +29,9 @@ const modeFilters = [
 export function ProjectsPageContent() {
   const [activeFilter, setActiveFilter] = useState("all")
   const { selectedProject, sourceRect, openProject, closeProject } = useProjectModal()
+  const isMobile = useIsMobile()
+  const scrollThreshold = 25
+  const isAtTop = useAtTopHighlight(isMobile, scrollThreshold)
 
   const filtered =
     activeFilter === "all"
@@ -46,7 +50,11 @@ export function ProjectsPageContent() {
       <main className="mx-auto max-w-7xl px-4 pt-24 pb-16 lg:pt-28">
         {/* HUD Navigation */}
         <div className="mb-12">
-          <PremiumBackButton href="/" text="Return to Dashboard" />
+          <PremiumBackButton 
+            href="/" 
+            text="Return to Dashboard" 
+            autoHover={isAtTop}
+          />
         </div>
 
         {/* Page header */}

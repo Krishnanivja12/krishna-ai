@@ -18,7 +18,7 @@ import {
 import { education } from "@/lib/bio-data"
 import { BentoGallery } from "@/components/sections/bento-gallery"
 import { fadeUpVariant, sectionVariants, cardVariantRight, cinematicReveal, staggerContainer, headerReveal } from "@/lib/animations"
-import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
+import { useIsMobile, useAutoHighlight, useAtTopHighlight } from "@/hooks/use-mobile-view-effect"
 import { Footer } from "@/components/layout/footer"
 import { SectionHeader } from "@/components/layout/section-header"
 import { GlowCard } from "@/components/blocks/glow-card"
@@ -75,6 +75,8 @@ export function AboutContent() {
   const [isTypingComplete, setIsTypingComplete] = useState(false)
   const [loadingDots, setLoadingDots] = useState("")
   const isMobile = useIsMobile()
+  const scrollThreshold = 25
+  const isAtTop = useAtTopHighlight(isMobile, scrollThreshold)
   const text = "> initiating background check"
   const [skipAnimation, setSkipAnimation] = useState(false)
 
@@ -105,7 +107,11 @@ export function AboutContent() {
       <div className="mx-auto max-w-7xl px-4 pt-24 pb-16 lg:pt-28">
         {/* Back link */}
         <div className="mb-12">
-          <PremiumBackButton href="/" text="Back to Terminal" />
+          <PremiumBackButton 
+            href="/" 
+            text="Back to Terminal" 
+            autoHover={isAtTop}
+          />
         </div>
 
         {/* Page header */}
