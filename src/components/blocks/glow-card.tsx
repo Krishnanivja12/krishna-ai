@@ -1,5 +1,3 @@
-"use client"
-
 import { useRef, useState, useCallback, useEffect } from "react"
 import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion"
 import { useAccessibility } from "@/contexts/accessibility-context"
@@ -10,6 +8,7 @@ interface GlowCardProps {
   as?: React.ElementType
   glowRadius?: number
   glowOpacity?: number
+  enableTilt?: boolean // Keep for prop compatibility but ignore in logic, or use for subtle scale
   [key: string]: any
 }
 
@@ -19,6 +18,7 @@ export function GlowCard({
   as: Component = "div",
   glowRadius = 350,
   glowOpacity = 0.4,
+  enableTilt = false,
   ...rest
 }: GlowCardProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -26,7 +26,7 @@ export function GlowCard({
   const [isDesktop, setIsDesktop] = useState(false)
   const { reducedMotion } = useAccessibility()
 
-  // Physics-based mouse tracking
+  // Mouse tracking for glowing border
   const mouseX = useMotionValue(-1000)
   const mouseY = useMotionValue(-1000)
 
@@ -60,24 +60,27 @@ export function GlowCard({
 
   const showGlow = isDesktop && !reducedMotion
   const borderBackground = useMotionTemplate`radial-gradient(${glowRadius}px circle at ${smoothX}px ${smoothY}px, hsla(var(--primary) / ${glowOpacity}), transparent 80%)`
-  const ambientBackground = useMotionTemplate`radial-gradient(${glowRadius / 1.5}px circle at ${smoothX}px ${smoothY}px, hsla(var(--primary) / 0.08), transparent 80%)`
 
   return (
     <Component
       ref={containerRef}
-      className={`group relative overflow-hidden rounded-md ${className}`}
+      className={`group relative overflow-hidden rounded-md transition-all duration-500 ease-out ${className} ${isHovering ? "border-primary/30 shadow-2xl shadow-primary/5" : "border-border"}`}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      style={{
+        scale: enableTilt && isHovering && !reducedMotion ? 1.01 : 1,
+        ...rest.style
+      }}
       {...rest}
     >
-      {/* 1. Ambient Background Glow (Subtle tint follows cursor inside) */}
-      {/* {showGlow && (
-        <motion.div
-           className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-           style={{ background: ambientBackground }}
-        />
-      )} */}
+      {/* Inner Highlight Ring (Subtle Terminal aesthetic) */}
+      <div 
+        className={`pointer-events-none absolute inset-0 z-0 transition-opacity duration-500 ${isHovering ? "opacity-10" : "opacity-0"}`}
+        style={{
+          boxShadow: "inset 0 0 40px 0 hsla(var(--primary) / 0.2)"
+        }}
+      />
 
       {/* 2. Border Glow Layer */}
       {showGlow && (
@@ -95,10 +98,7 @@ export function GlowCard({
         />
       )}
 
-      {/* Content wrapper to ensure it stays above ambient glow */}
-      {/* {/* <div className="relative z-10 h-full w-full"> */}
-        {children}
-      {/* </div> */}
+      {children}
     </Component>
   )
 }

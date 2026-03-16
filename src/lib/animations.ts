@@ -76,13 +76,48 @@ export const cinematicReveal: Variants = {
   }
 }
 
+export const cinematicGrid: Variants = {
+  hidden: { opacity: 0, scale: 0.95, filter: "blur(10px)" },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+      staggerChildren: 0.05
+    }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    filter: "blur(10px)",
+    transition: { duration: 0.4, ease: "easeInOut" }
+  }
+}
+
+export const emptyStateReveal: Variants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 200,
+      damping: 20,
+      delayChildren: 0.3,
+      staggerChildren: 0.1
+    }
+  }
+}
+
 export const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
+      staggerChildren: 0.08,
+      delayChildren: 0.1
     }
   }
 }

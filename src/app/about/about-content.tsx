@@ -22,6 +22,7 @@ import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 import { Footer } from "@/components/layout/footer"
 import { SectionHeader } from "@/components/layout/section-header"
 import { GlowCard } from "@/components/blocks/glow-card"
+import { PremiumBackButton } from "@/components/ui/premium-back-button"
 
 const intro = {
   title: "I'm a Full Stack AI Engineer who believes that the best code is written by those who never stop being students.",
@@ -103,13 +104,9 @@ export function AboutContent() {
     <>
       <div className="mx-auto max-w-7xl px-4 pt-24 pb-16 lg:pt-28">
         {/* Back link */}
-        <Link
-          href="/"
-          className="mb-12 inline-flex items-center gap-2 font-mono text-[10px] tracking-widest text-muted-foreground uppercase transition-colors hover:text-primary"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Back to Terminal
-        </Link>
+        <div className="mb-12">
+          <PremiumBackButton href="/" text="Back to Terminal" />
+        </div>
 
         {/* Page header */}
         <SectionHeader 
@@ -276,6 +273,7 @@ function JourneyCard({ item, isMobile }: { item: typeof journey[number], isMobil
       ref={ref}
       as={motion.div}
       variants={cinematicReveal}
+      enableTilt={!isMobile}
       className={`group flex w-full flex-col gap-4 rounded-md border bg-card/40 backdrop-blur-md p-4 md:p-6 transition-all duration-300 md:w-[calc(50%-0.5rem)] lg:w-[calc(33.33%-0.67rem)]`}
     >
       <div className={`flex h-9 w-9 items-center justify-center rounded-sm border transition-colors duration-300 lg:group-hover:bg-primary lg:group-hover:text-primary-foreground ${isActive ? "bg-primary text-primary-foreground border-primary" : "bg-secondary text-primary border-border"}`}>
@@ -297,6 +295,7 @@ function EducationCard({ edu, isMobile }: { edu: typeof education[number], isMob
       ref={ref}
       as={motion.div}
       variants={cinematicReveal}
+      enableTilt={!isMobile}
       className={`group rounded-md border bg-card/40 backdrop-blur-md p-4 md:p-8 transition-all duration-300`}
     >
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
