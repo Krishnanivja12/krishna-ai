@@ -141,7 +141,7 @@ export function ProjectDetailModal({ project, onClose, sourceRect }: ProjectDeta
                     className="object-cover"
                     priority
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-transparent to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background via-background/20 to-transparent" />
                 </div>
               )}
 

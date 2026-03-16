@@ -123,11 +123,11 @@ function PhotoCard({
         priority={priority}
       />
 
-      <div className={`absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent transition-opacity duration-500 lg:group-hover:opacity-100 ${isActive ? "opacity-100" : "opacity-0"}`} />
+      <div className={`absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-transparent to-transparent transition-opacity duration-500 lg:group-hover:opacity-100 ${isActive ? "opacity-100" : "opacity-0"}`} />
       
       {photo.caption && (
         <div className={`absolute bottom-6 left-6 transition-all duration-500 ease-out lg:group-hover:translate-y-0 lg:group-hover:opacity-100 ${isActive ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
-          <p className="font-mono text-xs lg:text-sm font-medium text-foreground">
+          <p className="font-mono text-xs lg:text-sm font-medium text-white/90">
             <span className="text-primary">{"> "}</span>
             {photo.caption}
           </p>

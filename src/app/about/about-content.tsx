@@ -170,7 +170,7 @@ export function AboutContent() {
               <GlowCard 
                 as={motion.div}
                 variants={cinematicReveal}
-                className="rounded-md border border-border bg-card/40 backdrop-blur-md lg:col-span-3 p-4 md:p-8 lg:p-10"
+                className="rounded-md border border-border glass-premium-bg lg:col-span-3 p-4 md:p-8 lg:p-10"
               >
                 <div className="flex flex-col h-full">
                   <span className="mb-4 inline-block font-mono text-[10px] tracking-widest text-primary uppercase">
@@ -195,7 +195,7 @@ export function AboutContent() {
                 <GlowCard 
                   as={motion.div}
                   variants={cinematicReveal}
-                  className="flex flex-col justify-center gap-4 rounded-md border border-border bg-card/40 backdrop-blur-md p-4 md:p-8 lg:p-6"
+                  className="flex flex-col justify-center gap-4 rounded-md border border-border glass-premium-bg p-4 md:p-8 lg:p-6"
                 >
                   <div className="flex items-center gap-3">
                     <span className="relative flex h-2 w-2">
@@ -213,7 +213,7 @@ export function AboutContent() {
                 <GlowCard 
                   as={motion.div}
                   variants={cinematicReveal}
-                  className="flex flex-col justify-center gap-4 rounded-md border border-border bg-card/40 backdrop-blur-md p-4 md:p-8 lg:p-6"
+                  className="flex flex-col justify-center gap-4 rounded-md border border-border glass-premium-bg p-4 md:p-8 lg:p-6"
                 >
                   <div className="space-y-1">
                     <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">Location</span>
@@ -283,7 +283,7 @@ function JourneyCard({ item, isMobile }: { item: typeof journey[number], isMobil
       as={motion.div}
       variants={cinematicReveal}
       enableTilt={!isMobile}
-      className={`group flex w-full flex-col gap-4 rounded-md border bg-card/40 backdrop-blur-md p-4 md:p-6 transition-all duration-300 md:w-[calc(50%-0.5rem)] lg:w-[calc(33.33%-0.67rem)]`}
+      className={`group flex w-full flex-col gap-4 rounded-md border glass-premium-bg p-4 md:p-6 transition-all duration-300 md:w-[calc(50%-0.5rem)] lg:w-[calc(33.33%-0.67rem)]`}
     >
       <div className={`flex h-9 w-9 items-center justify-center rounded-sm border transition-colors duration-300 lg:group-hover:bg-primary lg:group-hover:text-primary-foreground ${isActive ? "bg-primary text-primary-foreground border-primary" : "bg-secondary text-primary border-border"}`}>
         <item.icon className="h-4 w-4" strokeWidth={1.5} />
@@ -305,7 +305,7 @@ function EducationCard({ edu, isMobile }: { edu: typeof education[number], isMob
       as={motion.div}
       variants={cinematicReveal}
       enableTilt={!isMobile}
-      className={`group rounded-md border bg-card/40 backdrop-blur-md p-4 md:p-8 transition-all duration-300`}
+      className={`group rounded-md border glass-premium-bg p-4 md:p-8 transition-all duration-300`}
     >
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-4">

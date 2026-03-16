@@ -81,12 +81,12 @@ export function Navigation() {
               onClick={() => setIsOpen(false)}
               className="group flex items-center gap-3 rounded-md border border-border bg-card/80 px-3 py-2 md:px-4 md:py-2 backdrop-blur-xl hover:border-primary/50 transition-all"
             >
-              <div className="relative h-6 w-6 md:h-7 md:w-7 overflow-hidden rounded-sm">
+              <div className="relative h-6 w-6 md:h-7 md:w-7">
                 <Image
                   src={SITE_METADATA.logo}
                   alt="Logo"
                   fill
-                  className="object-cover invert dark:invert-0 transition-transform duration-500 group-hover:scale-110"
+                  className="object-cover invert dark:invert-0 transition-all duration-500 group-hover:scale-110 mix-blend-multiply dark:mix-blend-screen [mask-image:radial-gradient(circle,black_70%,transparent_100%)]"
                 />
               </div>
               <span className="hidden font-mono text-xs tracking-tighter text-foreground/80 sm:block">
