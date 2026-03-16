@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 		description: SITE_METADATA.description,
 		images: [
 			{
-				url: "/og-image.jpg", // need to be added
+				url: "/og-image.png", // need to be changed
 				width: 1200,
 				height: 630,
 				alt: SITE_METADATA.title,
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: SITE_METADATA.title,
 		description: SITE_METADATA.description,
-		images: ["/og-image.jpg"],
+		images: ["/og-image.png"], // need to be changed
 		creator: "@Viraj__Mavani",
 	},
 	icons: {
@@ -99,11 +99,11 @@ const jsonLd = {
 				"@id": `${SITE_METADATA.siteUrl}/#logo`
 			},
 			"sameAs": [
-				"https://github.com/Viraj-Mavani",
-				"https://www.linkedin.com/in/viraj-mavani/",
-				"https://twitter.com/Viraj__Mavani",
-				"https://discord.com/users/atom1zer",
-				"https://www.instagram.com/veer.mavani"
+				SITE_METADATA.social.github,
+				SITE_METADATA.social.linkedin,
+				SITE_METADATA.social.twitter,
+				SITE_METADATA.social.discord,
+				SITE_METADATA.social.instagram
 			],
 			"jobTitle": "Full Stack AI Engineer"
 		}
