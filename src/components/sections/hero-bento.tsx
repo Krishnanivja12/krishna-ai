@@ -87,7 +87,7 @@ export function HeroBento({ index }: HeroBentoProps) {
           </div>
           <div>
             <span className="mb-4 inline-block font-mono text-[10px] tracking-widest text-primary uppercase">
-              <DiaText words={["Full-Stack", "AI"]} duration={3500} /> {content.title}
+              <DiaText words={["Full-Stack", "AI", "Data"]} duration={3500} /> {content.title}
             </span>
             <h1
               id="hero-heading"
