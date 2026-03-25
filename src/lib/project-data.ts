@@ -1,3 +1,5 @@
+// NOTE FOR PROJECT-DATA.TS: ALL BRIEF CONTENT SHOULD BE SIMILAR IN LENGTH TO MAINTAIN CONSISTENCY IN THE UI. 
+
 export interface Project {
 	title: string;
 	brief: string;
@@ -168,6 +170,29 @@ export const projects: Project[] = [
 		github: "https://github.com/Viraj-Mavani/EthicalDilemmaAI",
 		mode: ["ai-ml"],
 	},
+  {
+    title: "Abhi Kansara Photography - Premium Studio Portfolio",
+    brief: "Engineered a high-end, full-stack photography portfolio using Next.js 16, React 19, and Tailwind CSS v4, paired with a robust .NET 8 backend. The platform features an immersive visual experience with smooth Lenis scrolling, complex Framer Motion animations, and a secure, bespoke dynamic image management system with gallery integrated with Adobe Lightroom.",
+    description: [
+      "Built as a premium showcase for a professional photography studio, this platform bridges the gap between stunning visual aesthetics and high-performance web engineering. The frontend is powered by Next.js 16 and React 19, utilizing Tailwind CSS v4 for pixel-perfect, responsive styling. A core focus was the user experience, integrating Lenis for buttery-smooth scroll behavior and Framer Motion for sophisticated, hardware-accelerated page transitions and micro-interactions that elevate the 'premium' immersive feel.",
+      "To handle the dynamic, high-resolution media requirements effortlessly, I architected a robust, scalable backend using .NET 8 Web API, C#, and Entity Framework Core, supported by a structured SQL database. This custom headless CMS approach allows the client to securely authenticate, seamlessly manage their portfolio, upload new high-res shoots, and update site content in real-time, completely decoupling content management from the front-end presentation layer.",
+      "The system is deployed with a heavy emphasis on Core Web Vitals and SEO, utilizing Next.js's advanced React Server Components (RSC), highly optimized edge image caching, and automated structured data generation. I also integrated Resend with Next.js Server Actions for reliable, instant client inquiries directly from the site. This architecture ensures the artist's photography remains front-and-center without sacrificing lighting-fast load speeds or long-term maintainability."
+    ],
+    tags: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS v4",
+      "Framer Motion",
+      "Lenis",
+      "C#",
+      ".NET 8",
+      "Entity Framework Core"
+    ],
+    live: "https://abhikansaraphotography.com",
+    github: "https://github.com/Viraj-Mavani/abhi-kansara-photography",
+    mode: ["fullstack"],
+  },
 	{
 		title: "Context-Aware Portfolio Platform",
 		brief: 'Architected a high-performance, polymorphic portfolio platform from scratch using Next.js 14 and TypeScript. The system features a custom state-driven "Mode Switcher" that recontextualizes the entire UI—from hero text to project filtering—based on a viewer\'s interest. I utilized Gemini Stitch for UI design inspiration, ensuring a modern, developer-centric aesthetic with 99.9% performance scores.',
