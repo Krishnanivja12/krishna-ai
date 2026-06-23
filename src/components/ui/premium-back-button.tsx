@@ -9,7 +9,6 @@ interface PremiumBackButtonProps {
   text: string
   className?: string
   autoHover?: boolean
-  threshold?: number
   isVisible?: boolean
 }
 
@@ -18,7 +17,6 @@ export function PremiumBackButton({
   text, 
   className = "", 
   autoHover = false, 
-  threshold = 50,
   isVisible = true
 }: PremiumBackButtonProps) {
   return (
@@ -73,8 +71,8 @@ export function PremiumBackButton({
           <motion.div
             variants={{
               closed: { scale: 0.8, opacity: 0 },
-              opened: { scale: 1, opacity: 1, backgroundColor: "hsla(var(--secondary) / 0.3)" },
-              hover: { scale: 1.05, opacity: 1, backgroundColor: "hsl(var(--primary))" }
+              opened: { scale: 1, opacity: 1 },
+              hover: { scale: 1.05, opacity: 1 }
             }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             className="relative flex h-8 items-center justify-center rounded-sm border border-primary/30 px-3 transition-colors duration-300 group-hover:border-primary"

@@ -41,10 +41,10 @@ export interface Certificate {
   modes: string[]
 }
 
-export const HeroContent: HeroContent= {
+export const HeroContent: HeroContent = {
   generalist: {
     title: "Engineer",
-    description: "Merging Full Stack Engineering with AI Research to create production-grade solutions."
+    description: "Developing intelligent systems, predictive models, and optimizing neural networks for real-world applications."
   },
   fullstack: {
     title: "Full Stack Developer",
@@ -62,9 +62,9 @@ export const HeroContent: HeroContent= {
 
 export const aboutContent: AboutContent = {
   generalist: [
-    "I am a Full Stack AI Engineer dedicated to architecting intelligent systems that bridge the gap between experimental AI research and scalable, production-grade software. I focus on building resilient, data-driven applications that prioritize both performance and intuitive UX.",
-    "With a background rooted in full-stack development and an advanced specialization in AI, I design end-to-end pipelines—from high-performance backends to interactive frontends. I ensure that every layer of the stack is optimized for speed, security, and data integrity.",
-    "I thrive at the intersection of engineering rigor and creative experimentation, seeking the most efficient approach to complex challenges. Beyond implementation, I prioritize software-engineering-first principles while staying current with the evolving AI landscape."
+    "I am an AI/ML Engineer dedicated to building intelligent systems that bridge the gap between cutting-edge research and production-ready deployment. I focus on NLP, LLM fine-tuning, and RAG pipelines — engineering solutions that are optimized, scalable, and solve real-world problems.",
+    "With hands-on experience across the full ML lifecycle, I design end-to-end systems — from fine-tuning Mistral 7B with LoRA and QLoRA to deploying low-latency FastAPI inference APIs backed by FAISS vector databases. I've reduced NLP inference latency by 40% and improved model accuracy by 25% in production environments.",
+    "I thrive at the intersection of research and engineering — whether it's implementing parameter-efficient fine-tuning with PEFT, building semantic search pipelines, or optimizing batch inference at scale. I'm not waiting to graduate to build real AI — I'm already doing it."
   ],
   fullstack: [
     "As a Full Stack Developer, I specialize in building robust enterprise applications using the .NET ecosystem, React, and Next.js. I focus on creating modular architectures that allow for rapid scaling and easy maintenance in high-stakes, data-intensive business environments.",
@@ -85,149 +85,109 @@ export const aboutContent: AboutContent = {
 
 export const education: Education[] = [
   {
-    degree: "Master of Science in Computer Science",
-    school: "WESTERN UNIVERSITY",
-    location: "ON, Canada",
-    period: "2024 - 2025",
-    focus: "Specialization in Artificial Intelligence",
-    description: "Conducted advanced research in Large Language Models (LLMs) and Neural Networks to optimize domain-specific AI performance.",
-    highlights: [
-      "GPA: 3.58/4.0 | University Ranking: Top 1%–2% of universities worldwide // 6th in Canada",
-      "Directed Studies Research: 'Ethical Dilemmas in AI' – A quantitative framework evaluating ethical alignment across ChatGPT, Gemini, Claude, and DeepSeek.",
-      "Developed an ML-Powered Taxi Fare Prediction system using LightGBM and Docker-based automated data pipelines.",
-      "Engineered a Distributed Web Scraper using MPI for parallel computing, optimizing large-scale data extraction throughput.",
-      "Relevant Coursework: Advanced AI, Distributed & Parallel Systems, AI Ethics, and Machine Learning."
-    ],
+    degree: "Bachelor of Technology in Artificial Intelligence & Machine Learning",
+    school: "SHRI RAM GROUP OF COLLEGE",
+    location: "Banmore, MP, India",
+    period: "Pursuing",
+    focus: "Specialization in AI, ML, NLP & Deep Learning",
+    description: "Actively building production-grade ML systems alongside academics — including fine-tuned LLMs, RAG pipelines, and FastAPI deployments.",
+    highlights: [],
   },
   {
-    degree: "Bachelor of Technology in Computer Engineering",
-    school: "ATMIYA UNIVERSITY",
-    location: "Gujarat, India",
-    period: "2019 - 2023",
-    description: "Established a strong foundation in software engineering principles, algorithms, data structures, and distributed system architecture.",
-    highlights: [
-      "GPA: 3.62/4.0 (85.18%)",
-      "Senior Capstone: Full-Stack Amazon Clone – Developed a cross-platform E-commerce app with Flutter, Node.js, and MongoDB featuring real-time payment integration (G-Pay/Apple Pay).",
-      "Designed and implemented a Seller Admin Panel with real-time sales statistics and inventory management.",
-      "Relevant Coursework: Python, .NET C#, Java, Web Development, Theory of Computation, Data Structures, Internet & Network Security, Data Mining, and Cloud Computing."
-    ],
+    degree: "ChatGPT Prompt Engineering for Developers",
+    school: "DEEPLEARNING.AI",
+    location: "Online",
+    period: "2024",
+    focus: "Certification — LLM Applications & Prompt Design",
+    description: "Learned to build LLM-powered apps using best practices in prompt chaining, output parsing, and iterative refinement.",
+    highlights: [],
   },
 ]
 
 export const skillCategories: SkillCategory[] = [
   {
-    label: "Languages",
-    skills: ["Python", "TypeScript", "JavaScript", "C#", "Java", "SQL", "C++", "R"],
+    label: "Languages & Databases",
+    skills: ["Python", "SQL", "PostgreSQL", "Vector Databases", "FAISS"],
   },
   {
-    label: "Frameworks / Web",
-    skills: ["React", "Next.js", ".NET Core", "Node.js", "FastAPI", "Tailwind CSS"],
+    label: "Machine Learning",
+    skills: ["Scikit-learn", "XGBoost", "Random Forest", "Feature Engineering", "Hyperparameter Tuning", "Cross Validation", "EDA"],
   },
   {
-    label: "Databases",
-    skills: ["PostgreSQL", "MongoDB", "Redis", "MySQL", "Supabase", "Firebase"],
+    label: "Deep Learning & NLP",
+    skills: ["PyTorch", "TensorFlow", "Keras", "CNN", "RNN", "LSTM", "Transformers", "Attention Mechanism", "Transfer Learning"],
   },
   {
-    label: "Data Science & AI",
-    skills: ["PyTorch", "TensorFlow", "Scikit-learn", "Pandas", "NumPy", "LangChain", "Hugging Face"],
+    label: "LLM & GenAI",
+    skills: ["Hugging Face", "RAG Pipelines", "Semantic Search", "Embeddings", "Prompt Engineering", "LoRA", "QLoRA", "PEFT", "Quantization", "RLHF", "LangChain", "CrewAI"],
   },
   {
-    label: "Data Engineering",
-    skills: ["Apache Spark", "Airflow", "Kafka", "dbt", "ETL Pipelines", "Data Modeling"],
+    label: "MLOps & Backend",
+    skills: ["FastAPI", "RESTful APIs", "Model Inference APIs", "Streamlit", "Docker", "Batch Inference", "Latency Optimization", "Model Versioning"],
   },
   {
-    label: "Cloud & Tools",
-    skills: ["AWS", "Azure", "Git", "Docker", "Kubernetes", "Terraform", "CI/CD"],
+    label: "Data & Cloud",
+    skills: ["Pandas", "NumPy", "Matplotlib", "Seaborn", "AWS EC2", "AWS S3", "Git", "Linux"],
   },
 ]
 
 export const experiences: Experience[] = [
   {
-    role: "Graduate Teaching Assistant",
-    company: "Western University",
-    location: "London, ON",
-    period: "Jan 2024 - Apr 2025",
+    role: "AI/ML Engineer",
+    company: "STEVE'S AI LAB",
+    location: "Indore, MP, India",
+    period: "Apr 2026 - Present",
     description:
-      "Mentored 200+ students in CS2034b (Data Analytics: Principles), delivering comprehensive labs and tutorials on Python, machine learning, and data visualization. Facilitated academic success by simplifying complex algorithmic concepts, resulting in improved average course satisfaction scores and student performance metrics.",
-    tags: ["Python", "Pandas", "NumPy", "Matplotlib", "Scikit-learn", "SQL", "Jupyter Notebooks", "VBA", "Data Analytics"],
+      "Built a GeoSpatial AI Platform integrating Google Maps API, OpenStreetMap, and 5+ REST APIs using a LangChain RAG pipeline with ChromaDB vector store for real-time location-aware query resolution. Engineered a multi-step retrieval orchestration agent using LangGraph, reducing LLM hallucination on geo-specific queries by 40%. Containerized the inference stack with Docker, deployed on AWS EC2 with 99.2% production uptime, and monitored performance with Weights & Biases. Performed LLM fine-tuning using LoRA/QLoRA with Hugging Face PEFT and GGUF/GPTQ quantization.",
+    tags: ["LangChain", "LangGraph", "RAG", "ChromaDB", "Docker", "AWS EC2", "LoRA", "QLoRA", "PEFT", "Google Maps API", "W&B"],
   },
   {
-    role: "Full Stack Developer",
-    company: "Dexoc Solutions",
-    location: "Ahmedabad, India",
-    period: "Sep 2023 - Jul 2024",
+    role: "Data Science Intern",
+    company: "TECHIESHUBHDEEP IT SOLUTIONS PVT. LTD.",
+    location: "Gwalior, MP, India",
+    period: "Apr 2025 - Jan 2026",
     description:
-      "Engineered scalable full-stack solutions using .NET Core and AngularJS, optimizing front-end/back-end integration to boost client system performance by 20%. Led 15+ enterprise web scraping projects for international clients, processing millions of records with 99%+ data integrity. Implemented serverless AWS Lambda pipelines to streamline data storage, while mentoring junior developers to elevate team coding standards.",
-    tags: ["C#", ".NET Core", "AngularJS", "JWT Token", "Python", "AWS Lambda", "PostgreSQL", "SQL", "Azure DevOps/ServiceBus", "Docker", "Selenium", "Scrapy", "CI/CD", "Web Scraping", "xUnit"],
+      "Architected and deployed scalable AI APIs using FastAPI, implementing asynchronous processing to reduce model inference latency by 40%. Built end-to-end ML pipelines using Python, Scikit-learn, and XGBoost for classification tasks, improving model performance by 25% through feature engineering and hyperparameter tuning. Designed CNN and RNN architectures for sentiment analysis and NLP text classification in production environments.",
+    tags: ["Python", "FastAPI", "Scikit-learn", "XGBoost", "CNN", "RNN", "MLOps", "NLP", "Docker", "NumPy"],
   },
   {
-    role: "Software Engineer",
-    company: "FSP MEDIA",
-    location: "Ahmedabad, India",
-    period: "Mar 2023 - Aug 2023",
+    role: "Data Science Trainee",
+    company: "ALMABETTER",
+    location: "Remote",
+    period: "Oct 2024 - Mar 2025",
     description:
-      "Architected modular .NET backend systems for diverse industry clients, ensuring high availability and timely delivery. Partnered directly with stakeholders to translate complex business requirements into technical specifications. Enhanced system reliability and code maintainability by establishing comprehensive unit testing protocols and rigorous debugging cycles.",
-    tags: ["C#", ".NET Core", "ASP.NET Web API", "React", "SQL", "PostgreSQL", "Entity Framework", "Dapper", "MSSQL", "Git", "System Architecture"],
-  },
-  {
-    role: ".NET Developer Intern",
-    company: "TatvaSoft",
-    location: "Ahmedabad, India",
-    period: "Dec 2022 - Feb 2023",
-    description:
-      "Contributed to production-level enterprise software, translating theoretical concepts into robust .NET solutions. Optimized application performance through proactive debugging and code refactoring within the .NET ecosystem. Collaborated with senior teams using Git and Agile methodologies to maintain high-velocity release cycles.",
-    tags: ["C#", ".NET Core", "ASP.NET MVC", "LINQ", "SQL", "Entity Framework", "Git", "Unit Testing", "Agile"],
+      "Simulated high-level consulting workflows, delivering data-driven insights and forensic technology solutions for complex real-world business scenarios. Worked extensively on exploratory data analysis, statistical modeling, and deriving actionable insights from large datasets. Developed strong foundations in data analysis pipelines, visualization, and applied machine learning through intensive project-based apprenticeship training.",
+    tags: ["Python", "Data Analysis", "Forensic Technology", "EDA", "Pandas", "Matplotlib", "Scikit-learn"],
   },
 ]
 
 export const certificates: Certificate[] = [
   {
-    title: "Generative AI with Large Language Models",
-    issuer: "Amazon Web Services",
-    date: "2026",
-    credentialUrl: "#",
-    modes: ["ai-ml"],
-  },
-  {
-    title: "Neural Networks and Deep Learning",
+    title: "ChatGPT Prompt Engineering for Developers",
     issuer: "DeepLearning.AI",
-    date: "2025",
-    credentialUrl: "https://www.linkedin.com/redir/redirect/?url=https%3A%2F%2Fwww.coursera.org%2Faccount%2Faccomplishments%2Fcertificate%2FG47R9OJCYUM1&urlhash=WMGG&isSdui=true&lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_certifications_details%3B4MZPrNvgQuG7NWAMorUL7g%3D%3D",
+    date: "Jul 2025",
+    credentialUrl: "",
     modes: ["ai-ml"],
   },
   {
-    title: "Machine Learning Specialization",
-    issuer: "Stanford University & DeepLearning.AI",
-    date: "2023",
-    credentialUrl: "https://www.linkedin.com/redir/redirect/?url=https%3A%2F%2Fwww.coursera.org%2Faccount%2Faccomplishments%2Fspecialization%2Fcertificate%2F33GHJ2QY82KX&urlhash=7cWX&isSdui=true&lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_certifications_details%3B4MZPrNvgQuG7NWAMorUL7g%3D%3D",
-    modes: ["ai-ml", "data"],
+    title: "Tata Group - Data Visualisation: Empowering Business with Effective Insights",
+    issuer: "Forage",
+    date: "Mar 2025",
+    credentialUrl: "https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/ifobHAoMjQs9s6bKS/MyXvBcppsW2FkNYCX_ifobHAoMjQs9s6bKS_hkh2cdkQbqzCps4TL_1743081046036_completion_certificate.pdf",
+    modes: ["data", "ai-ml"],
   },
   {
-    title: "Web Scraping in Python",
-    issuer: "Udemy",
-    date: "2023",
-    credentialUrl: "https://www.udemy.com/certificate/UC-67d9a135-be8f-43a4-b9e9-10f2ede5e3e3/",
-    modes: ["data"],
+    title: "Deloitte Australia - Data Analytics Job Simulation",
+    issuer: "Forage",
+    date: "Mar 2025",
+    credentialUrl: "https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/9PBTqmSxAf6zZTseP/io9DzWKe3PTsiS6GG_9PBTqmSxAf6zZTseP_hkh2cdkQbqzCps4TL_1743080213504_completion_certificate.pdf",
+    modes: ["data", "ai-ml"],
   },
   {
-    title: "The Complete Web Development Bootcamp",
-    issuer: "The App Brewery",
-    date: "2022",
-    credentialUrl: "https://www.linkedin.com/redir/redirect/?url=https%3A%2F%2Fwww.udemy.com%2Fcertificate%2FUC-9779c93d-77bd-4610-ad4d-2e815b0a382c%2F&urlhash=h-sJ&isSdui=true&lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_certifications_details%3B4MZPrNvgQuG7NWAMorUL7g%3D%3D",
-    modes: ["fullstack"],
-  },
-  {
-    title: "Python Data Structures",
-    issuer: "University of Michigan",
-    date: "2022",
-    credentialUrl: "https://coursera.org/share/ee17983586c604634839c77d9bca134e",
-    modes: ["ai-ml", "fullstack"],
-  },
-  {
-    title: "Programming Fundamentals",
-    issuer: "Duke University",
-    date: "2020",
-    credentialUrl: "https://coursera.org/share/ba053d3229601521dd958d7c66b4c974",
-    modes: ["fullstack"],
+    title: "Cisco Verified Data Analytics Essentials",
+    issuer: "Cisco Networking Academy",
+    date: "Mar 2025",
+    credentialUrl: "",
+    modes: ["data", "ai-ml"],
   },
 ]

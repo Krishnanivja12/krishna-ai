@@ -2,7 +2,7 @@
 
 import { useRef } from "react"
 import { motion } from "framer-motion"
-import { Globe, Brain, BarChart3 } from "lucide-react"
+import { Cpu, Brain, BarChart3 } from "lucide-react"
 import { cinematicReveal, staggerContainer } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
 import { SectionHeader } from "../layout/section-header"
@@ -13,10 +13,10 @@ interface ServicesStripProps {
 
 const services = [
   {
-    icon: Globe,
-    title: "Web Development",
-    tags: ["Scalable", "Fast", "React"],
-    description: "Production-grade applications built with modern frameworks and optimized for performance at scale.",
+    icon: Cpu,
+    title: "LLM Fine-Tuning",
+    tags: ["LoRA", "QLoRA", "PEFT", "Mistral"],
+    description: "Domain-specific LLM fine-tuning using LoRA and QLoRA on your own data — delivering accurate, context-aware models optimized for your use case.",
   },
   {
     icon: Brain,
@@ -71,7 +71,7 @@ function ServiceCard({ service, isMobile }: { service: typeof services[number], 
       variants={cinematicReveal}
       className={`relative bg-background lg:hover:z-10 ${isActive ? "z-10" : "z-0"}`}
     >
-      <div className={`group flex flex-col gap-6 h-full p-4 lg:p-8 transition-all duration-500 ease-out lg:hover:bg-card lg:hover:-translate-y-1 lg:hover:shadow-xl lg:hover:shadow-primary/10 ${isActive ? "bg-card -translate-y-1 shadow-xl shadow-primary/10" : "bg-background translate-y-0 shadow-none"}`}>
+      <div className={`group flex flex-col gap-6 h-full p-4 lg:p-8 transition-all duration-500 ease-out lg:hover:bg-card ${isActive ? "bg-card" : "bg-background"}`}>
       <div className="flex items-start justify-between">
         <service.icon
           className="h-5 w-5 text-primary"

@@ -2,14 +2,15 @@
 import * as React from "react";
 import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
+
 export interface TextBlurInProps
-    extends Omit<HTMLMotionProps<any>, "children"> {
+    extends Omit<HTMLMotionProps<"p">, "children"> {
     children: string;
     duration?: number;
     delay?: number;
     by?: "character" | "word";
     staggerDelay?: number;
-    as?: any;
+    as?: React.ElementType;
 }
 export function TextBlurIn({
     children,

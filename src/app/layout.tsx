@@ -1,27 +1,23 @@
 import React from "react"
-import type { Metadata, Viewport } from 'next'
-import { JetBrains_Mono } from 'next/font/google'
+import type { Metadata, Viewport } from "next"
+import localFont from "next/font/local"
 import { ThemeProvider } from "@/components/layout/theme-provider"
 import { SITE_METADATA } from "@/lib/site-metadata"
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { AmbientCursor } from "@/components/layout/ambient-cursor"
-import { PremiumBackground } from '@/components/layout/premium-background'
 import { AccessibilityProvider } from "@/contexts/accessibility-context"
 import { NavigationHubProvider } from "@/contexts/navigation-hub-context"
-import { AccessibilityMenu } from "@/components/blocks/accessibility-menu"
 import { ClientShell } from "@/components/layout/client-shell"
-import localFont from 'next/font/local'
+import { ChromeEffects } from "@/components/layout/chrome-effects"
 
-import './globals.css'
+import "./globals.css"
 
 const googleSans = localFont({
-	src: '../../public/fonts/GoogleSans-VariableFont_GRAD,opsz,wght.ttf',
-	variable: '--font-google-sans',
-	display: 'swap'
+	src: "../../public/fonts/GoogleSans-VariableFont_GRAD,opsz,wght.ttf",
+	variable: "--font-google-sans",
+	display: "swap",
+	preload: true,
 })
-
-const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains' })
 
 export const metadata: Metadata = {
 	metadataBase: new URL(SITE_METADATA.siteUrl),
@@ -117,7 +113,17 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="en" className={`${googleSans.variable} ${jetbrains.variable}`} suppressHydrationWarning>
+		<html
+			lang="en"
+			className={googleSans.variable}
+			suppressHydrationWarning
+			style={
+				{
+					"--font-jetbrains":
+						'"JetBrains Mono", "Fira Code", "Fira Mono", "Cascadia Code", "Source Code Pro", ui-monospace, monospace',
+				} as React.CSSProperties
+			}
+		>
 			<head>
 				<script
 					type="application/ld+json"
@@ -133,12 +139,10 @@ export default function RootLayout({
 				>
 					<AccessibilityProvider>
 						<NavigationHubProvider>
-							<AmbientCursor />
-							<PremiumBackground />
+							<ChromeEffects />
 							<ClientShell>
 								{children}
 							</ClientShell>
-							<AccessibilityMenu />
 						</NavigationHubProvider>
 					</AccessibilityProvider>
 				</ThemeProvider>

@@ -1,17 +1,18 @@
 export const SITE_METADATA = {
-	title: "Viraj Mavani",
-	siteName: "VirajMavani.dev",
+	title: "Krishna Nivja",
+	siteName: "Krishna Nivja.dev",
 	description:
 		"Full Stack AI Engineer. Merging Full Stack Engineering with AI Research to create production-grade solutions.",
-	siteUrl: "https://virajmavani.dev",
-	logo: "/logo.png",
+	siteUrl: "https://krishnanivja.dev",
+	logo: "/kn-logo.png",
 	favicon: "/favicon.ico",
-	keywords: ["Viraj Mavani", "AI Engineer", "Full Stack Developer", "AI Research", "Machine Learning"],
+	keywords: ["Krishna Nivja", "AI Engineer", "Full Stack Developer", "AI Research", "Machine Learning"],
 	social: {
-		github: "https://github.com/Viraj-Mavani",
-		linkedin: "https://www.linkedin.com/in/viraj-mavani/",
-		twitter: "https://twitter.com/Viraj__Mavani",
-		discord: "https://discord.com/users/atom1zer",
-		instagram: "https://www.instagram.com/veer.mavani",
+		github: "https://github.com/Krishnanivja12",
+		linkedin: "https://www.linkedin.com/in/krishnanivja/",
+		twitter: "",
+		discord: "https://discord.com/users/krishnanivja",
+		instagram: "",
+		email: "krishnanivja249@gmail.com",
 	},
 };

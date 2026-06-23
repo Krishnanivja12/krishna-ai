@@ -1,14 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { RefreshCcw, SearchX } from "lucide-react"
 
 import { projects } from "@/lib/project-data"
 import { Navigation } from "@/components/layout/navigation"
 import { Footer } from "@/components/layout/footer"
-import { fadeUpVariant, sectionVariants, cinematicGrid, cardVariantRight, cardVariantLeft } from "@/lib/animations"
+import { fadeUpVariant, cinematicGrid, cardVariantRight, cardVariantLeft } from "@/lib/animations"
 import { useProjectModal } from "@/hooks/use-project-modal"
 import { ProjectCard } from "@/components/blocks/project-card"
 import { ProjectDetailModal } from "@/components/blocks/project-detail-modal"
@@ -24,7 +23,6 @@ const modeFilters = [
   { id: "fullstack", label: "Full Stack" },
   { id: "ai-ml", label: "AI / ML" },
   { id: "data", label: "Web Scraping" },
-  { id: "game", label: "Game Dev" },
 ]
 
 export function ProjectsPageContent() {

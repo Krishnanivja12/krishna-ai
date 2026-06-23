@@ -1,10 +1,9 @@
 "use client"
 
 import React, { createContext, useContext, useState } from "react";
-import { SITE_CONFIG } from "@/config/site-config";
 
 // Matches the IDs in your top-nav.tsx
-type Mode = "generalist" | "fullstack" | "ai-ml" | "data";
+export type Mode = "generalist" | "fullstack" | "ai-ml" | "data";
 
 interface ModeContextType {
   mode: Mode;

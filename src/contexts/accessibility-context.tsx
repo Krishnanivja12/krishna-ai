@@ -19,6 +19,7 @@ interface AccessibilityContextValue extends AccessibilityState {
   toggleReducedMotion: () => void;
   toggleHighContrast: () => void;
   toggleLargeText: () => void;
+  lowPerformance: boolean;
 }
 
 const STORAGE_KEY = "a11y-settings";
@@ -32,6 +33,7 @@ const defaults: AccessibilityState = {
 // ─── Context ─────────────────────────────────────────────────
 const AccessibilityContext = createContext<AccessibilityContextValue>({
   ...defaults,
+  lowPerformance: false,
   toggleReducedMotion: () => {},
   toggleHighContrast: () => {},
   toggleLargeText: () => {},
@@ -48,42 +50,54 @@ export function AccessibilityProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [state, setState] = useState<AccessibilityState>(defaults);
-  const [mounted, setMounted] = useState(false);
+  const [state, setState] = useState<AccessibilityState>(() => {
+    if (typeof window === "undefined") {
+      return defaults;
+    }
 
-  // Read localStorage on mount
-  useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as Partial<AccessibilityState>;
-        setState((prev) => ({ ...prev, ...parsed }));
+        return { ...defaults, ...parsed };
       }
     } catch {
       // ignore
     }
-    setMounted(true);
-  }, []);
+
+    return defaults;
+  });
 
   // Persist to localStorage whenever state changes
   useEffect(() => {
-    if (!mounted) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       // ignore
     }
-  }, [state, mounted]);
+  }, [state]);
+
+  // Detect low-performance devices: mobile (touch+small screen) OR low CPU cores
+  const [lowPerformance, setLowPerformance] = useState(false)
+
+  useEffect(() => {
+    const isTouchDevice = window.matchMedia("(pointer: coarse)").matches
+    const isSmallScreen = window.innerWidth < 768
+    const lowCores = (navigator.hardwareConcurrency || 8) <= 4
+    const isMobileOS = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+
+    setLowPerformance((isTouchDevice && isSmallScreen) || lowCores || isMobileOS)
+  }, [])
 
   // Apply CSS classes to <html> element
   useEffect(() => {
-    if (!mounted) return;
     const root = document.documentElement;
 
     root.classList.toggle("a11y-reduced-motion", state.reducedMotion);
     root.classList.toggle("a11y-high-contrast", state.highContrast);
     root.classList.toggle("a11y-large-text", state.largeText);
-  }, [state, mounted]);
+    root.classList.toggle("low-performance", state.reducedMotion || lowPerformance);
+  }, [state, lowPerformance]);
 
   const toggleReducedMotion = useCallback(
     () => setState((s) => ({ ...s, reducedMotion: !s.reducedMotion })),
@@ -105,6 +119,7 @@ export function AccessibilityProvider({
         toggleReducedMotion,
         toggleHighContrast,
         toggleLargeText,
+        lowPerformance,
       }}
     >
       {children}

@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState } from "react"
+import { motion, AnimatePresence, type Variants } from "framer-motion"
 import Link from "next/link"
 import { useTheme } from "next-themes"
 import { flushSync } from "react-dom"
 import { Sun, Moon, FileText, Download, ChevronRight } from "lucide-react"
 import { useMode } from "@/hooks/use-mode"
+import type { Mode } from "@/hooks/use-mode"
 import { exploreLinks, modes, RESUMES } from "@/config/navigation-data"
 import { socialLinks } from "@/components/layout/footer"
 import { useIsMobile, useAtBottomHighlight } from "@/hooks/use-mobile-view-effect"
@@ -17,7 +18,7 @@ interface MenuOverlayProps {
   onClose: () => void
 }
 
-const overlayVariants = {
+const overlayVariants: Variants = {
   closed: {
     opacity: 0,
     transition: {
@@ -34,12 +35,20 @@ const overlayVariants = {
   }
 }
 
-const itemVariants = {
+const itemVariants: Variants = {
   closed: { y: 20, opacity: 0 },
   opened: { y: 0, opacity: 1 }
 }
 
-function NavStaggerItem({ children, variants, className = "" }: { children: React.ReactNode, variants: any, className?: string }) {
+function NavStaggerItem({
+  children,
+  variants,
+  className = "",
+}: {
+  children: React.ReactNode
+  variants: Variants
+  className?: string
+}) {
   const [isItemReady, setIsItemReady] = useState(false)
   return (
     <motion.div
@@ -47,7 +56,8 @@ function NavStaggerItem({ children, variants, className = "" }: { children: Reac
       onAnimationComplete={(definition) => {
         if (definition === "opened") setIsItemReady(true)
       }}
-      className={cn(className, !isItemReady && "pointer-events-none")}
+      className={cn("gpu-layer", className, !isItemReady && "pointer-events-none")}
+      style={{ willChange: 'transform, opacity' }}
     >
       {children}
     </motion.div>
@@ -103,8 +113,6 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
     })
   }
 
-  const currentResume = RESUMES.find(r => r.id === (activeMode === "ai-ml" ? "data" : activeMode)) || RESUMES[0]
-
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     const isAnchor = href.startsWith("#") || href.startsWith("/#")
     const targetPathname = href.split("#")[0].replace("/", "") || "home"
@@ -147,7 +155,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
           exit="closed"
           variants={overlayVariants}
           data-nav-overlay
-          className="fixed inset-0 z-[150] flex flex-col bg-background/80 backdrop-blur-[40px] px-6 py-24 md:px-20 md:py-32 overflow-y-auto border-b border-border/50 shadow-2xl"
+          className="gpu-layer fixed inset-0 z-[150] flex flex-col bg-background/80 backdrop-blur-[40px] px-4 py-20 sm:px-6 md:px-20 md:py-32 overflow-y-auto border-b border-border/50 shadow-2xl"
         >
           <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-row gap-12 lg:gap-32">
 
@@ -160,7 +168,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                 01. Explore
               </motion.span>
               <nav className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-                {exploreLinks.map((link, i) => {
+                {exploreLinks.map((link) => {
                   const isAnchor = link.href.includes("#")
                   const routeLabel = isAnchor 
                     ? `#${link.href.split("#")[1]}` 
@@ -199,7 +207,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                                   animate={{ y: 0, opacity: 0.6, filter: "blur(0px)" }}
                                   exit={{ y: "-100%", opacity: 0, filter: "blur(4px)" }}
                                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                  className="block font-mono text-[9px] tracking-[0.2em] text-muted-foreground uppercase italic"
+                                  className="gpu-layer block font-mono text-[9px] tracking-[0.2em] text-muted-foreground uppercase italic"
                                 >
                                   {(link.href.startsWith("#") || link.href.startsWith("/#")) ? "Section" : "Page"}
                                 </motion.span>
@@ -231,7 +239,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                   {modes.map((mode) => (
                     <button
                       key={mode.id}
-                      onClick={() => setActiveMode(mode.id as any)}
+                      onClick={() => setActiveMode(mode.id as Mode)}
                       className={`flex items-center justify-between rounded-sm border border-border px-4 py-3 font-mono text-xs transition-all ${activeMode === mode.id
                           ? "bg-primary text-primary-foreground border-primary"
                           : "bg-secondary/40 text-muted-foreground hover:border-primary/50"
@@ -264,7 +272,8 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                               animate={{ y: 0, opacity: 1, rotate: 0 }}
                               exit={{ y: -20, opacity: 0, rotate: 45 }}
                               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                              className="absolute inset-0 flex items-center justify-center"
+                              className="gpu-layer absolute inset-0 flex items-center justify-center"
+                              style={{ willChange: 'transform, opacity' }}
                             >
                               {resolvedTheme === "dark" ? (
                                 <Sun size={14} className="text-amber-500 fill-amber-500/10" />
@@ -299,7 +308,8 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                           initial={{ opacity: 0, y: 10, scale: 0.9, filter: "blur(10px)" }}
                           animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
                           exit={{ opacity: 0, y: 10, scale: 0.9, filter: "blur(10px)" }}
-                          className="absolute bottom-full right-0 mb-3 w-full lg:w-full md:w-[calc(50%-4px)] flex flex-col gap-1 rounded-sm border border-border bg-background/90 p-1 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] z-20"
+                          className="gpu-layer absolute bottom-full right-0 mb-3 w-full lg:w-full md:w-[calc(50%-4px)] flex flex-col gap-1 rounded-sm border border-border bg-background/90 p-1 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] z-20"
+                          style={{ willChange: 'transform, opacity' }}
                         >
                           <div className="px-3 py-2 border-b border-border/50 mb-1 text-right">
                             <span className="font-mono text-[8px] tracking-widest text-muted-foreground uppercase block italic">Download Version</span>
@@ -313,7 +323,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                               initial={{ opacity: 0, x: 20 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: idx * 0.05 }}
-                              className="flex items-center justify-end gap-3 rounded-sm px-3 py-2.5 font-mono text-[10px] hover:bg-primary hover:text-primary-foreground transition-all group text-right"
+                              className="gpu-layer flex items-center justify-end gap-3 rounded-sm px-3 py-2.5 font-mono text-[10px] hover:bg-primary hover:text-primary-foreground transition-all group text-right"
                             >
                               <ChevronRight size={10} className="-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-50 transition-all rotate-180" />
                               <span className="flex items-center gap-2">
@@ -334,7 +344,7 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                     04. Network
                   </span>
                   <div className="flex flex-wrap gap-3">
-                    {socialLinks.map((social, i) => {
+                    {socialLinks.map((social) => {
                       // Explicit mapping to ensure Tailwind generates these brand classes for auto-hover
                       const brandStyles: Record<string, string> = {
                         GitHub: "text-white bg-[#24292e] border-[#24292e]",

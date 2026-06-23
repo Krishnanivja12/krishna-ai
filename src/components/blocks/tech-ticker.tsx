@@ -1,20 +1,22 @@
 "use client"
 
 const techStack = [
-  "React",
-  "Next.js",
   "Python",
-  "C#",
-  ".NET Core",
   "PyTorch",
-  "TypeScript",
-  "PostgreSQL",
   "TensorFlow",
+  "Hugging Face",
+  "LangChain",
   "FastAPI",
+  "RAG Pipelines",
+  "LoRA / QLoRA",
+  "FAISS",
+  "Transformers",
+  "Scikit-learn",
   "Docker",
   "AWS",
-  "LangChain",
   "Pandas",
+  "CrewAI",
+  "Streamlit",
 ]
 
 export function TechTicker() {

@@ -4,6 +4,20 @@ import { useEffect, useState, RefObject } from "react";
 import { useInView } from "framer-motion";
 export const VIEWPORT_MARGIN_PERCENT = 40;
 
+function getScrollTop(target: EventTarget | null) {
+	if (target instanceof Element) return target.scrollTop;
+	return window.scrollY || document.documentElement.scrollTop || 0;
+}
+
+function getDistanceToBottom(target: EventTarget | null) {
+	if (target instanceof Element) {
+		return target.scrollHeight - (target.scrollTop + target.clientHeight);
+	}
+
+	const root = document.documentElement;
+	return root.scrollHeight - ((window.scrollY || root.scrollTop) + window.innerHeight);
+}
+
 export function useIsMobile() {
 	const [isMobile, setIsMobile] = useState(() => {
 		if (typeof window === "undefined") return false;
@@ -32,66 +46,73 @@ export function useAutoHighlight(
 	return isMobile && isInView;
 }
 
+// ─── Shared Scroll State ────────────────────────────────────
+// Single scroll listener shared across all hooks to reduce event overhead
+let sharedScrollY = 0
+let sharedScrollTarget: EventTarget | null = null
+let scrollListeners: Array<() => void> = []
+let isScrollInitialized = false
+
+function initSharedScroll() {
+  if (isScrollInitialized) return
+  isScrollInitialized = true
+
+  window.addEventListener("scroll", (event) => {
+    sharedScrollY = window.scrollY || document.documentElement.scrollTop || 0
+    sharedScrollTarget = event.target
+    // Notify all registered listeners
+    scrollListeners.forEach(fn => fn())
+  }, { passive: true, capture: true })
+}
+
+function subscribe(fn: () => void) {
+  scrollListeners.push(fn)
+  return () => {
+    scrollListeners = scrollListeners.filter(f => f !== fn)
+  }
+}
+
 export function useAtTopHighlight(isMobile: boolean, threshold = 20) {
-	const [isAtTop, setIsAtTop] = useState(true);
+	const [isAtTop, setIsAtTop] = useState(() => {
+		if (typeof window === "undefined") return false;
+		return isMobile && (window.scrollY || document.documentElement.scrollTop) < threshold;
+	});
 
 	useEffect(() => {
-		if (!isMobile) {
-			setIsAtTop(false);
-			return;
-		}
+		if (!isMobile) return;
 
-		const handleScroll = (e: any) => {
-			const target = e.target;
-			// Extract scroll position from various possible targets (Window, Document, or Viewport Div)
-			const scrollY = 
-				target.scrollTop !== undefined ? target.scrollTop :
-				target.pageYOffset !== undefined ? target.pageYOffset :
-				(target === document ? (document.scrollingElement?.scrollTop || document.documentElement.scrollTop) : 0);
-			
-			// console.log(`[DEBUG] ScrollY: ${scrollY} (Threshold: ${threshold})`);
-			setIsAtTop(scrollY < threshold);
-		};
+    initSharedScroll()
 
-		// Initial check
-		const initialScroll = window.scrollY || document.documentElement.scrollTop;
-		setIsAtTop(initialScroll < threshold);
+    const update = () => {
+      setIsAtTop(sharedScrollY < threshold)
+    }
 
-		// capture: true is essential for catching scroll events from child containers like Radix ScrollArea
-		window.addEventListener("scroll", handleScroll, { passive: true, capture: true });
-		return () => window.removeEventListener("scroll", handleScroll, { capture: true });
+    update()
+    const unsub = subscribe(update)
+    return unsub
 	}, [isMobile, threshold]);
 
-	return isAtTop;
+	return isMobile ? isAtTop : false;
 }
 export function useAtBottomHighlight(isMobile: boolean, threshold = 20) {
-	const [isAtBottom, setIsAtBottom] = useState(false);
+	const [isAtBottom, setIsAtBottom] = useState(() => {
+		if (typeof window === "undefined") return false;
+		return isMobile && getDistanceToBottom(document) < threshold;
+	});
 
 	useEffect(() => {
-		if (!isMobile) {
-			setIsAtBottom(false);
-			return;
-		}
+		if (!isMobile) return;
 
-		const handleScroll = (e: any) => {
-			const target = e.target;
-			if (!target) return;
+    initSharedScroll()
 
-			// Handle both Window/Document and specific Element targets
-			const scrollHeight = target.scrollHeight || (target === document ? document.documentElement.scrollHeight : 0);
-			const clientHeight = target.clientHeight || (target === document ? window.innerHeight : 0);
-			const scrollTop = target.scrollTop !== undefined ? target.scrollTop : (target === document ? (window.scrollY || document.documentElement.scrollTop) : 0);
+    const update = () => {
+      setIsAtBottom(getDistanceToBottom(document) < threshold)
+    }
 
-			const distanceToBottom = scrollHeight - (scrollTop + clientHeight);
-			
-			// console.log(`[DEBUG-BOTTOM] Distance: ${distanceToBottom} (Threshold: ${threshold})`);
-			setIsAtBottom(distanceToBottom < threshold);
-		};
-
-		// capture: true is crucial for Radix overlays and other nested scroll containers
-		window.addEventListener("scroll", handleScroll, { passive: true, capture: true });
-		return () => window.removeEventListener("scroll", handleScroll, { capture: true });
+    update()
+    const unsub = subscribe(update)
+    return unsub
 	}, [isMobile, threshold]);
 
-	return isAtBottom;
+	return isMobile ? isAtBottom : false;
 }

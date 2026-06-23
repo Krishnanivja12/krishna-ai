@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { motion, useSpring, useTransform } from "framer-motion"
 
 interface MagneticButtonProps {
@@ -11,8 +11,8 @@ interface MagneticButtonProps {
 }
 
 export function MagneticButton({ children, className = "", strength = 0.3, as = "div" }: MagneticButtonProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [isHovered, setIsHovered] = useState(false)
+  const divRef = useRef<HTMLDivElement>(null)
+  const spanRef = useRef<HTMLSpanElement>(null)
 
   const offsetX = useSpring(0, { damping: 20, stiffness: 300 })
   const offsetY = useSpring(0, { damping: 20, stiffness: 300 })
@@ -21,9 +21,10 @@ export function MagneticButton({ children, className = "", strength = 0.3, as = 
   const innerX = useTransform(offsetX, (v) => v * 0.6)
   const innerY = useTransform(offsetY, (v) => v * 0.6)
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return
-    const rect = ref.current.getBoundingClientRect()
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const target = as === "span" ? spanRef.current : divRef.current
+    if (!target) return
+    const rect = target.getBoundingClientRect()
     const centerX = rect.left + rect.width / 2
     const centerY = rect.top + rect.height / 2
     const dx = (e.clientX - centerX) * strength
@@ -33,27 +34,41 @@ export function MagneticButton({ children, className = "", strength = 0.3, as = 
   }
 
   const handleMouseLeave = () => {
-    setIsHovered(false)
     offsetX.set(0)
     offsetY.set(0)
   }
 
-  const Component = as === "span" ? motion.span : motion.div
+  const content = (
+    <motion.span
+      style={{ x: innerX, y: innerY, display: "inline-block" }}
+    >
+      {children}
+    </motion.span>
+  )
+
+  if (as === "span") {
+    return (
+      <motion.span
+        ref={spanRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{ x: offsetX, y: offsetY }}
+        className={`inline-block ${className}`}
+      >
+        {content}
+      </motion.span>
+    )
+  }
 
   return (
-    <Component
-      ref={ref as any}
+    <motion.div
+      ref={divRef}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       style={{ x: offsetX, y: offsetY }}
       className={`inline-block ${className}`}
     >
-      <motion.span
-        style={{ x: innerX, y: innerY, display: "inline-block" }}
-      >
-        {children}
-      </motion.span>
-    </Component>
+      {content}
+    </motion.div>
   )
 }

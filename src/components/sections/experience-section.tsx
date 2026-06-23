@@ -49,7 +49,7 @@ function ExperienceCard({ exp, index, isMobile }: { exp: typeof experiences[numb
     <motion.div
       ref={ref}
       variants={cinematicReveal}
-      className={`group relative flex flex-col gap-6 rounded-md border bg-card/40 backdrop-blur-md px-4 py-6 md:p-6 lg:p-8 transition-all duration-500 ease-out lg:hover:border-primary/30 lg:hover:-translate-y-1 lg:hover:shadow-lg lg:hover:shadow-primary/5 ${isActive ? "border-primary/30 -translate-y-1 shadow-lg shadow-primary/5" : "border-border translate-y-0 shadow-none"}`}
+      className={`group relative flex flex-col gap-6 rounded-md border bg-card/40 backdrop-blur-md px-4 py-6 md:p-6 lg:p-8 transition-all duration-500 ease-out lg:hover:border-primary/30 ${isActive ? "border-primary/30" : "border-border"}`}
     >
       {/* Top row */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

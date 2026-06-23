@@ -3,58 +3,131 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { headerReveal, staggerContainer } from "@/lib/animations"
+import { useMode } from "@/hooks/use-mode"
 
-const terminalLines = [
-  { type: "comment", text: "# data_pipeline.py" },
-  { type: "import", text: "import torch" },
-  { type: "import", text: "from transformers import AutoModel" },
-  { type: "blank", text: "" },
-  { type: "code", text: 'model = AutoModel.from_pretrained("bert-base")' },
-  { type: "code", text: "tokenizer = AutoTokenizer.from_pretrained()" },
-  { type: "blank", text: "" },
-  { type: "code", text: "def process_batch(data, batch_size=32):" },
-  { type: "code", text: '    """Process data in parallel batches"""' },
-  { type: "code", text: "    results = []" },
-  { type: "code", text: "    for batch in chunk(data, batch_size):" },
-  { type: "code", text: "        embeddings = model.encode(batch)" },
-  { type: "code", text: "        results.extend(embeddings)" },
-  { type: "code", text: "    return torch.stack(results)" },
-  { type: "blank", text: "" },
-  { type: "output", text: ">>> Processing 10,000 records..." },
-  { type: "output", text: ">>> Batch 1/312 complete [0.3s]" },
-  { type: "output", text: ">>> Pipeline finished. Accuracy: 97.3%" },
-]
+type TerminalLine = { type: string; text: string }
+
+const terminalContent: Record<string, { filename: string; lines: TerminalLine[] }> = {
+  generalist: {
+    filename: "Ask_Ai.py",
+    lines: [
+      { type: "comment", text: "# Ask_Ai.py" },
+      { type: "import", text: "from openai import OpenAI" },
+      { type: "blank", text: "" },
+      { type: "code", text: "client = OpenAI(" },
+      { type: "code", text: '    api_key="sk-454fasfas54asfasf546asfa"' },
+      { type: "code", text: ")" },
+      { type: "blank", text: "" },
+      { type: "code", text: "response = client.chat.completions.create(" },
+      { type: "code", text: '    model="gpt-4o",' },
+      { type: "code", text: "    messages=[{" },
+      { type: "code", text: '        "role": "user",' },
+      { type: "code", text: '        "content": "How to learn coding?"' },
+      { type: "code", text: "    }]" },
+      { type: "code", text: ")" },
+      { type: "blank", text: "" },
+      { type: "output", text: ">>> Calling GPT-4o..." },
+      { type: "output", text: '>>> "Start with Python, build projects,' },
+      { type: "output", text: '>>>  stay consistent, never stop learning."' },
+    ],
+  },
+  "ai-ml": {
+    filename: "ask_ai.py",
+    lines: [
+      { type: "comment", text: "# ask_ai.py" },
+      { type: "import", text: "import anthropic" },
+      { type: "blank", text: "" },
+      { type: "code", text: "client = anthropic.Anthropic(" },
+      { type: "code", text: '    api_key="sk-ant-••••••••••••••••"' },
+      { type: "code", text: ")" },
+      { type: "blank", text: "" },
+      { type: "code", text: "message = client.messages.create(" },
+      { type: "code", text: '    model="claude-3-5-sonnet-20241022",' },
+      { type: "code", text: "    max_tokens=1024," },
+      { type: "code", text: "    messages=[{" },
+      { type: "code", text: '        "role": "user",' },
+      { type: "code", text: '        "content": "How to learn coding?"' },
+      { type: "code", text: "    }]" },
+      { type: "code", text: ")" },
+      { type: "blank", text: "" },
+      { type: "output", text: ">>> Claude responding..." },
+      { type: "output", text: '>>> "Pick one language, build real things,' },
+      { type: "output", text: '>>>  read others code, repeat daily."' },
+    ],
+  },
+  fullstack: {
+    filename: "api_server.ts",
+    lines: [
+      { type: "comment", text: "// api_server.ts" },
+      { type: "import", text: 'import { NextRequest, NextResponse } from "next/server"' },
+      { type: "import", text: 'import { db } from "@/lib/db"' },
+      { type: "blank", text: "" },
+      { type: "code", text: "export async function GET(req: NextRequest) {" },
+      { type: "code", text: "  const { searchParams } = req.nextUrl" },
+      { type: "code", text: '  const id = searchParams.get("id")' },
+      { type: "blank", text: "" },
+      { type: "code", text: "  const data = await db.query(" },
+      { type: "code", text: '    "SELECT * FROM users WHERE id = $1",' },
+      { type: "code", text: "    [id]" },
+      { type: "code", text: "  )" },
+      { type: "blank", text: "" },
+      { type: "code", text: "  return NextResponse.json(data)" },
+      { type: "code", text: "}" },
+      { type: "blank", text: "" },
+      { type: "output", text: ">>> Server running on :3000" },
+      { type: "output", text: ">>> GET /api/users?id=42  200 OK [12ms]" },
+    ],
+  },
+  data: {
+    filename: "etl_pipeline.py",
+    lines: [
+      { type: "comment", text: "# etl_pipeline.py" },
+      { type: "import", text: "import pandas as pd" },
+      { type: "import", text: "from pyspark.sql import SparkSession" },
+      { type: "import", text: "import boto3" },
+      { type: "blank", text: "" },
+      { type: "code", text: "spark = SparkSession.builder\\" },
+      { type: "code", text: '    .appName("ETL Pipeline")\\.getOrCreate()' },
+      { type: "blank", text: "" },
+      { type: "code", text: "def run_pipeline(source: str):" },
+      { type: "code", text: "    df = spark.read.parquet(source)" },
+      { type: "code", text: "    df = df.dropDuplicates().na.drop()" },
+      { type: "code", text: "    df = transform(df)" },
+      { type: "code", text: '    df.write.mode("overwrite").parquet(SINK)' },
+      { type: "blank", text: "" },
+      { type: "output", text: ">>> Loading 4.2M records from S3..." },
+      { type: "output", text: ">>> Dedup complete. 3.98M rows retained." },
+      { type: "output", text: ">>> Pipeline finished in 8.3s ✓" },
+    ],
+  },
+}
 
 export function TerminalCard() {
+  const { mode } = useMode()
+  const content = terminalContent[mode] ?? terminalContent.generalist
   const [visibleLines, setVisibleLines] = useState(0)
 
   useEffect(() => {
     const interval = setInterval(() => {
       setVisibleLines((prev) => {
-        if (prev >= terminalLines.length) {
-          return 0
-        }
+        if (prev >= content.lines.length) return 0
         return prev + 1
       })
-    }, 300)
+    }, 200)
     return () => clearInterval(interval)
-  }, [])
+  }, [content.lines.length])
 
   const getLineColor = (type: string) => {
     switch (type) {
-      case "comment":
-        return "text-muted-foreground"
-      case "import":
-        return "text-primary"
-      case "output":
-        return "text-emerald-400"
-      default:
-        return "text-foreground"
+      case "comment": return "text-muted-foreground"
+      case "import":  return "text-primary"
+      case "output":  return "text-emerald-400"
+      default:        return "text-foreground"
     }
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
@@ -68,13 +141,13 @@ export function TerminalCard() {
           <motion.span variants={headerReveal} className="h-2.5 w-2.5 rounded-full bg-emerald-500/70" aria-hidden="true" />
         </div>
         <motion.span variants={headerReveal} className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
-          data_pipeline.py
+          {content.filename}
         </motion.span>
       </div>
-      <div className="flex-1 overflow-hidden p-4" aria-label="Terminal animation showing a Python data pipeline script">
+      <div className="flex-1 overflow-hidden p-4" aria-label={`Terminal showing ${content.filename}`}>
         <pre className="font-mono text-[11.5px] lg:text-xs leading-relaxed">
-          {terminalLines.slice(0, visibleLines).map((line, i) => (
-            <div key={`${line.text}-${i}`} className={`${getLineColor(line.type)} transition-opacity duration-200`}>
+          {content.lines.slice(0, visibleLines).map((line, i) => (
+            <div key={i} className={`${getLineColor(line.type)} transition-opacity duration-200`}>
               {line.text || "\u00A0"}
             </div>
           ))}

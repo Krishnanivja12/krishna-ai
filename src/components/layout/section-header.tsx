@@ -27,7 +27,7 @@ export function SectionHeader({ index, title, subtitle }: SectionHeaderProps) {
           </span>
           <motion.div 
             variants={lineReveal} 
-            className="h-[1px] w-8 bg-primary/30 origin-left" 
+            className="terminal-scan-line h-[1px] w-8 bg-primary/30 origin-left" 
             aria-hidden="true"
           />
           <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase italic">

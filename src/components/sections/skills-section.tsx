@@ -1,12 +1,16 @@
 "use client"
 
-import { memo, useMemo, useRef, useState } from "react"
+import React from "react"
+import { memo, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { skillCategories } from "@/lib/bio-data"
 import { cinematicReveal, staggerContainer, headerReveal } from "@/lib/animations"
 import { useIsMobile, useAutoHighlight } from "@/hooks/use-mobile-view-effect"
-import * as SiIcons from "react-icons/si";
-import { LuHash, LuWorkflow, LuDatabaseZap, LuNetwork } from "react-icons/lu";
+import type { IconType } from "react-icons";
+import { SiScikitlearn, SiPytorch, SiTensorflow, SiKeras, SiHuggingface, SiLangchain, SiPandas, SiNumpy, SiFastapi, SiStreamlit, SiLinux, SiPostgresql, SiMysql, SiPython, SiGit, SiDocker } from "react-icons/si";
+import { LuHash, LuWorkflow, LuDatabaseZap, LuNetwork, LuZap, LuGitBranch, LuServer, LuLayers, LuCpu, LuActivity, LuTreeDeciduous, LuSearch, LuCloud } from "react-icons/lu";
+import { TbApi, TbBrandSpeedtest, TbVersions } from "react-icons/tb";
+import { MdOutlineModelTraining } from "react-icons/md";
 import { FaJava } from "react-icons/fa";
 import { VscAzure } from "react-icons/vsc";
 import { PiFileSql } from "react-icons/pi";
@@ -16,70 +20,92 @@ interface SkillsSectionProps {
   index: number
 }
 
-const getSkillIcon = (skillName: string) => {
+type SkillIcon = IconType;
+
+const iconMap: Record<string, SkillIcon> = {
+  // Specific library icons
+  "java": FaJava,
+  "azure": VscAzure,
+  "sql": PiFileSql,
+
+  // Frameworks & Languages
+  "python": SiPython,
+  "fastapi": SiFastapi,
+  "streamlit": SiStreamlit,
+  "docker": SiDocker,
+  "git": SiGit,
+  "linux": SiLinux,
+
+  // Databases
+  "postgresql": SiPostgresql,
+  "mysql": SiMysql,
+  "vector databases": LuDatabaseZap,
+  "faiss": LuDatabaseZap,
+
+  // Machine Learning
+  "scikit-learn": SiScikitlearn,
+  "xgboost": LuTreeDeciduous,
+  "random forest": LuTreeDeciduous,
+  "feature engineering": LuGitBranch,
+  "hyperparameter tuning": LuZap,
+  "cross validation": LuActivity,
+  "eda": LuActivity,
+
+  // Deep Learning
+  "pytorch": SiPytorch,
+  "tensorflow": SiTensorflow,
+  "keras": SiKeras,
+  "cnn": LuCpu,
+  "rnn": LuCpu,
+  "lstm": LuCpu,
+  "transformers": SiHuggingface,
+  "attention mechanism": LuCpu,
+  "transfer learning": MdOutlineModelTraining,
+  "nlp": LuNetwork,
+  "mlops": LuWorkflow,
+
+  // LLM & GenAI
+  "hugging face": SiHuggingface,
+  "rag pipelines": LuNetwork,
+  "semantic search": LuActivity,
+  "embeddings": LuCpu,
+  "prompt engineering": LuZap,
+  "lora": MdOutlineModelTraining,
+  "qlora": MdOutlineModelTraining,
+  "peft": MdOutlineModelTraining,
+  "quantization": LuCpu,
+  "rlhf": MdOutlineModelTraining,
+  "langchain": SiLangchain,
+  "crewai": LuWorkflow,
+
+  // Data & Cloud
+  "pandas": SiPandas,
+  "numpy": SiNumpy,
+  "matplotlib": LuActivity,
+  "seaborn": LuActivity,
+  "aws ec2": LuServer,
+  "aws s3": LuCloud,
+
+  // MLOps & Backend
+  "restful apis": TbApi,
+  "model inference apis": LuServer,
+  "batch inference": LuLayers,
+  "latency optimization": TbBrandSpeedtest,
+  "model versioning": TbVersions,
+
+  // Additional from experience tags
+  "data analysis": LuActivity,
+  "forensic technology": LuSearch,
+}
+
+const getSkillIcon = (skillName: string): SkillIcon => {
   if (!skillName) return LuHash;
   const name = skillName.toLowerCase().trim();
 
-  // 1. Manual mapping for tricky React Icon names (Si prefix)
-  const specialCases: Record<string, any> = {
-    // Icons from specific libraries
-    "java": FaJava,
-    "azure": VscAzure,
-    "sql": PiFileSql,
+  const icon = iconMap[name];
+  if (icon) return icon;
 
-    // Frameworks / Web
-    "next.js": "SiNextdotjs",
-    "node.js": "SiNodedotjs",
-    ".net core": "SiDotnet",
-    "fastapi": "SiFastapi",
-    "tailwind css": "SiTailwindcss",
-    // Languages
-    "c#": "SiCsharp",
-    "c++": "SiCplusplus",
-    "typescript": "SiTypescript",
-    "javascript": "SiJavascript",
-    // Data Science & AI
-    "scikit-learn": "SiScikitlearn",
-    "hugging face": "SiHuggingface",
-    "langchain": "SiLangchain",
-    "pytorch": "SiPytorch",
-    "tensorflow": "SiTensorflow",
-    "pandas": "SiPandas",
-    "numpy": "SiNumpy",
-    // Data Engineering
-    "apache spark": "SiApachespark",
-    "airflow": "SiApacheairflow",
-    "kafka": "SiApachekafka",
-    "gcp": "SiGooglecloud",
-    "aws": "SiAmazonwebservices",
-    "ci/cd": "SiGithubactions",
-    // Database
-    "postgresql": "SiPostgresql",
-    "mysql": "SiMysql",
-    "mongodb": "SiMongodb",
-  };
-
-  const lookup = specialCases[name];
-
-  // FIX: If 'lookup' is already a component (function), return it immediately
-  if (typeof lookup === "function") return lookup;
-
-  // Try manual map
-  if (typeof lookup === "string") {
-    const Icon = (SiIcons as any)[lookup];
-    if (Icon) return Icon;
-  }
-
-  // 2. PascalCase Lookup (e.g., "Python" -> "SiPython")
-  const pascalName = `Si${skillName.replace(/[^a-zA-Z0-9]/g, "")}`;
-  const SiIcon = (SiIcons as any)[pascalName];
-  if (SiIcon) return SiIcon;
-
-  // 3. Fallback to Lucide category icons
-  if (name.includes("modeling")) return LuWorkflow;
-  if (name.includes("dbt")) return LuDatabaseZap;
-  if (name.includes("pipelines")) return LuNetwork;
-
+  // Fallback
   return LuHash;
 };
 
@@ -128,9 +154,9 @@ function SkillCard({ category, isMobile }: { category: typeof skillCategories[nu
       className={`relative h-full bg-background lg:hover:z-10 ${isActive ? "z-10" : "z-0"}`}
     >
       {/* The Inner Card: Handles the 3D lift, shadow, and background color */}
-      <div className={`group flex flex-col h-full gap-5 p-4 md:p-6 lg:p-8 transition-all duration-500 ease-out lg:hover:bg-card lg:hover:-translate-y-1.5 lg:hover:shadow-xl lg:hover:shadow-primary/10 ${isActive
-        ? "bg-card -translate-y-1.5 shadow-xl shadow-primary/10"
-        : "bg-transparent translate-y-0 shadow-none"
+      <div className={`group flex flex-col h-full gap-5 p-4 md:p-6 lg:p-8 transition-all duration-500 ease-out lg:hover:bg-card ${isActive
+        ? "bg-card"
+        : "bg-transparent"
         }`}>
 
         <div className="flex items-center justify-between">
@@ -152,9 +178,16 @@ function SkillCard({ category, isMobile }: { category: typeof skillCategories[nu
   )
 }
 
-const SkillPill = memo(({ skill, isActive }: { skill: string, isActive: boolean }) => {
-  const Icon = useMemo(() => getSkillIcon(skill), [skill]);
+const SkillIconGlyph = memo(({ skill }: { skill: string }) => {
+  const icon = getSkillIcon(skill);
+  return React.createElement(icon, {
+    className: "h-3 w-3 shrink-0 text-primary lg:h-3.5 lg:w-3.5",
+    "aria-hidden": true,
+  });
+});
+SkillIconGlyph.displayName = "SkillIconGlyph";
 
+const SkillPill = memo(({ skill, isActive }: { skill: string, isActive: boolean }) => {
   return (
     <span
       className={`inline-flex items-center rounded-sm border px-2 py-1 font-mono text-[11px] lg:text-[12.5px] 
@@ -164,13 +197,10 @@ const SkillPill = memo(({ skill, isActive }: { skill: string, isActive: boolean 
         }`}
     >
       <span
-        className={`inline-flex items-center justify-center overflow-hidden transition-all duration-500 ease-out shrink-0 ${isActive ? "w-3 lg:w-3.5 mr-1.5 opacity-100" : "w-0 mr-0 opacity-0"
+        className={`inline-flex items-center justify-center overflow-hidden transition-all duration-500 ease-out shrink-0 ${isActive ? "mr-1.5 w-3 opacity-100 lg:w-3.5" : "mr-0 w-0 opacity-0"
           }`}
       >
-        <Icon
-          className="shrink-0 text-primary h-3 w-3 lg:h-3.5 lg:w-3.5"
-          aria-hidden="true"
-        />
+        <SkillIconGlyph skill={skill} />
       </span>
       <span>{skill}</span>
     </span>

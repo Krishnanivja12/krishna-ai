@@ -138,6 +138,7 @@ export function ProjectDetailModal({ project, onClose, sourceRect }: ProjectDeta
                     src={project.banner || project.images![0]}
                     alt={project.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 1280px"
                     className="object-cover"
                     priority
                   />
@@ -230,7 +231,9 @@ export function ProjectDetailModal({ project, onClose, sourceRect }: ProjectDeta
                                 src={img}
                                 alt={`${project.title} scan ${i + 1}`}
                                 fill
-                                className="object-cover transition-transform duration-700 group-hover/img:scale-110"
+                                sizes="(max-width: 768px) 100vw, 400px"
+                                loading="lazy"
+                                className="object-cover transition-transform duration-700 group-hover/img:scale-110 gpu-layer"
                               />
                             </div>
                           ))}

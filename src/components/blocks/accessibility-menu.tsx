@@ -5,30 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Accessibility, Monitor, Contrast, Type } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useAccessibility } from "@/contexts/accessibility-context";
-import { usePathname } from "next/navigation"; // Not used here directly but good for context if needed
+import { useNavigationHub } from "@/contexts/navigation-hub-context";
 
 export function AccessibilityMenu() {
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  // We need to know if the main navigation is open. 
-  // Since Navigation and AccessibilityMenu are siblings in RootLayout, 
-  // we might need a shared state or just check for the presence of the menu overlay class/id.
-  // However, simpler is to check if the scroll is locked or if the overlay is in DOM.
-  const [isNavOpen, setIsNavOpen] = useState(false);
-
-  useEffect(() => {
-    const checkNav = () => {
-      const overlay = document.querySelector('[data-nav-overlay]');
-      setIsNavOpen(!!overlay);
-    };
-
-    const observer = new MutationObserver(checkNav);
-    observer.observe(document.body, { childList: true, subtree: true });
-    
-    return () => observer.disconnect();
-  }, []);
+  const { isOpen: isNavOpen } = useNavigationHub();
 
   const {
     reducedMotion,
@@ -38,10 +20,6 @@ export function AccessibilityMenu() {
     toggleHighContrast,
     toggleLargeText,
   } = useAccessibility();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Close on outside click
   useEffect(() => {
@@ -64,8 +42,6 @@ export function AccessibilityMenu() {
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
   }, [isOpen]);
-
-  if (!mounted) return null;
 
   const settings = [
     {
