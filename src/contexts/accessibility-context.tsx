@@ -86,7 +86,10 @@ export function AccessibilityProvider({
     const lowCores = (navigator.hardwareConcurrency || 8) <= 4
     const isMobileOS = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
 
-    setLowPerformance((isTouchDevice && isSmallScreen) || lowCores || isMobileOS)
+    // Use setTimeout to avoid synchronous setState in effect
+    setTimeout(() => {
+      setLowPerformance((isTouchDevice && isSmallScreen) || lowCores || isMobileOS)
+    }, 0)
   }, [])
 
   // Apply CSS classes to <html> element

@@ -261,7 +261,8 @@ export function SkeletonProvider({ children }: { children: React.ReactNode }) {
     // Skip skeleton on subsequent SPA navigations within same session
     if (sessionStorage.getItem("portfolio:hydrated")) {
       skippedRef.current = true
-      setReady(true)
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => setReady(true), 0)
       return
     }
 

@@ -1,5 +1,4 @@
 import { useRef, useState, useCallback, useEffect } from "react"
-import { motion } from "framer-motion"
 import { useAccessibility } from "@/contexts/accessibility-context"
 
 interface GlowCardProps {

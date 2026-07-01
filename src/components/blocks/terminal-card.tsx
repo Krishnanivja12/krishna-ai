@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { useEffect, useState, useRef, useCallback } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { headerReveal, staggerContainer } from "@/lib/animations"
 import { useMode } from "@/hooks/use-mode"
+import { useReducedMotion } from "@/hooks/use-mobile-view-effect"
 
 type TerminalLine = { type: string; text: string }
 
@@ -27,8 +28,8 @@ const terminalContent: Record<string, { filename: string; lines: TerminalLine[] 
       { type: "code", text: ")" },
       { type: "blank", text: "" },
       { type: "output", text: ">>> Calling GPT-4o..." },
-      { type: "output", text: '>>> "Start with Python, build projects,' },
-      { type: "output", text: '>>>  stay consistent, never stop learning."' },
+      { type: "output", text: '"Start with Python, build projects,' },
+      { type: "output", text: ' stay consistent, never stop learning."' },
     ],
   },
   "ai-ml": {
@@ -38,7 +39,7 @@ const terminalContent: Record<string, { filename: string; lines: TerminalLine[] 
       { type: "import", text: "import anthropic" },
       { type: "blank", text: "" },
       { type: "code", text: "client = anthropic.Anthropic(" },
-      { type: "code", text: '    api_key="sk-ant-••••••••••••••••"' },
+      { type: "code", text: '    api_key="sk-ant-..."' },
       { type: "code", text: ")" },
       { type: "blank", text: "" },
       { type: "code", text: "message = client.messages.create(" },
@@ -51,8 +52,8 @@ const terminalContent: Record<string, { filename: string; lines: TerminalLine[] 
       { type: "code", text: ")" },
       { type: "blank", text: "" },
       { type: "output", text: ">>> Claude responding..." },
-      { type: "output", text: '>>> "Pick one language, build real things,' },
-      { type: "output", text: '>>>  read others code, repeat daily."' },
+      { type: "output", text: '"Pick one language, build real things,' },
+      { type: "output", text: ' read others code, repeat daily."' },
     ],
   },
   fullstack: {
@@ -97,34 +98,97 @@ const terminalContent: Record<string, { filename: string; lines: TerminalLine[] 
       { type: "blank", text: "" },
       { type: "output", text: ">>> Loading 4.2M records from S3..." },
       { type: "output", text: ">>> Dedup complete. 3.98M rows retained." },
-      { type: "output", text: ">>> Pipeline finished in 8.3s ✓" },
+      { type: "output", text: ">>> Pipeline finished in 8.3s" },
     ],
   },
 }
 
+const TYPE_COLORS: Record<string, string> = {
+  comment: "text-muted-foreground",
+  import: "text-primary",
+  output: "text-emerald-400",
+  code: "text-foreground",
+}
+
+const TYPE_DELAYS: Record<string, number> = {
+  comment: 50,
+  import: 80,
+  code: 40,
+  output: 120,
+  blank: 20,
+}
+
 export function TerminalCard() {
   const { mode } = useMode()
+  const reducedMotion = useReducedMotion()
   const content = terminalContent[mode] ?? terminalContent.generalist
   const [visibleLines, setVisibleLines] = useState(0)
+  const [isTyping, setIsTyping] = useState(false)
+  const [cursorVisible, setCursorVisible] = useState(true)
+  const [hasInitialized, setHasInitialized] = useState(false)
+  const [cycleCount, setCycleCount] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setVisibleLines((prev) => {
-        if (prev >= content.lines.length) return 0
-        return prev + 1
-      })
-    }, 200)
-    return () => clearInterval(interval)
-  }, [content.lines.length])
+  const getLineColor = useCallback((type: string) => TYPE_COLORS[type] ?? TYPE_COLORS.code, [])
 
-  const getLineColor = (type: string) => {
-    switch (type) {
-      case "comment": return "text-muted-foreground"
-      case "import":  return "text-primary"
-      case "output":  return "text-emerald-400"
-      default:        return "text-foreground"
+  const typeNextLine = useCallback(() => {
+    if (visibleLines >= content.lines.length) {
+      setIsTyping(false)
+      setTimeout(() => {
+        setCycleCount(c => c + 1)
+        setVisibleLines(0)
+        setIsTyping(true)
+      }, reducedMotion ? 500 : 2000)
+      return
     }
-  }
+
+    const line = content.lines[visibleLines]
+    const delay = reducedMotion ? 10 : (TYPE_DELAYS[line.type] ?? 50)
+    
+    setTimeout(() => {
+      setVisibleLines((prev) => prev + 1)
+    }, delay)
+  }, [visibleLines, content.lines, reducedMotion])
+
+  // Initialize on mount - handle reduced motion
+  useEffect(() => {
+    if (reducedMotion) {
+      setTimeout(() => {
+        setVisibleLines(content.lines.length)
+        setHasInitialized(true)
+      }, 0)
+      return
+    }
+    
+    if (!hasInitialized) {
+      setTimeout(() => {
+        setHasInitialized(true)
+        setIsTyping(true)
+      }, 0)
+    }
+  }, [reducedMotion, content.lines.length, hasInitialized])
+
+  // Main typing loop
+  useEffect(() => {
+    if (reducedMotion || !isTyping) return
+    
+    const interval = setInterval(typeNextLine, reducedMotion ? 10 : 80)
+    return () => clearInterval(interval)
+  }, [typeNextLine, reducedMotion, isTyping])
+
+  // Cursor blink
+  useEffect(() => {
+    if (reducedMotion) return
+    const interval = setInterval(() => setCursorVisible((v) => !v), 530)
+    return () => clearInterval(interval)
+  }, [reducedMotion])
+
+  // Auto-scroll to bottom when new lines appear
+  useEffect(() => {
+    if (containerRef.current && visibleLines > 0) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight
+    }
+  }, [visibleLines])
 
   return (
     <motion.div
@@ -136,24 +200,89 @@ export function TerminalCard() {
     >
       <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
         <div className="flex gap-1.5">
-          <motion.span variants={headerReveal} className="h-2.5 w-2.5 rounded-full bg-red-500/70" aria-hidden="true" />
-          <motion.span variants={headerReveal} className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" aria-hidden="true" />
-          <motion.span variants={headerReveal} className="h-2.5 w-2.5 rounded-full bg-emerald-500/70" aria-hidden="true" />
+          <motion.span
+            variants={headerReveal}
+            className="h-2.5 w-2.5 rounded-full bg-red-500/70"
+            aria-hidden="true"
+          />
+          <motion.span
+            variants={headerReveal}
+            className="h-2.5 w-2.5 rounded-full bg-yellow-500/70"
+            aria-hidden="true"
+          />
+          <motion.span
+            variants={headerReveal}
+            className="h-2.5 w-2.5 rounded-full bg-emerald-500/70"
+            aria-hidden="true"
+          />
         </div>
-        <motion.span variants={headerReveal} className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
+        <motion.span
+          variants={headerReveal}
+          className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase"
+        >
           {content.filename}
         </motion.span>
+        <motion.span
+          className="ml-auto flex items-center gap-1.5 font-mono text-[9px] text-muted-foreground/60"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/60" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          </span>
+          <span>CONNECTED</span>
+        </motion.span>
       </div>
-      <div className="flex-1 overflow-hidden p-4" aria-label={`Terminal showing ${content.filename}`}>
+      <div
+        ref={containerRef}
+        className="flex-1 overflow-hidden p-4"
+        aria-label={`Terminal showing ${content.filename}`}
+        role="region"
+        aria-live="polite"
+        tabIndex={0}
+      >
         <pre className="font-mono text-[11.5px] lg:text-xs leading-relaxed">
-          {content.lines.slice(0, visibleLines).map((line, i) => (
-            <div key={i} className={`${getLineColor(line.type)} transition-opacity duration-200`}>
-              {line.text || "\u00A0"}
-            </div>
-          ))}
-          <span className="inline-block h-3.5 w-1.5 animate-pulse bg-primary" aria-hidden="true" />
+          <AnimatePresence>
+            {content.lines.slice(0, visibleLines).map((line, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: reducedMotion ? 0.01 : 0.15, ease: "easeOut" }}
+                className={`${getLineColor(line.type)} transition-opacity duration-200`}
+              >
+                {line.text || "\u00A0"}
+              </motion.div>
+            ))}
+          </AnimatePresence>
+          {(isTyping || cycleCount > 0) && (
+            <span className="inline-block h-3.5 w-1.5 align-bottom" aria-hidden="true">
+              <motion.span
+                className="inline-block h-full w-full bg-primary"
+                animate={{ opacity: cursorVisible ? 1 : 0 }}
+                transition={{ duration: 0.01, repeat: Infinity, repeatType: "reverse" }}
+                style={{ animationDuration: "530ms" }}
+              />
+            </span>
+          )}
         </pre>
       </div>
+      <motion.div
+        className="border-t border-border/50 px-4 py-1.5 flex items-center justify-between text-[9px] font-mono text-muted-foreground/60"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.3 }}
+      >
+        <span>LINE {visibleLines}/{content.lines.length}</span>
+        <span>{mode.toUpperCase()}</span>
+        <span className="flex items-center gap-1">
+          <kbd className="px-1.5 py-0.5 rounded bg-muted text-[8px] border border-border">Ctrl+C</kbd>
+          <span className="text-muted-foreground/40">INTERRUPT</span>
+        </span>
+      </motion.div>
     </motion.div>
   )
 }

@@ -52,9 +52,9 @@ export function CertificatesSection({ index }: CertificatesSectionProps) {
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
           className="grid gap-px border border-border bg-border md:grid-cols-2">
-          {visible.map((cert, index) => (
-            <CertificateCard key={cert.title} cert={cert} index={index} expanded={expanded} isMobile={isMobile} />
-          ))}
+{visible.map((cert) => (
+              <CertificateCard key={cert.title} cert={cert} isMobile={isMobile} />
+            ))}
           {Array.from({ length: emptySlots }).map((_, i) => (
             <motion.div
               variants={cinematicReveal}
@@ -94,7 +94,7 @@ export function CertificatesSection({ index }: CertificatesSectionProps) {
   )
 }
 
-function CertificateCard({ cert, index, expanded, isMobile }: { cert: typeof certificates[number], index: number, expanded: boolean, isMobile: boolean }) {
+function CertificateCard({ cert, isMobile }: { cert: typeof certificates[number], isMobile: boolean }) {
   const ref = useRef(null)
   const isActive = useAutoHighlight(ref, isMobile)
 

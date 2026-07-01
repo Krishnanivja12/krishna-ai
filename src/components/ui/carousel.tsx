@@ -111,7 +111,8 @@ const Carousel = React.forwardRef<
         return
       }
 
-      onSelect(api)
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => onSelect(api), 0)
       api.on('reInit', onSelect)
       api.on('select', onSelect)
 

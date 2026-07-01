@@ -210,13 +210,11 @@ function getLocalReply(message: string): string {
 
 export function AIAssistant() {
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: "Hey there! 👋 I'm Krishna's AI assistant. Ask me anything about his work, skills, or experience.",
-      timestamp: Date.now(),
-    },
-  ])
+  const [messages, setMessages] = useState<Message[]>(() => [{
+    role: "assistant",
+    content: "Hey there! 👋 I'm Krishna's AI assistant. Ask me anything about his work, skills, or experience.",
+    timestamp: Date.now(),
+  }])
   const [input, setInput] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)

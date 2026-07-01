@@ -292,21 +292,20 @@ interface LegendPayloadItem {
 }
 
 interface ChartLegendContentProps {
-  className?: string
-  hideIcon?: boolean
-  nameKey?: string
-  payload?: LegendPayloadItem[]
-  verticalAlign?: 'top' | 'bottom' | 'middle'
-}
+    className?: string
+    hideIcon?: boolean
+    payload?: LegendPayloadItem[]
+    verticalAlign?: 'top' | 'bottom' | 'middle'
+  }
 
 const ChartLegendContent = React.forwardRef<
-  HTMLDivElement,
-  ChartLegendContentProps
->(
-  (
-    { className, hideIcon = false, payload, verticalAlign = 'bottom', nameKey },
-    ref,
-  ) => {
+    HTMLDivElement,
+    ChartLegendContentProps
+  >(
+    (
+      { className, hideIcon = false, payload, verticalAlign = 'bottom' },
+      ref,
+    ) => {
     const { config } = useChart()
 
     if (!payload?.length) {
